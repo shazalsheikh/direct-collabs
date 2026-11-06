@@ -1,0 +1,15 @@
+export { Nav } from "./Nav";
+export { Hero } from "./Hero";
+export { ProofBar } from "./ProofBar";
+export { Pain } from "./Pain";
+export { Mechanism } from "./Mechanism";
+export { Calculator } from "./Calculator";
+export { Compare } from "./Compare";
+export { LaraibStory } from "./LaraibStory";
+export { Inside } from "./Inside";
+export { Plans } from "./Plans";
+export { Guarantee } from "./Guarantee";
+export { About } from "./About";
+export { FAQ } from "./FAQ";
+export { FinalCTA, Footer } from "./FinalCTA";
+export { StickyCTA } from "./StickyCTA";
