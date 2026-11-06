@@ -61,9 +61,9 @@ export function PhoneLeads() {
             </span>
             <div className="min-w-0">
               <p className="text-[12px] font-semibold leading-tight">New lead</p>
-              <p className="truncate text-[11px] text-bone-3">A brand owner filled your form</p>
+              <p className="truncate text-[11px] text-bone-2">A brand owner filled your form</p>
             </div>
-            <span className="ml-auto text-[10px] text-bone-3">now</span>
+            <span className="ml-auto text-[11px] text-bone-2">now</span>
           </div>
 
           {/* Lead Center header */}
@@ -76,20 +76,19 @@ export function PhoneLeads() {
           </div>
 
           {/* Lead card stack */}
-          <ul className="mt-3 space-y-2 px-3 pb-5">
+          <ul className="mt-3 h-[300px] space-y-2 overflow-hidden px-3">
             {items.map((l, i) => (
               <li
                 key={l.key}
                 className={`rounded-2xl border border-ink-4 bg-ink-2 p-3 ${i === 0 && animate ? "animate-lead-in" : ""}`}
-                style={{ opacity: i === 0 ? 1 : i === 1 ? 0.8 : 0.55 }}
               >
                 <div className="flex items-center justify-between">
                   <span className="rounded-md bg-ink-3 px-2 py-0.5 text-[11px] font-semibold">{l.cat}</span>
-                  <span className="text-[10px] text-bone-3">{l.city}</span>
+                  <span className="text-[11px] text-bone-2">{l.city}</span>
                 </div>
                 <p className="tnum mt-2 text-[15px] font-semibold">{l.budget}</p>
                 <div className="mt-1.5 flex items-center justify-between">
-                  <span className="text-[12px] text-bone-3 blur-[1.5px] select-none">{l.handle}</span>
+                  <span className="text-[12px] text-bone-2 blur-[1.5px] select-none">{l.handle}</span>
                   <span className="text-[11px] font-semibold text-lime">Paid collab</span>
                 </div>
               </li>

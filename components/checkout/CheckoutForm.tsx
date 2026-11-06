@@ -227,7 +227,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
       )}
 
       <div className="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-6 sm:pt-8">
-        <Link href="/" className="display text-lg">
+        <Link href="/" className="display inline-flex min-h-11 items-center text-lg">
           Direct<span className="text-lime">Collabs</span>
         </Link>
 

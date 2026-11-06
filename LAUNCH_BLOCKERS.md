@@ -14,6 +14,8 @@ Things only Sheikh can supply. The site builds and runs without them, but do not
 - [ ] **Verify the four proof numbers** against Meta (forms, cost per form, spend, deals). They are marked `verified: false` and render with "~" until confirmed.
 - [ ] **Real student feedback.** `TESTIMONIALS` in `lib/proof.config.ts` is empty by design. Only add with consent.
 - [ ] **Who watches the Needs review queue.** One named person, with the admin password and WhatsApp, checking `/admin` at least twice a day.
+- [ ] **Founding counter decision.** `FOUNDING.enabled` is off. If you turn it on you must raise `PLANS.pro.price` yourself at 100 sales (admin warns you).
+- [ ] **Re-measure speed on Netlify** with a real CDN (Lighthouse mobile, LCP target under 2 s).
 - [ ] **Course video URL.** `COURSE_VIDEO_URL` (unlisted YouTube, Vimeo or Bunny embed).
 - [ ] **Download files** (PDFs for templates, scripts, rate card) uploaded and their paths set in `DOWNLOADS` in `lib/offer.config.ts`.
 - [ ] **Supabase project** created, SQL from `supabase/migrations/` run, storage bucket `receipts` (private) created, Edge Function deployed with its secrets.

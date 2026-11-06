@@ -6,6 +6,8 @@ import { ADMIN_COOKIE, isValidAdminCookie } from "@/lib/admin-auth";
 import { loadAdminSnapshot, type Range } from "@/lib/admin-data";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { demoSnapshot } from "@/lib/admin-demo";
+import { countVerifiedSales } from "@/lib/db";
+import { FOUNDING } from "@/lib/offer.config";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
 
@@ -27,5 +29,7 @@ async function AdminData({ searchParams }: { searchParams: PageProps<"/admin">["
   const range: Range = sp.range === "7" ? 7 : 30;
   let snap = await loadAdminSnapshot(range);
   if (!snap.configured && process.env.NODE_ENV !== "production" && sp.demo === "1") snap = demoSnapshot(range);
-  return <AdminDashboard snap={snap} />;
+  const proSold = FOUNDING.enabled ? await countVerifiedSales("pro") : null;
+  const foundingHit = proSold !== null && proSold >= FOUNDING.limit;
+  return <AdminDashboard snap={snap} foundingHit={foundingHit} />;
 }

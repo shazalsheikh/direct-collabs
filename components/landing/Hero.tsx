@@ -1,22 +1,19 @@
-import { Suspense } from "react";
 import { Container, LinkButton, HonestLine } from "@/components/ui";
 import { PLANS, GUARANTEE } from "@/lib/offer.config";
 import { LARAIB } from "@/lib/proof.config";
-import { HEROES, DEFAULT_HERO } from "@/lib/heroes";
+import type { HeroVariant } from "@/lib/heroes";
 import { rs } from "@/lib/format";
-import { Headline, HeroHeadline } from "./HeroHeadline";
+import { Headline } from "./HeroHeadline";
 import { PhoneLeads } from "./PhoneLeads";
 
-export function Hero() {
+export function Hero({ hero }: { hero: HeroVariant }) {
   const g = GUARANTEE[GUARANTEE.type];
   return (
     <section className="pt-10 pb-14 sm:pt-16 sm:pb-20">
       <Container wide>
         <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <Suspense fallback={<Headline hero={HEROES[DEFAULT_HERO]} />}>
-              <HeroHeadline />
-            </Suspense>
+            <Headline hero={hero} />
 
             <div className="mt-8 flex flex-col gap-3 sm:max-w-sm">
               <LinkButton href="/checkout?plan=pro" className="w-full">

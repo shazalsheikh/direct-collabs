@@ -1,6 +1,6 @@
 /**
  * Seed dummy rows so /admin has something to show.
- * Run: node --env-file=.env.local scripts/seed.ts
+ * Run: npm run seed
  * Needs SUPABASE_URL and SUPABASE_SERVICE_KEY. Safe to run twice (refs are random).
  */
 import { createClient } from "@supabase/supabase-js";

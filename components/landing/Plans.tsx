@@ -69,12 +69,13 @@ export function Plans() {
 
 /** Founding price counter. Real verified count only. Hidden until FOUNDING.showAt. */
 async function Founding() {
+  if (!FOUNDING.enabled) return null;
   const sold = await countVerifiedSales("pro");
   if (sold === null || sold < FOUNDING.showAt || sold >= FOUNDING.limit) return null;
   return (
     <p className="mt-2 text-sm text-bone-2">
       Founding price. <span className="tnum font-semibold text-bone">{FOUNDING.limit - sold}</span> of{" "}
-      {FOUNDING.limit} left at this price, then {rs(FOUNDING.priceAfter)}.
+      {FOUNDING.limit} spots left at {rs(PLANS.pro.price)}. After that it is {rs(FOUNDING.priceAfter)}.
     </p>
   );
 }

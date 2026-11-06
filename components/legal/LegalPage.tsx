@@ -7,18 +7,19 @@ export function LegalPage({ title, intro, children }: { title: string; intro?: s
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-2xl px-4 pt-6 pb-20 sm:px-6 sm:pt-8">
-        <Link href="/" className="display text-lg">
+        <Link href="/" className="display inline-flex min-h-11 items-center text-lg">
           Direct<span className="text-lime">Collabs</span>
         </Link>
         <h1 className="display mt-8 text-4xl sm:text-5xl">{title}</h1>
         <p className="mt-3 text-[13px] text-bone-3">Last updated {SITE.legal.lastUpdated}</p>
         {intro && <p className="mt-5 text-lg text-bone-2">{intro}</p>}
         <div className="mt-8 space-y-4 text-[15px] leading-relaxed text-bone-2">{children}</div>
-        <nav className="mt-12 flex flex-wrap gap-x-6 gap-y-2 border-t border-ink-4 pt-6 text-sm text-bone-3">
-          <Link href="/refund-policy" className="hover:text-bone">Refund policy</Link>
-          <Link href="/terms" className="hover:text-bone">Terms</Link>
-          <Link href="/privacy" className="hover:text-bone">Privacy</Link>
-          <Link href="/" className="hover:text-bone">Home</Link>
+        <nav className="mt-12 flex flex-wrap gap-x-6 border-t border-ink-4 pt-3 text-sm text-bone-3">
+          {([["/refund-policy", "Refund policy"], ["/terms", "Terms"], ["/privacy", "Privacy"], ["/", "Home"]] as const).map(([href, label]) => (
+            <Link key={href} href={href} className="inline-flex min-h-11 items-center hover:text-bone">
+              {label}
+            </Link>
+          ))}
         </nav>
       </div>
     </main>

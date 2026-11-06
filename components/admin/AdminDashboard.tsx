@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { AdminSnapshot } from "@/lib/admin-data";
 import type { OrderCurrent } from "@/lib/orders";
-import { PLANS } from "@/lib/offer.config";
+import { PLANS, FOUNDING } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
 import { rs, num } from "@/lib/format";
 import { Chart } from "./Chart";
@@ -25,7 +25,7 @@ function ago(iso: string) {
 const fmtRs = (n: number) => rs(n);
 const fmtN = (n: number) => num(n);
 
-export function AdminDashboard({ snap }: { snap: AdminSnapshot }) {
+export function AdminDashboard({ snap, foundingHit = false }: { snap: AdminSnapshot; foundingHit?: boolean }) {
   const [bucket, setBucket] = useState<Bucket>("review");
   const leads = snap.orders.filter((o) => o.status === "Lead");
   const review = snap.orders.filter((o) => o.status === "Needs review" || o.status === "Submitted" || o.status === "Rejected");
@@ -52,6 +52,16 @@ export function AdminDashboard({ snap }: { snap: AdminSnapshot }) {
           </form>
         </div>
       </header>
+
+      {foundingHit && (
+        <div role="alert" className="mt-5 rounded-card border-2 border-coral bg-ink-2 p-4 text-sm">
+          <p className="font-semibold text-coral">Founding limit reached.</p>
+          <p className="mt-1 text-bone-2">
+            {FOUNDING.limit} verified Pro sales. The page still sells Pro at {rs(PLANS.pro.price)}. Change PLANS.pro.price to {rs(FOUNDING.priceAfter)} in lib/offer.config.ts
+            and redeploy, or set FOUNDING.enabled to false.
+          </p>
+        </div>
+      )}
 
       {!snap.configured && (
         <div className="mt-5 rounded-card border border-coral/60 bg-ink-2 p-4 text-sm">

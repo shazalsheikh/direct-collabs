@@ -1,4 +1,4 @@
-/** Unit tests for the pure decision logic. Run: node --test scripts/decide.test.ts */
+/** Unit tests for the pure decision logic. Run: npm test */
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { decide, type Ocr } from "../supabase/functions/_shared/decide.ts";

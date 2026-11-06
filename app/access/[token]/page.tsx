@@ -12,7 +12,7 @@ export default function AccessPage(props: PageProps<"/access/[token]">) {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-3xl px-4 pt-6 pb-16 sm:px-6 sm:pt-8">
-        <Link href="/" className="display text-lg">
+        <Link href="/" className="display inline-flex min-h-11 items-center text-lg">
           Direct<span className="text-lime">Collabs</span>
         </Link>
         <Suspense fallback={<p className="mt-8 text-bone-3">Checking your link…</p>}>

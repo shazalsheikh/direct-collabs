@@ -129,8 +129,16 @@ export const GUARANTEE: {
   },
 };
 
-/** Founding price. Reads the real verified sales count. Hidden until showAt. */
+/**
+ * Founding price counter. Reads the REAL verified Pro sales count, hidden until showAt.
+ *
+ * enabled is false by default on purpose: the counter promises the price rises after `limit`
+ * sales, and the site does NOT raise it automatically (every price is a static number in this
+ * file). Turn it on only if you will change PLANS.pro.price to priceAfter yourself when the
+ * limit is hit. /admin shows a red banner the moment that happens. No fake scarcity.
+ */
 export const FOUNDING = {
+  enabled: false,
   limit: 100,
   priceAfter: 9900,
   showAt: 10,

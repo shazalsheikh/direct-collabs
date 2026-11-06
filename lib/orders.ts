@@ -213,6 +213,16 @@ export async function signedReceiptUrl(path: string, seconds = 600): Promise<str
   return data?.signedUrl ?? null;
 }
 
+/** Fail safe: if verification could not run, a human reviews it. Never leave an order stuck on Submitted. */
+async function parkForReview(ref: string, reason: string) {
+  try {
+    const o = await getOrderByRef(ref);
+    if (o && o.status === "Submitted") await appendEvent(o.id, { status: "Needs review", method: "auto", reason });
+  } catch (e) {
+    console.error("could not park order", ref, e);
+  }
+}
+
 /** Fire the verify-receipt Edge Function. Never throws; failures land in Needs review via the function's own fail-safe. */
 export async function invokeVerify(ref: string): Promise<void> {
   const url = process.env.SUPABASE_URL;
@@ -230,13 +240,11 @@ export async function invokeVerify(ref: string): Promise<void> {
       body: JSON.stringify({ ref }),
       signal: AbortSignal.timeout(60_000),
     });
-    if (!res.ok) console.error("verify-receipt", res.status, await res.text());
+    if (res.ok) return;
+    console.error("verify-receipt", res.status, await res.text());
+    await parkForReview(ref, `Verification function returned ${res.status}${res.status === 401 ? " (check VERIFY_FUNCTION_SECRET)" : ""}`);
   } catch (err) {
     console.error("verify-receipt call failed", err);
-    // Fail safe: park it for a human.
-    try {
-      const o = await getOrderByRef(ref);
-      if (o && o.status === "Submitted") await appendEvent(o.id, { status: "Needs review", method: "auto", reason: "Verification function unreachable" });
-    } catch {}
+    await parkForReview(ref, "Verification function unreachable");
   }
 }
