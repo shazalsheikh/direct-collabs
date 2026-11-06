@@ -1,9 +1,6 @@
+# Netlify auto-detects Next.js and installs its runtime. Do not set `publish` or a plugin here.
 [build]
   command = "npm run build"
-  publish = ".next"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
 
 # Static assets: long cache. Next hashes filenames.
 [[headers]]

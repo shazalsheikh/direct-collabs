@@ -10,6 +10,7 @@ import { rs } from "@/lib/format";
 import { normalizePkPhone, isEmail, cleanHandle } from "@/lib/format";
 import { amountsFor, ALLOWED_RECEIPT_TYPES, MAX_RECEIPT_BYTES, type FieldErrors } from "@/lib/validate";
 import { captureAttribution, readAttribution } from "@/lib/attribution";
+import { track, whenIdle } from "@/lib/track";
 import { HonestLine, SampleTag } from "@/components/ui";
 import { CopyButton } from "./CopyButton";
 
@@ -94,7 +95,8 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
       if (d.email) setEmail(d.email);
       if (d.instagram) setInstagram(d.instagram);
     }
-  }, [linked]);
+    whenIdle(() => track("InitiateCheckout", { value: dueNow, once: true }));
+  }, [linked, dueNow]);
 
   /** Insert/update the lead row once name + WhatsApp are valid. */
   async function saveLead(over: Partial<{ plan: PlanId; bump: boolean; payIn2: boolean; email: string; instagram: string }> = {}) {
@@ -168,6 +170,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
       document.getElementById(`f-${Object.keys(e)[0]}`)?.scrollIntoView({ block: "center" });
       return;
     }
+    track("AddPaymentInfo", { value: dueNow });
     setSubmitting(true);
     const fd = new FormData();
     if (ref) fd.set("ref", ref);

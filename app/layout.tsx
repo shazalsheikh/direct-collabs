@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
+import { Suspense } from "react";
 import { SITE } from "@/lib/site.config";
+import { Tracking } from "@/components/Tracking";
 import "./globals.css";
 
 // Headlines: Bricolage Grotesque 800 only. Body: Inter 400/600.
@@ -48,7 +50,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-ink text-bone">{children}</body>
+      <body className="min-h-full flex flex-col bg-ink text-bone">
+        {children}
+        <Suspense fallback={null}>
+          <Tracking />
+        </Suspense>
+      </body>
     </html>
   );
 }

@@ -17,6 +17,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/order/[ref]/sta
         bump: o.bump,
         amount: o.amount,
         pay_in_2: o.pay_in_2,
+        event_id: o.event_id,
         access_token: o.status === "Approved" ? o.access_token : null,
         status_at: o.status_at,
       },

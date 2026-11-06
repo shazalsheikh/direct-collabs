@@ -7,7 +7,7 @@ export type PurchaseInput = {
   pixelId: string | undefined;
   token: string | undefined;
   eventId: string;
-  value: number;
+  value?: number;
   currency?: string;
   email?: string | null;
   phone?: string | null; // digits with country code
@@ -17,7 +17,7 @@ export type PurchaseInput = {
   clientIp?: string | null;
   userAgent?: string | null;
   testEventCode?: string;
-  eventName?: "Purchase" | "InitiateCheckout" | "AddPaymentInfo" | "ViewContent";
+  eventName?: "Purchase" | "InitiateCheckout" | "AddPaymentInfo" | "ViewContent" | "PageView";
 };
 
 async function sha256(s: string): Promise<string> {
@@ -47,7 +47,7 @@ export async function sendCapiEvent(i: PurchaseInput): Promise<{ sent: boolean; 
         action_source: "website",
         event_source_url: i.sourceUrl,
         user_data,
-        custom_data: { value: i.value, currency: i.currency ?? "PKR" },
+        ...(i.value !== undefined ? { custom_data: { value: i.value, currency: i.currency ?? "PKR" } } : {}),
       },
     ],
   };

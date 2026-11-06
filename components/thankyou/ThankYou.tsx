@@ -6,6 +6,7 @@ import { PLANS, UPGRADE, AD_BUDGET, PAY_IN_2 } from "@/lib/offer.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 import { HonestLine } from "@/components/ui";
+import { trackPurchaseClient } from "@/lib/track";
 
 type Status = {
   ref: string;
@@ -15,6 +16,7 @@ type Status = {
   bump: boolean;
   amount: number;
   pay_in_2: { enabled: boolean; first: number; second: number; due_at: string; first_paid: boolean; second_paid?: boolean } | null;
+  event_id: string | null;
   access_token: string | null;
 };
 
@@ -50,7 +52,10 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
           const j = (await res.json()) as Status;
           setErr("none");
           setS(j);
-          if (j.status === "Approved") return; // stop polling
+          if (j.status === "Approved") {
+            trackPurchaseClient({ ref: j.ref, value: j.pay_in_2?.enabled && !j.pay_in_2.second_paid && j.kind === "purchase" ? j.pay_in_2.first + Math.max(0, j.amount - j.pay_in_2.first - j.pay_in_2.second) : j.amount, eventId: j.event_id });
+            return; // stop polling
+          }
         }
       } catch {}
       if (!stop) t = setTimeout(tick, POLL_MS);

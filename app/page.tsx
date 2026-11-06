@@ -16,10 +16,12 @@ import {
   Footer,
   StickyCTA,
 } from "@/components/landing";
+import { TrackOnMount } from "@/components/Tracking";
 
 export default function Home() {
   return (
     <>
+      <TrackOnMount event="ViewContent" contentName="landing" />
       <Nav />
       <main className="flex-1">
         <Hero />
