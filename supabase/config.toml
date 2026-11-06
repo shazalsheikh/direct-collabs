@@ -1,0 +1,6 @@
+# Supabase CLI config. Only the bits that matter for this project.
+project_id = "direct-collabs"
+
+[functions.verify-receipt]
+# Called server-to-server with the service role key; the function checks it itself.
+verify_jwt = false
