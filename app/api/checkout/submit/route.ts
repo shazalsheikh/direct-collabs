@@ -9,9 +9,11 @@ import {
   sha256,
   uploadReceipt,
   invokeVerify,
+  linkedContext,
   DbUnavailable,
 } from "@/lib/orders";
-import { parseDetails, amountsFor, payIn2Record, ALLOWED_RECEIPT_TYPES, MAX_RECEIPT_BYTES } from "@/lib/validate";
+import { parseDetails, amountsFor, payIn2Record, parseLinked, ALLOWED_RECEIPT_TYPES, MAX_RECEIPT_BYTES } from "@/lib/validate";
+import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
 
 /**
  * POST /api/checkout/submit (multipart)
@@ -43,13 +45,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid", fields: errors }, { status: 400 });
   }
   const d = parsed.d;
-  const { total } = amountsFor(d);
+  const linked = parseLinked(raw);
+  const { total } = amountsFor(d, linked?.kind);
   let attr: Record<string, unknown> = {};
   try {
     attr = JSON.parse(String(raw.attribution ?? "{}"));
   } catch {}
 
   try {
+    let parentId: string | null = null;
+    if (linked) {
+      const ctx = await linkedContext(linked.kind, linked.parentRef, { upgrade: UPGRADE.price, second: PAY_IN_2.second });
+      if ("error" in ctx) return NextResponse.json({ error: "linked", fields: { receipt: ctx.error } }, { status: 400 });
+      parentId = ctx.parent.id;
+    }
+
     const buf = await (file as File).arrayBuffer();
     const hash = sha256(buf);
     if (await receiptHashSeen(hash)) {
@@ -57,8 +67,10 @@ export async function POST(req: Request) {
     }
 
     const patch = {
-      plan: d.plan,
-      bump: d.bump,
+      plan: linked ? ("pro" as const) : d.plan,
+      kind: linked?.kind ?? ("purchase" as const),
+      parent_order_id: parentId,
+      bump: linked ? false : d.bump,
       amount: total,
       name: d.name,
       whatsapp: d.whatsapp,
@@ -68,7 +80,7 @@ export async function POST(req: Request) {
       fbp: (attr.fbp as string) ?? null,
       fbc: (attr.fbc as string) ?? null,
       fbclid: (attr.fbclid as string) ?? null,
-      pay_in_2: payIn2Record(d),
+      pay_in_2: linked ? null : payIn2Record(d),
       event_id: randomUUID(),
     };
 

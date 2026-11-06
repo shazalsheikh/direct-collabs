@@ -8,6 +8,7 @@ create table if not exists orders (
   id              uuid primary key default gen_random_uuid(),
   ref             text unique not null,                       -- DC-XXXX
   plan            text not null check (plan in ('basic','pro')),
+  kind            text not null default 'purchase' check (kind in ('purchase','upgrade','second')),
   bump            boolean not null default false,
   amount          integer not null default 0,                 -- total due, PKR
   name            text,
@@ -20,7 +21,7 @@ create table if not exists orders (
   fbclid          text,
   event_id        text,                                       -- Meta dedup id for Purchase
   parent_order_id uuid references orders(id),                 -- upgrade orders point at the Basic order
-  pay_in_2        jsonb,                                      -- {enabled, first, second, due_at, first_paid}
+  pay_in_2        jsonb,                                      -- {enabled, first, second, due_at, first_paid, second_paid}
   access_token    text unique,                                -- set on approval
   created_at      timestamptz not null default now()
 );

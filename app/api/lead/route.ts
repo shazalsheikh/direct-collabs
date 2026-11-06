@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { createLead, updateOrder, getOrderByRef, DbUnavailable } from "@/lib/orders";
-import { parseDetails, amountsFor, payIn2Record } from "@/lib/validate";
+import { createLead, updateOrder, getOrderByRef, linkedContext, DbUnavailable } from "@/lib/orders";
+import { parseDetails, amountsFor, payIn2Record, parseLinked } from "@/lib/validate";
+import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
 
 /**
  * POST /api/lead
@@ -17,12 +18,27 @@ export async function POST(req: Request) {
   const parsed = parseDetails(body, { requireAll: false });
   if (!parsed.ok) return NextResponse.json({ error: "invalid", fields: parsed.errors }, { status: 400 });
   const d = parsed.d;
-  const { total } = amountsFor(d);
+  const linked = parseLinked(body);
+  const { total } = amountsFor(d, linked?.kind);
   const attr = (body.attribution ?? {}) as Record<string, unknown>;
 
+  let parentId: string | null = null;
+  if (linked) {
+    try {
+      const ctx = await linkedContext(linked.kind, linked.parentRef, { upgrade: UPGRADE.price, second: PAY_IN_2.second });
+      if ("error" in ctx) return NextResponse.json({ error: "linked", message: ctx.error }, { status: 400 });
+      parentId = ctx.parent.id;
+    } catch (err) {
+      if (err instanceof DbUnavailable) return NextResponse.json({ error: "db_unavailable" }, { status: 503 });
+      throw err;
+    }
+  }
+
   const patch = {
-    plan: d.plan,
-    bump: d.bump,
+    plan: linked ? ("pro" as const) : d.plan,
+    kind: linked?.kind ?? ("purchase" as const),
+    parent_order_id: parentId,
+    bump: linked ? false : d.bump,
     amount: total,
     name: d.name,
     whatsapp: d.whatsapp,
@@ -32,7 +48,7 @@ export async function POST(req: Request) {
     fbp: (attr.fbp as string) ?? null,
     fbc: (attr.fbc as string) ?? null,
     fbclid: (attr.fbclid as string) ?? null,
-    pay_in_2: payIn2Record(d),
+    pay_in_2: linked ? null : payIn2Record(d),
   };
 
   try {

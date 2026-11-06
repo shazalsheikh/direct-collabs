@@ -13,6 +13,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/order/[ref]/sta
         ref: o.ref,
         status: o.status,
         plan: o.plan,
+        kind: o.kind,
         bump: o.bump,
         amount: o.amount,
         pay_in_2: o.pay_in_2,

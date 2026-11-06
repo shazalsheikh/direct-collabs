@@ -13,7 +13,17 @@ import { captureAttribution, readAttribution } from "@/lib/attribution";
 import { HonestLine, SampleTag } from "@/components/ui";
 import { CopyButton } from "./CopyButton";
 
-type Props = { initialPlan: PlanId | null };
+type Linked = { kind: "upgrade" | "second"; parentRef: string } | null;
+type Props = { initialPlan: PlanId | null; linked?: Linked };
+
+const DETAILS_KEY = "dc_details";
+function savedDetails(): { name?: string; whatsapp?: string; email?: string; instagram?: string } {
+  try {
+    return JSON.parse(sessionStorage.getItem(DETAILS_KEY) ?? "{}");
+  } catch {
+    return {};
+  }
+}
 
 /** Order ref survives a reload via sessionStorage. Tiny external store so React can subscribe. */
 const refStore = (() => {
@@ -45,10 +55,14 @@ const refStore = (() => {
 export function CheckoutWithParams() {
   const sp = useSearchParams();
   const p = sp.get("plan");
-  return <CheckoutForm initialPlan={p === "basic" ? "basic" : "pro"} />;
+  const up = sp.get("upgrade");
+  const second = sp.get("second");
+  const okRef = (r: string | null) => (r && /^DC-[A-Z0-9]{4}$/.test(r) ? r : null);
+  const linked: Linked = okRef(up) ? { kind: "upgrade", parentRef: okRef(up) as string } : okRef(second) ? { kind: "second", parentRef: okRef(second) as string } : null;
+  return <CheckoutForm initialPlan={p === "basic" ? "basic" : "pro"} linked={linked} />;
 }
 
-export function CheckoutForm({ initialPlan }: Props) {
+export function CheckoutForm({ initialPlan, linked = null }: Props) {
   const router = useRouter();
   const [plan, setPlan] = useState<PlanId>(initialPlan ?? "pro");
   const [bump, setBump] = useState(false);
@@ -65,13 +79,22 @@ export function CheckoutForm({ initialPlan }: Props) {
   const [topError, setTopError] = useState<string | null>(null);
   const leadBusy = useRef(false);
 
-  const payIn2Allowed = PAY_IN_2.enabled && plan === PAY_IN_2.plan;
+  const payIn2Allowed = !linked && PAY_IN_2.enabled && plan === PAY_IN_2.plan;
   const effectivePayIn2 = payIn2Allowed && payIn2;
-  const { total, dueNow } = useMemo(() => amountsFor({ plan, bump, payIn2: effectivePayIn2 }), [plan, bump, effectivePayIn2]);
+  const { total, dueNow } = useMemo(() => amountsFor({ plan, bump, payIn2: effectivePayIn2 }, linked?.kind), [plan, bump, effectivePayIn2, linked]);
 
   useEffect(() => {
     captureAttribution();
-  }, []);
+    // Linked orders prefill from the same device's last checkout.
+    if (linked) {
+      const d = savedDetails();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (d.name) setName(d.name);
+      if (d.whatsapp) setWhatsapp(d.whatsapp);
+      if (d.email) setEmail(d.email);
+      if (d.instagram) setInstagram(d.instagram);
+    }
+  }, [linked]);
 
   /** Insert/update the lead row once name + WhatsApp are valid. */
   async function saveLead(over: Partial<{ plan: PlanId; bump: boolean; payIn2: boolean; email: string; instagram: string }> = {}) {
@@ -85,6 +108,8 @@ export function CheckoutForm({ initialPlan }: Props) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ref,
+          kind: linked?.kind,
+          parentRef: linked?.parentRef,
           plan: over.plan ?? plan,
           bump: over.bump ?? bump,
           payIn2: over.payIn2 ?? effectivePayIn2,
@@ -146,6 +171,13 @@ export function CheckoutForm({ initialPlan }: Props) {
     setSubmitting(true);
     const fd = new FormData();
     if (ref) fd.set("ref", ref);
+    if (linked) {
+      fd.set("kind", linked.kind);
+      fd.set("parentRef", linked.parentRef);
+    }
+    try {
+      sessionStorage.setItem(DETAILS_KEY, JSON.stringify({ name: name.trim(), whatsapp, email: email.trim(), instagram: cleanHandle(instagram) }));
+    } catch {}
     fd.set("plan", plan);
     fd.set("bump", bump ? "1" : "0");
     fd.set("payIn2", effectivePayIn2 ? "1" : "0");
@@ -199,8 +231,22 @@ export function CheckoutForm({ initialPlan }: Props) {
         <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px] lg:items-start">
           <div className="space-y-8">
             {/* 1. Plan */}
-            <Step n={1} title="Plan">
-              <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Plan">
+            <Step n={1} title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : "Plan"}>
+              {linked && (
+                <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="display text-xl">{linked.kind === "upgrade" ? "Basic to Pro" : "Pay-in-2, part 2"}</span>
+                    <span className="text-xs text-bone-3">for order {linked.parentRef}</span>
+                  </div>
+                  <p className="display tnum mt-1 text-2xl">{rs(total)}</p>
+                  <p className="mt-2 text-[13px] text-bone-2">
+                    {linked.kind === "upgrade"
+                      ? "Unlocks the 5 ad scripts, 20 DM replies and the rate card on your existing access link."
+                      : `Second half of your ${PLANS.pro.name} plan. Your access stays open.`}
+                  </p>
+                </div>
+              )}
+              <div className={`grid gap-3 sm:grid-cols-2 ${linked ? "hidden" : ""}`} role="radiogroup" aria-label="Plan">
                 {(["pro", "basic"] as PlanId[]).map((p) => {
                   const P = PLANS[p];
                   const on = plan === p;
@@ -231,7 +277,7 @@ export function CheckoutForm({ initialPlan }: Props) {
                 })}
               </div>
 
-              {plan === "basic" && (
+              {!linked && plan === "basic" && (
                 <div className="mt-3 flex flex-col gap-3 rounded-card border border-lime/40 bg-ink-2 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-bone-2">
                     <span className="font-semibold text-bone">Only {rs(UPGRADE.price)} more</span> gets you the 5 ad scripts, 20 DM replies and the
@@ -275,6 +321,7 @@ export function CheckoutForm({ initialPlan }: Props) {
             </Step>
 
             {/* 3. Bump */}
+            {!linked && (
             <Step n={3} title="Add on">
               <label className={`flex cursor-pointer items-start gap-3 rounded-card border-2 p-4 ${bump ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2"}`}>
                 <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={bump} onChange={(e) => toggleBump(e.target.checked)} />
@@ -288,9 +335,10 @@ export function CheckoutForm({ initialPlan }: Props) {
                 </span>
               </label>
             </Step>
+            )}
 
             {/* 4. Payment */}
-            <Step n={4} title="Pay">
+            <Step n={linked ? 3 : 4} title="Pay">
               <div className="rounded-card border border-ink-4 bg-ink-2 p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-bone-2">Send exactly</p>
@@ -316,7 +364,7 @@ export function CheckoutForm({ initialPlan }: Props) {
             </Step>
 
             {/* 5. Receipt */}
-            <Step n={5} title="Receipt">
+            <Step n={linked ? 4 : 5} title="Receipt">
               <div className="grid gap-4">
                 <Field id="f-receipt" label="Screenshot or PDF of the payment" error={errors.receipt} hint="JPG, PNG, WebP or PDF. Under 5 MB.">
                   <label className={`flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-4 text-center ${file ? "border-lime" : "border-ink-4 hover:border-bone-3"}`}>
@@ -361,7 +409,7 @@ export function CheckoutForm({ initialPlan }: Props) {
 
           {/* Sticky summary (desktop) */}
           <aside className="hidden lg:sticky lg:top-6 lg:block">
-            <Summary plan={plan} bump={bump} total={total} dueNow={dueNow} payIn2={effectivePayIn2} />
+            <Summary plan={plan} bump={bump} total={total} dueNow={dueNow} payIn2={effectivePayIn2} linked={linked} />
           </aside>
         </div>
       </div>
@@ -370,8 +418,8 @@ export function CheckoutForm({ initialPlan }: Props) {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-4 bg-ink/95 p-3 pb-[max(12px,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
         <div className="mb-2 flex items-center justify-between text-[13px]">
           <span className="text-bone-2">
-            {PLANS[plan].name}
-            {bump ? ` + ${BUMP.name}` : ""}
+            {linked ? (linked.kind === "upgrade" ? "Upgrade to Pro" : "Second payment") : PLANS[plan].name}
+            {!linked && bump ? ` + ${BUMP.name}` : ""}
           </span>
           <span className="display tnum text-lg">{rs(dueNow)}</span>
         </div>
@@ -421,16 +469,16 @@ function PayRow({ label, value, sub }: { label: string; value: string; sub?: str
   );
 }
 
-function Summary({ plan, bump, total, dueNow, payIn2 }: { plan: PlanId; bump: boolean; total: number; dueNow: number; payIn2: boolean }) {
+function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; bump: boolean; total: number; dueNow: number; payIn2: boolean; linked: Linked }) {
   return (
     <div className="rounded-card border border-ink-4 bg-ink-2 p-5">
       <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Summary</p>
       <dl className="mt-3 space-y-2 text-sm">
         <div className="flex justify-between">
-          <dt>{PLANS[plan].name}</dt>
-          <dd className="tnum">{rs(PLANS[plan].price)}</dd>
+          <dt>{linked ? (linked.kind === "upgrade" ? "Upgrade to Pro" : "Second payment") : PLANS[plan].name}</dt>
+          <dd className="tnum">{rs(linked ? total : PLANS[plan].price)}</dd>
         </div>
-        {bump && (
+        {!linked && bump && (
           <div className="flex justify-between">
             <dt>{BUMP.name}</dt>
             <dd className="tnum">{rs(BUMP.price)}</dd>

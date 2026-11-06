@@ -6,10 +6,13 @@ import type { PlanId } from "./offer.config";
 
 export type OrderStatus = "Lead" | "Submitted" | "Approved" | "Needs review" | "Rejected";
 
+export type OrderKind = "purchase" | "upgrade" | "second";
+
 export type Order = {
   id: string;
   ref: string;
   plan: PlanId;
+  kind: OrderKind;
   bump: boolean;
   amount: number;
   name: string | null;
@@ -33,6 +36,7 @@ export type PayIn2 = {
   second: number;
   due_at: string;
   first_paid: boolean;
+  second_paid?: boolean;
 };
 
 export type OrderEvent = {
@@ -84,6 +88,7 @@ async function uniqueRef() {
 
 export type LeadInput = {
   plan: PlanId;
+  kind?: OrderKind;
   bump: boolean;
   amount: number;
   name: string;
@@ -133,6 +138,43 @@ export async function getOrderByRef(ref: string): Promise<OrderCurrent | null> {
   const { data, error } = await c.from("orders_current").select("*").eq("ref", ref).maybeSingle();
   if (error) throw error;
   return (data as OrderCurrent) ?? null;
+}
+
+export async function getOrderById(id: string): Promise<OrderCurrent | null> {
+  const c = must();
+  const { data, error } = await c.from("orders_current").select("*").eq("id", id).maybeSingle();
+  if (error) throw error;
+  return (data as OrderCurrent) ?? null;
+}
+
+/**
+ * Validate a linked order request (Basic->Pro upgrade, or pay-in-2 second part).
+ * Returns the parent and the fixed amount, or an error string.
+ */
+export async function linkedContext(kind: OrderKind, parentRef: string, prices: { upgrade: number; second: number }) {
+  const parent = await getOrderByRef(parentRef);
+  if (!parent) return { error: "Parent order not found" as const };
+  if (parent.status !== "Approved") return { error: "Parent order is not approved yet" as const };
+  if (kind === "upgrade") {
+    if (parent.plan !== "basic") return { error: "That order is already Pro" as const };
+    return { parent, amount: prices.upgrade };
+  }
+  if (kind === "second") {
+    const p = parent.pay_in_2;
+    if (!p?.enabled || !p.first_paid) return { error: "No second payment is due on that order" as const };
+    if (p.second_paid) return { error: "Second payment already received" as const };
+    return { parent, amount: p.second };
+  }
+  return { error: "Unknown kind" as const };
+}
+
+/** After a linked order is approved, reflect it on the parent. */
+export async function applyLinkedApproval(order: Pick<OrderCurrent, "kind" | "parent_order_id">) {
+  if (!order.parent_order_id || order.kind === "purchase") return;
+  const parent = await getOrderById(order.parent_order_id);
+  if (!parent) return;
+  if (order.kind === "upgrade") await updateOrder(parent.ref, { plan: "pro" });
+  if (order.kind === "second" && parent.pay_in_2) await updateOrder(parent.ref, { pay_in_2: { ...parent.pay_in_2, second_paid: true } });
 }
 
 export async function getOrderByToken(token: string): Promise<OrderCurrent | null> {

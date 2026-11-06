@@ -1,6 +1,8 @@
 import { normalizePkPhone, isEmail, cleanHandle } from "./format";
-import { PLANS, BUMP, PAY_IN_2, orderTotal, type PlanId } from "./offer.config";
+import { PLANS, BUMP, PAY_IN_2, UPGRADE, orderTotal, type PlanId } from "./offer.config";
 import type { PayIn2 } from "./orders";
+
+export type LinkedKind = "upgrade" | "second";
 
 export type Details = {
   plan: PlanId;
@@ -36,7 +38,9 @@ export function parseDetails(raw: Record<string, unknown>, opts: { requireAll: b
   return { ok: true, d: { plan, bump, payIn2, name, whatsapp: whatsapp as string, email: emailRaw, instagram } };
 }
 
-export function amountsFor(d: Pick<Details, "plan" | "bump" | "payIn2">) {
+export function amountsFor(d: Pick<Details, "plan" | "bump" | "payIn2">, linked?: LinkedKind | null) {
+  if (linked === "upgrade") return { total: UPGRADE.price, dueNow: UPGRADE.price };
+  if (linked === "second") return { total: PAY_IN_2.second, dueNow: PAY_IN_2.second };
   const total = orderTotal(d.plan, d.bump);
   const dueNow = d.payIn2 ? PAY_IN_2.first + (d.bump ? BUMP.price : 0) : total;
   return { total, dueNow };
@@ -46,6 +50,12 @@ export function payIn2Record(d: Pick<Details, "plan" | "bump" | "payIn2">): PayI
   if (!d.payIn2) return null;
   const due = new Date(Date.now() + PAY_IN_2.daysBetween * 864e5).toISOString();
   return { enabled: true, first: PAY_IN_2.first, second: PAY_IN_2.second, due_at: due, first_paid: false };
+}
+
+export function parseLinked(raw: Record<string, unknown>): { kind: LinkedKind; parentRef: string } | null {
+  const kind = raw.kind === "upgrade" || raw.kind === "second" ? raw.kind : null;
+  const parentRef = typeof raw.parentRef === "string" && /^DC-[A-Z0-9]{4}$/.test(raw.parentRef) ? raw.parentRef : null;
+  return kind && parentRef ? { kind, parentRef } : null;
 }
 
 export const ALLOWED_RECEIPT_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];

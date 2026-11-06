@@ -1,5 +1,5 @@
 import "server-only";
-import { appendEvent, updateOrder, newAccessToken, type OrderCurrent } from "./orders";
+import { appendEvent, updateOrder, newAccessToken, applyLinkedApproval, type OrderCurrent } from "./orders";
 import { sendAccessEmail } from "./email";
 import { sendCapiEvent } from "./capi";
 import { SITE } from "./site.config";
@@ -14,6 +14,7 @@ export async function approveManually(order: OrderCurrent, note = "Marked as pai
   if (order.pay_in_2?.enabled && !order.pay_in_2.first_paid) patch.pay_in_2 = { ...order.pay_in_2, first_paid: true };
   await updateOrder(order.ref, patch as Parameters<typeof updateOrder>[1]);
   await appendEvent(order.id, { status: "Approved", method: "manual", reason: note, receipt_path: order.receipt_path, receipt_hash: order.receipt_hash, txn_id: order.txn_id });
+  await applyLinkedApproval(order);
 
   const accessUrl = `${SITE.url.replace(/\/$/, "")}/access/${token}`;
   const [email, capi] = await Promise.all([

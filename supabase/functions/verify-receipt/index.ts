@@ -158,6 +158,15 @@ Deno.serve(async (req) => {
     });
     if (eErr) return json({ error: eErr.message }, 500);
 
+    // Linked orders: reflect on the parent (upgrade -> plan pro, second -> second_paid).
+    if (order.parent_order_id && order.kind !== "purchase") {
+      const { data: parent } = await db.from("orders").select("id, plan, pay_in_2").eq("id", order.parent_order_id).maybeSingle();
+      if (parent) {
+        if (order.kind === "upgrade") await db.from("orders").update({ plan: "pro" }).eq("id", parent.id);
+        if (order.kind === "second" && parent.pay_in_2) await db.from("orders").update({ pay_in_2: { ...parent.pay_in_2, second_paid: true } }).eq("id", parent.id);
+      }
+    }
+
     const siteUrl = (env("SITE_URL") ?? "https://directcollabs.pk").replace(/\/$/, "");
     const accessUrl = `${siteUrl}/access/${token}`;
     const wa = env("WHATSAPP_NUMBER");
@@ -187,8 +196,9 @@ Deno.serve(async (req) => {
 });
 
 /** Full total, or the pay-in-2 part that is due. */
-function expectedAmounts(order: { amount: number; bump: boolean; pay_in_2: { enabled: boolean; first: number; second: number; first_paid: boolean } | null }): number[] {
+function expectedAmounts(order: { amount: number; bump: boolean; kind: string; pay_in_2: { enabled: boolean; first: number; second: number; first_paid: boolean } | null }): number[] {
   const p = order.pay_in_2;
+  if (order.kind !== "purchase") return [order.amount];
   if (p?.enabled) {
     const bumpPart = order.amount - p.first - p.second; // bump rides on the first payment
     return p.first_paid ? [p.second] : [p.first + Math.max(0, bumpPart)];
