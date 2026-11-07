@@ -5,7 +5,7 @@
 #   1. logs you in to Supabase (a browser window opens, you click Allow)
 #   2. links this folder to your project
 #   3. creates the tables, the private storage buckets and the access rules
-#   4. deploys the receipt-checking function and sets its secrets
+#   4. deploys the receipt function and sets its secrets (Anthropic and Resend keys are optional)
 #   5. uploads the paid PDFs to the private downloads bucket
 #   6. writes .env.netlify (every variable Netlify needs) and updates .env.local
 #
@@ -46,7 +46,7 @@ PY
 )"
 
 missing=0
-for v in SUPABASE_PROJECT_REF SUPABASE_DB_PASSWORD ANTHROPIC_API_KEY RESEND_API_KEY RESEND_FROM SITE_URL WHATSAPP_NUMBER; do
+for v in SUPABASE_PROJECT_REF SUPABASE_DB_PASSWORD SITE_URL WHATSAPP_NUMBER; do
   if [ -z "${!v:-}" ]; then echo "Missing in $ENV_FILE: $v"; missing=1; fi
 done
 [ "$missing" = "1" ] && { echo "Fill those in and run again."; exit 1; }
@@ -57,6 +57,11 @@ if ! [[ "$WHATSAPP_NUMBER" =~ ^[0-9]{10,15}$ ]]; then
   echo "WHATSAPP_NUMBER must be digits only with country code, like 923001234567."; exit 1
 fi
 SITE_URL="${SITE_URL%/}"
+
+# Lean mode: no Anthropic or Resend key is fine. Orders then wait in Needs review and you tap
+# "Mark as paid" in /admin. Add the keys to .env.supabase later and run this again to turn them on.
+if [ -z "${ANTHROPIC_API_KEY:-}" ]; then echo "Lean mode: no ANTHROPIC_API_KEY, so every receipt goes to Needs review for you to approve by hand."; fi
+if [ -z "${RESEND_API_KEY:-}" ]; then echo "Lean mode: no RESEND_API_KEY, so no access emails. Send links from /admin on WhatsApp."; fi
 
 # A random shared secret between the website and the function.
 if [ -z "${VERIFY_FUNCTION_SECRET:-}" ]; then
@@ -93,6 +98,7 @@ with open(sys.argv[1], "w") as f:
         if v:
             f.write(n + '="' + v.replace("\\", "\\\\").replace('"', '\\"') + '"\n')
 PY
+if [ "$DRY_RUN" = "1" ]; then echo "  secrets that would be set:"; sed -E 's/=.*/=***/' "$SECRETS_TMP" | sed 's/^/    /'; fi
 sb secrets set --env-file "$SECRETS_TMP" --yes
 
 echo; echo "Step 5 of 6: read your project keys"

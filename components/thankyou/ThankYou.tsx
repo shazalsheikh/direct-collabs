@@ -82,7 +82,7 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
 
       {!ref && (
         <p className="mt-4 text-bone-2">
-          No order reference in this link. If you just paid, open the link from your email, or{" "}
+          No order reference in this link. If you just paid, go back to the page you were on after paying, or{" "}
           <Link href="/checkout" className="underline underline-offset-4">
             go back to checkout
           </Link>
@@ -103,12 +103,12 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
           title={review ? "Checking by hand" : "Verifying"}
           body={
             review
-              ? "We are checking your receipt manually, usually within a few hours. You will get the link by email and WhatsApp."
-              : "Reading the receipt and matching the amount. Usually a few minutes. This page checks itself every 20 seconds."
+              ? "We are checking your receipt by hand, usually within a few hours and often faster. We send your link on WhatsApp, and this page unlocks by itself."
+              : "We are checking your receipt, usually within a few hours and often faster. This page checks itself every 20 seconds, so keep it open."
           }
           warn={review}
         />
-        <Step n={3} active={step >= 3} done={step >= 3} title="Access unlocked" body="Your link lands in your email. It is also right here." last />
+        <Step n={3} active={step >= 3} done={step >= 3} title="Access unlocked" body="Your link is sent on WhatsApp and appears right here." last />
       </ol>
 
       {s?.status === "Approved" && s.access_token && (
@@ -164,7 +164,7 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">One more thing</p>
           <h2 className="display mt-2 text-2xl">Add Pro for {rs(UPGRADE.price)}</h2>
           <p className="mt-2 text-sm text-bone-2">
-            5 ad scripts in Roman Urdu, 20 DM replies, the rate card. Same link, unlocked in minutes.
+            5 ad scripts in Roman Urdu, 20 DM replies, the rate card. Same link, unlocked once we verify the upgrade.
           </p>
           <Link href={`/checkout?upgrade=${s.ref}`} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-pill bg-lime text-sm font-semibold text-ink">
             Upgrade · {rs(UPGRADE.price)}

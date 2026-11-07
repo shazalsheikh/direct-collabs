@@ -23,7 +23,7 @@ export function FAQ() {
     ["Language?", `${SITE.course.language}. Recorded the way people in Lahore actually talk.`],
     [
       "How do I pay, and when do I get access?",
-      "Easypaisa or JazzCash. Upload the receipt on the checkout page. Most receipts verify automatically in a few minutes and the access link lands in your email and WhatsApp. If it needs a manual check, usually within a few hours.",
+      "Easypaisa or JazzCash. Upload the receipt on the checkout page. We check every receipt, usually within a few hours and often faster. Your access unlocks on the page you land on after paying, and we send the link on WhatsApp too.",
     ],
     [
       "Is this a guaranteed income?",

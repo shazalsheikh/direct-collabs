@@ -75,7 +75,7 @@ The six files buyers receive (lead form template, ad setup checklist, 5 ad scrip
 
 ## Supabase setup
 
-**Fastest way:** create a project on supabase.com (free plan is fine to test), then run `npm run setup:supabase`. The first run creates `.env.supabase` for you to fill in (project reference, database password, Anthropic key, Resend key and sender, site address, WhatsApp number). Run it again and it logs you in, creates the tables and private buckets, deploys the receipt checker with its secrets, uploads the PDFs, and writes `.env.netlify` with every variable Netlify needs. It is safe to re-run. `DRY_RUN=1 npm run setup:supabase` shows each step without touching anything online.
+**Fastest way:** create a project on supabase.com (free plan is fine to test), then run `npm run setup:supabase`. The first run creates `.env.supabase` for you to fill in (project reference, database password, Anthropic key, Resend key and sender, site address, WhatsApp number). The Anthropic and Resend keys are optional: with them empty you launch **lean**, where every receipt waits in Needs review and you tap Mark as paid in `/admin` (the buyer's page unlocks by itself and you can send the link on WhatsApp from `/admin`). Add the keys later and run the command again to switch on automatic checking and emails. Run it again and it logs you in, creates the tables and private buckets, deploys the receipt checker with its secrets, uploads the PDFs, and writes `.env.netlify` with every variable Netlify needs. It is safe to re-run. `DRY_RUN=1 npm run setup:supabase` shows each step without touching anything online.
 
 **By hand** (what the script does):
 

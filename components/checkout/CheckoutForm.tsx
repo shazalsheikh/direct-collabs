@@ -348,7 +348,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                     <Field id="f-whatsapp" label="WhatsApp number" error={errors.whatsapp} hint="03XX XXXXXXX">
                       <input className={inputCls} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} onBlur={() => saveLead()} inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" />
                     </Field>
-                    <Field id="f-email" label="Email" error={errors.email} hint="Access link goes here">
+                    <Field id="f-email" label="Email" error={errors.email} hint="For your order updates">
                       <input className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => saveLead({ email })} inputMode="email" autoComplete="email" type="email" />
                     </Field>
                     <Field id="f-instagram" label="Instagram handle" error={errors.instagram}>
@@ -569,7 +569,7 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
           </div>
         )}
       </dl>
-      <p className="mt-4 text-[12px] text-bone-3">Access by email and WhatsApp once the receipt is verified. Usually minutes.</p>
+      <p className="mt-4 text-[12px] text-bone-3">Your access unlocks once we verify the receipt, usually within a few hours and often faster. We also send the link on WhatsApp.</p>
       <p className="mt-2 text-[12px] text-bone-3">Questions? @{SITE.owner.instagram}</p>
     </div>
   );

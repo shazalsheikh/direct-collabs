@@ -33,7 +33,7 @@ export default function Terms() {
       <H>Payment and access</H>
       <UL>
         <li>You pay by Easypaisa or JazzCash and upload the receipt on the checkout page.</li>
-        <li>We verify the receipt automatically or by hand. Access is sent to your email and WhatsApp after verification.</li>
+        <li>We verify each receipt, automatically or by hand. After verification your access appears on your thank-you page and we send the link on WhatsApp. We may also email it.</li>
         <li>A receipt that does not match the order amount, receiver, date or that has been used before will not be approved.</li>
         <li>Prices are in Pakistani rupees.</li>
       </UL>

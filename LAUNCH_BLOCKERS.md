@@ -25,6 +25,6 @@ Things only you can supply. The site builds and runs without them, but do not ru
 - [ ] **Supabase project** created, then `npm run setup:supabase` (creates tables and private buckets, deploys the function and its secrets, uploads the PDFs, writes `.env.netlify`).
 - [ ] **Import `.env.netlify` into Netlify** and redeploy. Save the `ADMIN_PASSWORD` from that file in a password manager.
 - [ ] **A Rs 100 test purchase** end to end, then put the Pro price back.
-- [ ] **Resend domain verified** (add its DNS records in Namecheap) and `RESEND_API_KEY` set.
-- [ ] **Anthropic API key** for receipt OCR.
+- [ ] **Resend domain verified** (add its DNS records in Namecheap) and `RESEND_API_KEY` set. Optional: skipped for the lean launch. Until then send access links from `/admin` on WhatsApp.
+- [ ] **Anthropic API key** for automatic receipt checking. Optional: skipped for the lean launch, add it after the first sales.
 - [ ] **Legal pages reviewed** (`/terms`, `/privacy`, `/refund-policy`) and the business name in `SITE.legal`.

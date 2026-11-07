@@ -19,7 +19,7 @@ export default function Privacy() {
       <H>Why</H>
       <UL>
         <li>To verify your payment and unlock the course.</li>
-        <li>To message you about your order on email and WhatsApp.</li>
+        <li>To message you about your order, mainly on WhatsApp, and by email when we send one.</li>
         <li>To reply to refund and support requests.</li>
         <li>To measure which ads lead to purchases, including sending a purchase event to Meta with your email and phone number hashed.</li>
       </UL>
@@ -27,8 +27,8 @@ export default function Privacy() {
       <H>Who handles it</H>
       <UL>
         <li>Supabase stores orders and receipts in a private database and storage bucket.</li>
-        <li>An AI vision service reads the receipt image to check amount, receiver and date. A person reviews anything it cannot confirm.</li>
-        <li>Resend sends your access email.</li>
+        <li>When automatic checking is switched on, an AI vision service reads the receipt image to check amount, receiver and date. A person reviews anything it cannot confirm.</li>
+        <li>Resend sends order emails when email delivery is switched on.</li>
         <li>Meta and Google receive tracking events described above.</li>
         <li>Netlify hosts the site.</li>
       </UL>

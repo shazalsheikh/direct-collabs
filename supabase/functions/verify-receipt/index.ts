@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
 
     // ---- OCR with vision ----
     const apiKey = env("ANTHROPIC_API_KEY");
-    if (!apiKey) return await needsReview("OCR not configured (ANTHROPIC_API_KEY missing)");
+    if (!apiKey) return await needsReview("Automatic receipt check is not switched on. Review by hand.");
     const client = new Anthropic({ apiKey });
 
     const expected = expectedAmounts(order);

@@ -15,8 +15,10 @@ nl() {
 
 echo "Step 1 of 3: log in to Netlify (a browser window opens)"
 nl login
-echo; echo "Step 2 of 3: link this folder to the Netlify site built from shazalsheikh/direct-collabs"
-nl link --git-remote-url shazalsheikh/direct-collabs
+echo; echo "Step 2 of 3: link this folder to your Netlify project"
+# Linking by the repository name did not find the project, so link by its name instead.
+# Find the name in Netlify (the project overview page). Override with NETLIFY_SITE_NAME=your-name.
+nl link --name "${NETLIFY_SITE_NAME:-chimerical-halva-f69ce4}"
 echo; echo "Step 3 of 3: import the environment variables (existing ones are merged, not wiped)"
 nl env:import .env.netlify
 
