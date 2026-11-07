@@ -39,15 +39,26 @@ function toBase64(buf: ArrayBuffer) {
   return btoa(s);
 }
 
+/** Compare two strings without leaking where they differ. */
+function safeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let r = 0;
+  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return r === 0;
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
 
   // ---- Auth ----
-  const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
-  const auth = req.headers.get("authorization") ?? "";
-  if (!serviceKey || auth !== `Bearer ${serviceKey}`) return json({ error: "unauthorized" }, 401);
+  // verify_jwt is off, so the shared secret is the ONLY credential. It is long and random, and it is
+  // required: without it set, the function refuses to run. (Do not compare the caller's key with
+  // SUPABASE_SERVICE_ROLE_KEY: Supabase injects a different form of that key than the one the website holds.)
   const secret = env("VERIFY_FUNCTION_SECRET");
-  if (secret && req.headers.get("x-verify-secret") !== secret) return json({ error: "unauthorized" }, 401);
+  if (!secret) return json({ error: "VERIFY_FUNCTION_SECRET is not set" }, 500);
+  if (!safeEqual(req.headers.get("x-verify-secret") ?? "", secret)) return json({ error: "unauthorized" }, 401);
+  const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey) return json({ error: "service key missing" }, 500);
 
   let ref = "";
   try {
