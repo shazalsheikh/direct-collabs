@@ -9,7 +9,11 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node --test scripts/decide.test.mts",
-    "seed": "node --env-file=.env.local scripts/seed.mts"
+    "seed": "node --env-file=.env.local scripts/seed.mts",
+    "build:downloads": "node scripts/build-downloads.mts",
+    "upload:downloads": "node --env-file=.env.local scripts/upload-downloads.mts",
+    "setup:supabase": "bash scripts/setup-supabase.sh",
+    "setup:netlify": "bash scripts/setup-netlify.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

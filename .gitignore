@@ -49,3 +49,12 @@ next-env.d.ts
 
 # local tool config
 .claude/
+
+# Paid documents and local setup secrets. The repo is public, so these must never be committed.
+content/
+.env.supabase
+.env.netlify
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/

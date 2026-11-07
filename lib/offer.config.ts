@@ -195,13 +195,18 @@ export const CHAPTERS = [
 ] as const;
 
 /** Downloads inside /access. Pro-only items locked for Basic. */
+/**
+ * Downloads. `file` is the key in the PRIVATE Supabase bucket "downloads"
+ * (upload with `npm run upload:downloads`). Files are never public: /access/[token]/download/[id]
+ * checks the buyer's plan and hands out a 60 second link. Empty `file` shows "Coming soon".
+ */
 export const DOWNLOADS = [
-  { id: "lead-form", name: "Instagram lead form template", pro: false, path: "" },
-  { id: "checklist", name: "Ad setup checklist", pro: false, path: "" },
-  { id: "scripts", name: "5 ad scripts (Roman Urdu)", pro: true, path: "" },
-  { id: "dm-scripts", name: "20 DM reply scripts", pro: true, path: "" },
-  { id: "rate-card", name: "Rate card and quote sheet", pro: true, path: "" },
-  { id: "barter-pack", name: "Barter Pitch Pack", pro: false, bump: true, path: "" },
+  { id: "lead-form", name: "Instagram lead form template", pro: false, file: "lead-form.pdf", filename: "DirectCollabs - Lead form template.pdf" },
+  { id: "checklist", name: "Ad setup checklist", pro: false, file: "ad-setup-checklist.pdf", filename: "DirectCollabs - Ad setup checklist.pdf" },
+  { id: "scripts", name: "5 ad scripts (Roman Urdu)", pro: true, file: "ad-scripts.pdf", filename: "DirectCollabs - 5 ad scripts.pdf" },
+  { id: "dm-scripts", name: "20 DM reply scripts", pro: true, file: "dm-reply-scripts.pdf", filename: "DirectCollabs - 20 DM reply scripts.pdf" },
+  { id: "rate-card", name: "Rate card and quote sheet", pro: true, file: "rate-card-and-quote-sheet.pdf", filename: "DirectCollabs - Rate card and quote sheet.pdf" },
+  { id: "barter-pack", name: "Barter Pitch Pack", pro: false, bump: true, file: "barter-pitch-pack.pdf", filename: "DirectCollabs - Barter Pitch Pack.pdf" },
 ] as const;
 
 /** Total for an order. Pure, used on client, server and in the edge function. */

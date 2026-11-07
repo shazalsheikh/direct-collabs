@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { getOrderByToken, getOrderById, DbUnavailable, type OrderCurrent } from "@/lib/orders";
+import { DbUnavailable } from "@/lib/orders";
+import { resolveAccess, canDownload, type Access } from "@/lib/access";
 import { CHAPTERS, DOWNLOADS, UPGRADE, PLANS } from "@/lib/offer.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
@@ -25,24 +26,17 @@ export default function AccessPage(props: PageProps<"/access/[token]">) {
 
 async function Gate({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  if (!/^[A-Za-z0-9_-]{20,64}$/.test(token)) return <Invalid />;
-  let order: OrderCurrent | null = null;
+  let access: Access | null = null;
   try {
-    order = await getOrderByToken(token);
+    access = await resolveAccess(token);
   } catch (err) {
     if (err instanceof DbUnavailable) return <Invalid reason="Access is not switched on yet." />;
     throw err;
   }
-  if (!order || order.status !== "Approved") return <Invalid />;
+  if (!access) return <Invalid />;
 
-  // Linked orders (upgrade, second payment) open the parent's content.
-  let content = order;
-  if (order.parent_order_id) {
-    const parent = await getOrderById(order.parent_order_id);
-    if (parent) content = parent;
-  }
-  const isPro = content.plan === "pro";
-  const hasBump = content.bump;
+  // Linked orders (upgrade, second payment) open the original order's content.
+  const { content, isPro } = access;
   const videoUrl = process.env.COURSE_VIDEO_URL ?? "";
   const first = (content.name ?? "").split(" ")[0];
   const wa = whatsappLink(`Hi, order ${content.ref}. Question about the course.`);
@@ -98,8 +92,8 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
       <ul className="mt-4 grid gap-2">
         {DOWNLOADS.map((d) => {
           const isBump = "bump" in d && d.bump;
-          const locked = (d.pro && !isPro) || (isBump && !hasBump);
-          const ready = Boolean(d.path);
+          const locked = !canDownload(d, access);
+          const ready = Boolean(d.file);
           return (
             <li key={d.id} className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 ${locked ? "border-ink-4 bg-ink opacity-70" : "border-ink-4 bg-ink-2"}`}>
               <div className="min-w-0">
@@ -109,7 +103,7 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
               {locked ? (
                 <span className="text-[12px] text-bone-3">Locked</span>
               ) : ready ? (
-                <a href={d.path} download className="min-h-10 inline-flex items-center rounded-pill border border-bone-3 px-3 text-sm font-semibold">
+                <a href={`/access/${token}/download/${d.id}`} className="min-h-10 inline-flex items-center rounded-pill border border-bone-3 px-3 text-sm font-semibold">
                   Download
                 </a>
               ) : null}

@@ -80,6 +80,11 @@ join lateral (
 alter table orders enable row level security;
 alter table order_events enable row level security;
 
+-- Private bucket for the paid documents. Served only through /access/[token]/download/[id].
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('downloads', 'downloads', false, 20971520, array['application/pdf'])
+on conflict (id) do nothing;
+
 -- Private bucket for receipts. Signed URLs only.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('receipts', 'receipts', false, 5242880, array['image/jpeg','image/png','image/webp','application/pdf'])

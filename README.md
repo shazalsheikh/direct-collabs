@@ -24,6 +24,10 @@ With no env at all the landing page, legal pages and checkout form render. Payme
 | `npm run lint` | ESLint |
 | `npm test` | Unit tests for the receipt decision logic |
 | `npm run seed` | Insert dummy orders (needs Supabase env) |
+| `npm run setup:supabase` | One-command Supabase setup, see below |
+| `npm run setup:netlify` | Imports `.env.netlify` into your Netlify site |
+| `npm run build:downloads` | Build the six paid PDFs from `content/downloads/src` |
+| `npm run upload:downloads` | Upload the PDFs to the private `downloads` bucket |
 
 ## Pages
 
@@ -60,7 +64,20 @@ Edit `PLANS`, `BUMP` or `PAY_IN_2` in `lib/offer.config.ts` and redeploy. The la
 
 `GUARANTEE.type` in `lib/offer.config.ts` is `"performance"` (10 forms in 7 days at Rs 700/day, refund within 48 hours) or `"standard"` (7 day money back). The landing page, FAQ and `/refund-policy` follow it.
 
+## Paid documents (downloads)
+
+The six files buyers receive (lead form template, ad setup checklist, 5 ad scripts, 20 DM reply scripts, rate card and quote sheet, Barter Pitch Pack) live in `content/downloads/src/*.html` and build to PDF with headless Chrome.
+
+- **`content/` is git-ignored on purpose.** The GitHub repository is public and these files are the product. If you make the repository private you can remove `content/` from `.gitignore` and version them.
+- **Delivery is gated.** `/access/[token]/download/[id]` checks the buyer's token and plan (Pro files need Pro, the Barter pack needs the add-on), then redirects to a 60 second signed link from the private `downloads` bucket. Nothing is ever public.
+- **To change a document:** edit the HTML in `content/downloads/src/`, run `npm run build:downloads`, then `npm run upload:downloads`. Buyers get the new version on their next click.
+- **They are drafts.** Read every document before launch. The Roman Urdu is written the way people type it, but you should change anything that does not sound like you.
+
 ## Supabase setup
+
+**Fastest way:** create a project on supabase.com (free plan is fine to test), then run `npm run setup:supabase`. The first run creates `.env.supabase` for you to fill in (project reference, database password, Anthropic key, Resend key and sender, site address, WhatsApp number). Run it again and it logs you in, creates the tables and private buckets, deploys the receipt checker with its secrets, uploads the PDFs, and writes `.env.netlify` with every variable Netlify needs. It is safe to re-run. `DRY_RUN=1 npm run setup:supabase` shows each step without touching anything online.
+
+**By hand** (what the script does):
 
 1. Create a project. Copy the URL and the service role key into `.env.local` and Netlify.
 2. Run `supabase/migrations/0001_init.sql` in the SQL editor. It creates `orders`, the append-only `order_events` (a trigger blocks update and delete), the `orders_current` view, RLS with no policies (only the service key can touch data), and the private `receipts` bucket.
@@ -85,6 +102,7 @@ supabase secrets set \
 
 | Variable | Where | Needed for |
 |---|---|---|
+| `NODE_VERSION` | Netlify | Set to `22` |
 | `ADMIN_PASSWORD` | Netlify | `/admin` (8+ characters) |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | Netlify | Orders, receipts, status, admin |
 | `VERIFY_FUNCTION_SECRET` | Netlify and Supabase | Calls from the site to the function |
@@ -152,7 +170,7 @@ Decisions made without asking. Change any of them in the file named.
 - **Amount tolerance** is Rs 0 and **receipt age limit** is 48 hours (`bank.config.ts`). Wallet fees that shave rupees off will land in Needs review.
 - **Receiver matching** compares the last 8 characters of the receiver account to the configured accounts, because wallet apps often mask digits.
 - **Chapter lengths** (22, 18, 28, 20, 16, 16 minutes) are placeholders that add to 2 hours. Edit `CHAPTERS`.
-- **Download files** are not included. `DOWNLOADS[].path` is empty, so the access page shows "Coming soon" until you upload PDFs and set the paths.
+- **Download files** are drafts written for you (see Paid documents). The lead form has 3 required questions plus an optional fourth, "What do you want from me?", which is where the sample cards' "Video content of the dress" comes from.
 - **Proof numbers** are the ones you gave (960 forms, Rs 77, Rs 80,000, 15 deals, Rs 70 to Rs 100). All are marked unverified and show with a `~`.
 - **About copy** ("Spent years on the brand side watching creators get underpaid by the middle man") is drafted from your brief. Check it is true before launch.
 - **Legal pages** are plain-language drafts, not legal advice. Have them reviewed. The governing law is stated as Pakistan.

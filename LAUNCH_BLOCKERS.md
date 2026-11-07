@@ -19,8 +19,12 @@ Things only you can supply. The site builds and runs without them, but do not ru
 - [ ] **Founding counter decision.** `FOUNDING.enabled` is off. If you turn it on you must raise `PLANS.pro.price` yourself at 100 sales (admin warns you).
 - [ ] **Re-measure speed on Netlify** with a real CDN (Lighthouse mobile, LCP target under 2 s).
 - [ ] **Course video URL.** `COURSE_VIDEO_URL` (unlisted YouTube, Vimeo or Bunny embed).
-- [ ] **Download files** (PDFs for templates, scripts, rate card) uploaded and their paths set in `DOWNLOADS` in `lib/offer.config.ts`.
-- [ ] **Supabase project** created, SQL from `supabase/migrations/` run, storage bucket `receipts` (private) created, Edge Function deployed with its secrets.
-- [ ] **Resend domain verified** for `directcollabs.pk` and `RESEND_API_KEY` set.
+- [ ] **Read all six documents** in `content/downloads/src/` and fix anything that does not sound like you. They are drafts. Then `npm run build:downloads` and `npm run upload:downloads`.
+- [ ] **Decide on the public repository.** The paid documents are git-ignored, so they are safe. Real contact details and your code are still public. Make it private in GitHub if you prefer.
+- [ ] **A working support mailbox.** `SITE.supportEmail` (`hello@directcollabs.pk`) is on the legal pages. Set up forwarding for the real domain in Namecheap and update it.
+- [ ] **Supabase project** created, then `npm run setup:supabase` (creates tables and private buckets, deploys the function and its secrets, uploads the PDFs, writes `.env.netlify`).
+- [ ] **Import `.env.netlify` into Netlify** and redeploy. Save the `ADMIN_PASSWORD` from that file in a password manager.
+- [ ] **A Rs 100 test purchase** end to end, then put the Pro price back.
+- [ ] **Resend domain verified** (add its DNS records in Namecheap) and `RESEND_API_KEY` set.
 - [ ] **Anthropic API key** for receipt OCR.
 - [ ] **Legal pages reviewed** (`/terms`, `/privacy`, `/refund-policy`) and the business name in `SITE.legal`.
