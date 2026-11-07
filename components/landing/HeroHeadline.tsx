@@ -1,4 +1,4 @@
-import type { HeroVariant } from "@/lib/heroes";
+import { RATE_LINE, type HeroVariant } from "@/lib/heroes";
 import { Eyebrow } from "@/components/ui";
 
 /**
@@ -12,6 +12,7 @@ export function Headline({ hero }: { hero: HeroVariant }) {
       <Eyebrow lime>{hero.eyebrow}</Eyebrow>
       <h1 className="display mt-4 text-[2.6rem] leading-[0.98] sm:text-6xl lg:text-[4.25rem]">{hero.h1}</h1>
       <p className="mt-5 max-w-md text-[17px] leading-relaxed text-bone-2">{hero.sub}</p>
+      <p className="mt-3 max-w-md text-[17px] font-semibold leading-relaxed text-bone">{RATE_LINE}</p>
     </>
   );
 }

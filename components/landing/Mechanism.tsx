@@ -17,7 +17,7 @@ export function Mechanism() {
     {
       n: "3",
       title: "Ap choose krte ho",
-      body: "Rate ap ka. Payment seedha ap ko. No middle man.",
+      body: "Rate ap ka, jitna charge kro utna ap ka. Payment seedha ap ko. No middle man.",
     },
   ];
   return (

@@ -86,9 +86,9 @@ Deno.serve(async (req) => {
 
     const expected = expectedAmounts(order);
     const prompt =
-      `This is a payment receipt uploaded by a customer in Pakistan (bank app, Easypaisa or JazzCash). ` +
+      `This is a payment receipt uploaded by a customer in Pakistan (Easypaisa or JazzCash). ` +
       `Extract the fields exactly as printed. Expected amount is one of: ${expected.join(", ")} PKR. ` +
-      `Our receiving accounts: bank ${BANK.bank.account} (IBAN ${BANK.bank.iban}), Easypaisa ${BANK.easypaisa.number}, JazzCash ${BANK.jazzcash.number}. ` +
+      `Our receiving wallet is ${BANK.wallet.number} (${BANK.wallet.label}, account title ${BANK.wallet.title}). ` +
       `Do not guess. If a field is not visible, return null. If the image looks edited, say so in notes and lower confidence.`;
 
     const content: Anthropic.Messages.ContentBlockParam[] = [

@@ -14,7 +14,7 @@ export type Details = {
   instagram: string;
 };
 
-export type FieldErrors = Partial<Record<keyof Details | "receipt" | "senderName", string>>;
+export type FieldErrors = Partial<Record<keyof Details | "receipt", string>>;
 
 export function parseDetails(raw: Record<string, unknown>, opts: { requireAll: boolean }): { ok: true; d: Details } | { ok: false; errors: FieldErrors } {
   const errors: FieldErrors = {};

@@ -38,9 +38,6 @@ export async function POST(req: Request) {
   else if (!ALLOWED_RECEIPT_TYPES.includes(file.type)) errors.receipt = "JPG, PNG, WebP or PDF only.";
   else if (file.size > MAX_RECEIPT_BYTES) errors.receipt = "Under 5 MB please.";
 
-  const senderName = String(raw.senderName ?? "").trim();
-  if (senderName.length < 2) errors.senderName = "Name on the sending account.";
-
   if (!parsed.ok || Object.keys(errors).length) {
     return NextResponse.json({ error: "invalid", fields: errors }, { status: 400 });
   }
@@ -99,7 +96,7 @@ export async function POST(req: Request) {
     if (!order) throw new Error("order vanished");
 
     const path = await uploadReceipt(ref, hash, file as File);
-    await appendEvent(order.id, { status: "Submitted", receipt_path: path, receipt_hash: hash, reason: `Sender: ${senderName}` });
+    await appendEvent(order.id, { status: "Submitted", receipt_path: path, receipt_hash: hash });
 
     after(() => invokeVerify(ref));
     return NextResponse.json({ ref });

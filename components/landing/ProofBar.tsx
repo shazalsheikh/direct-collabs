@@ -22,7 +22,7 @@ export function ProofBar() {
           ))}
         </dl>
         <p className="mt-6 text-[13px] text-bone-3">
-          One ad. One lead form. Real numbers from Meta. Names hidden.
+          One ad. One lead form. Real numbers from Meta. Brand names hidden.
         </p>
       </Container>
     </section>

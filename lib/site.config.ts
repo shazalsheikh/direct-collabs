@@ -11,14 +11,14 @@ export const SITE = {
   description:
     "One Meta ad from your own Instagram. Brand owners fill a form with category, budget and handle. You pick who to work with. No agency, no 30% cut.",
   owner: {
-    name: "Sheikh Sajawal",
-    instagram: "shk.sajawal",
-    instagramUrl: "https://instagram.com/shk.sajawal",
+    name: "Sheikh Shazal",
+    instagram: "sh.shazal",
+    instagramUrl: "https://instagram.com/sh.shazal",
     agency: "Revzo",
     // Toggle the "Sajawal.School, 67,000+ students" line in the About block.
     showSchoolLine: false,
     schoolLine: "Also behind Sajawal.School, 67,000+ students.",
-    // Photo slot. Drop a WebP at public/sajawal.webp and set to "/sajawal.webp".
+    // Photo slot. Drop a WebP at public/owner.webp and set to "/owner.webp".
     // Hidden when empty.
     photo: "" as string,
   },
@@ -39,7 +39,7 @@ export const SITE = {
   },
   legal: {
     entity: "DirectCollabs", // TODO: registered business name if any
-    city: "Lahore, Pakistan",
+    city: "Islamabad, Pakistan",
     lastUpdated: "2026-11-07",
   },
 } as const;

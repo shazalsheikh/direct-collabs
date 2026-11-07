@@ -45,7 +45,7 @@ With no env at all the landing page, legal pages and checkout form render. Payme
 | Proof numbers, Laraib screenshot slots, testimonials | `lib/proof.config.ts` |
 | Brand, owner, WhatsApp, feature flags | `lib/site.config.ts` |
 | Hero headline sets | `lib/heroes.ts` |
-| Bank, Easypaisa, JazzCash details (shared with the Edge Function) | `supabase/functions/_shared/bank.config.ts` |
+| Easypaisa and JazzCash details (shared with the Edge Function) | `supabase/functions/_shared/bank.config.ts` |
 | Design tokens | `app/globals.css` |
 
 ### Change a price
@@ -58,7 +58,7 @@ Edit `PLANS`, `BUMP` or `PAY_IN_2` in `lib/offer.config.ts` and redeploy. The la
 
 ### Switch the guarantee
 
-`GUARANTEE.type` in `lib/offer.config.ts` is `"performance"` (10 forms in 7 days at Rs 500/day, refund within 48 hours) or `"standard"` (7 day money back). The landing page, FAQ and `/refund-policy` follow it.
+`GUARANTEE.type` in `lib/offer.config.ts` is `"performance"` (10 forms in 7 days at Rs 700/day, refund within 48 hours) or `"standard"` (7 day money back). The landing page, FAQ and `/refund-policy` follow it.
 
 ## Supabase setup
 
@@ -102,7 +102,7 @@ supabase secrets set \
 ## How a payment flows
 
 1. Name and WhatsApp blur on checkout inserts the order with a `Lead` event, so abandoned checkouts can be followed up from `/admin`.
-2. The buyer pays by bank, Easypaisa or JazzCash with the `DC-XXXX` reference, uploads the receipt and the sender name.
+2. The buyer pays by Easypaisa or JazzCash with the `DC-XXXX` reference, uploads the receipt.
 3. The site hashes the file (sha256, duplicates are refused), stores it in the private bucket, appends `Submitted`, then calls the `verify-receipt` function after the redirect.
 4. The function reads the receipt with a vision model and approves only if all of these hold: confidence 0.5 or more, amount equals the order (or the pay-in-2 part due), receiver matches the configured accounts, a transaction id is present and unseen, the file hash is unseen, the date is within 48 hours, status is success.
 5. Approve appends `Approved`, creates the access token, emails the link and sends Meta `Purchase` from the server. Anything else appends `Needs review` with the reason and what the OCR read.
@@ -149,7 +149,7 @@ Decisions made without asking. Change any of them in the file named.
 - **Pay-in-2 flag** is `NEXT_PUBLIC_PAY_IN_2` so it can be flipped per Netlify deploy context. It only applies to Pro. The Barter Pitch Pack rides on the first payment. Access unlocks after the first part. Part two is a linked order (`?second=`), with no automatic reminders or access pause. That is a manual WhatsApp follow-up from `/admin`.
 - **Basic to Pro upgrade** is a linked order (`kind = upgrade`) at Rs 3,000. When approved the parent order becomes Pro, so the same access link unlocks the Pro files.
 - **Receipt model** is `claude-opus-5-5` with the server-side refusal fallback enabled. Receipts are read with structured JSON output. Cost is one vision call per submitted receipt.
-- **Amount tolerance** is Rs 0 and **receipt age limit** is 48 hours (`bank.config.ts`). Bank fees that shave rupees off will land in Needs review.
+- **Amount tolerance** is Rs 0 and **receipt age limit** is 48 hours (`bank.config.ts`). Wallet fees that shave rupees off will land in Needs review.
 - **Receiver matching** compares the last 8 characters of the receiver account to the configured accounts, because wallet apps often mask digits.
 - **Chapter lengths** (22, 18, 28, 20, 16, 16 minutes) are placeholders that add to 2 hours. Edit `CHAPTERS`.
 - **Download files** are not included. `DOWNLOADS[].path` is empty, so the access page shows "Coming soon" until you upload PDFs and set the paths.

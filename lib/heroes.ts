@@ -37,6 +37,9 @@ export const HEROES: Record<1 | 2 | 3, HeroVariant> = {
 
 export const DEFAULT_HERO: 1 | 2 | 3 = 2;
 
+/** Shown under every hero variant. The rate is the creator's call, not the agency's. */
+export const RATE_LINE = "Rate ap tay krte ho, agency nhi.";
+
 export function pickHero(a?: string | null, utmContent?: string | null): HeroVariant {
   const raw = a ?? utmContent ?? "";
   const n = Number(raw);

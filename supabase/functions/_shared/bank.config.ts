@@ -5,43 +5,36 @@
  *
  * Pure TypeScript, no imports, so Deno and Next can both load it.
  *
- * !!! DUMMY VALUES. REPLACE BEFORE LAUNCH. See LAUNCH_BLOCKERS.md !!!
+ * Wallets only (Easypaisa and JazzCash), no bank account.
  */
 
 export const BANK = {
-  isDummy: true, // flip to false when real details are in
-  bank: {
-    name: "Dummy Bank Ltd",
-    title: "DirectCollabs Dummy",
-    account: "0000-0000000000",
-    iban: "PK00DUMM0000000000000000",
-  },
-  easypaisa: {
-    title: "DirectCollabs Dummy",
-    number: "03XX-XXXXXXX",
-  },
-  jazzcash: {
-    title: "DirectCollabs Dummy",
-    number: "03XX-XXXXXXX",
+  isDummy: false, // set true to bring back the "replace dummy details" banner and SAMPLE tag
+  // Digits only, so the Copy button pastes cleanly into a wallet app. Shown as 0300 0132773.
+  // One mobile number that receives on both Easypaisa and JazzCash.
+  wallet: {
+    title: "Shazal Ahmed Ali",
+    number: "03000132773",
+    label: "Easypaisa or JazzCash",
   },
   /** Receipt must be dated within this window to auto-approve. */
   receiptMaxAgeHours: 48,
-  /** Amount tolerance in rupees. Bank fees sometimes shave a few rupees. */
+  /** Amount tolerance in rupees. Wallet fees sometimes shave a few rupees. */
   amountToleranceRs: 0,
 } as const;
 
-/** Strings the OCR receiver field may match (digits compared without dashes/spaces). */
+/** Numbers the OCR receiver field may match (digits compared without spaces, dashes or +). */
 export function acceptedReceivers() {
-  return [
-    BANK.bank.account,
-    BANK.bank.iban,
-    BANK.easypaisa.number,
-    BANK.jazzcash.number,
-  ].map(normalizeAccount);
+  return [BANK.wallet.number].map(normalizeAccount);
 }
 
 export function normalizeAccount(s: string) {
   return s.replace(/[^a-z0-9]/gi, "").toUpperCase();
+}
+
+/** 03000132773 -> "0300 0132773" for display. Anything else is shown as is. */
+export function formatPkNumber(n: string) {
+  return n.replace(/^(\d{4})(\d{7})$/, "$1 $2");
 }
 
 /** Order reference, DC-XXXX, from a random 4-char base32 chunk. */

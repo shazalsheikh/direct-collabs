@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type Change
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, type PlanId } from "@/lib/offer.config";
-import { BANK } from "@/lib/bank.config";
+import { BANK, formatPkNumber } from "@/lib/bank.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 import { normalizePkPhone, isEmail, cleanHandle } from "@/lib/format";
@@ -72,13 +72,14 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [instagram, setInstagram] = useState("");
-  const [senderName, setSenderName] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const ref = useSyncExternalStore(refStore.subscribe, refStore.get, () => null);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [topError, setTopError] = useState<string | null>(null);
   const leadBusy = useRef(false);
+  const [step, setStep] = useState<1 | 2>(1);
+  const [continuing, setContinuing] = useState(false);
 
   const payIn2Allowed = !linked && PAY_IN_2.enabled && plan === PAY_IN_2.plan;
   const effectivePayIn2 = payIn2Allowed && payIn2;
@@ -157,15 +158,43 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
     if (!normalizePkPhone(whatsapp)) e.whatsapp = "Pakistani number like 03XX XXXXXXX.";
     if (!isEmail(email)) e.email = "A real email. Your access link goes here.";
     if (cleanHandle(instagram).length < 2) e.instagram = "Your Instagram handle.";
-    if (senderName.trim().length < 2) e.senderName = "Name on the sending account.";
     if (!file) e.receipt = "Upload your payment receipt.";
     return e;
+  }
+
+  const STEP_ONE_FIELDS = ["name", "whatsapp", "email", "instagram"];
+
+  function goTo(next: 1 | 2) {
+    setStep(next);
+    setTopError(null);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  /** Step 1 -> 2. Validates plan details, saves the lead so the DC reference exists, then shows payment. */
+  async function continueToPayment() {
+    setTopError(null);
+    const v = validateLocal();
+    const e: FieldErrors = {};
+    for (const k of STEP_ONE_FIELDS as ("name" | "whatsapp" | "email" | "instagram")[]) if (v[k]) e[k] = v[k];
+    setErrors(e);
+    if (Object.keys(e).length) {
+      document.getElementById(`f-${Object.keys(e)[0]}`)?.scrollIntoView({ block: "center" });
+      return;
+    }
+    setContinuing(true);
+    await saveLead({ email, instagram });
+    setContinuing(false);
+    goTo(2);
   }
 
   async function submit() {
     setTopError(null);
     const e = validateLocal();
     setErrors(e);
+    if (Object.keys(e).some((k) => STEP_ONE_FIELDS.includes(k))) {
+      goTo(1);
+      return;
+    }
     if (Object.keys(e).length) {
       document.getElementById(`f-${Object.keys(e)[0]}`)?.scrollIntoView({ block: "center" });
       return;
@@ -188,7 +217,6 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
     fd.set("whatsapp", whatsapp);
     fd.set("email", email.trim());
     fd.set("instagram", cleanHandle(instagram));
-    fd.set("senderName", senderName.trim());
     fd.set("attribution", JSON.stringify(readAttribution()));
     fd.set("receipt", file as File);
     try {
@@ -199,7 +227,10 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
         router.push(`/thank-you?order=${j.ref}`);
         return;
       }
-      if (j.fields) setErrors(j.fields);
+      if (j.fields) {
+        setErrors(j.fields);
+        if (Object.keys(j.fields).some((k) => STEP_ONE_FIELDS.includes(k))) goTo(1);
+      }
       setTopError(
         j.error === "db_unavailable"
           ? "Payments are not switched on yet. WhatsApp us your receipt and we will sort it by hand."
@@ -222,7 +253,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
       {/* Dev-only loud banner */}
       {isDev && BANK.isDummy && (
         <div className="bg-coral px-4 py-2 text-center text-xs font-bold uppercase tracking-[0.12em] text-ink">
-          Replace dummy bank details before launch
+          Replace dummy payment details before launch
         </div>
       )}
 
@@ -230,184 +261,218 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
         <Link href="/" className="display inline-flex min-h-11 items-center text-lg">
           Direct<span className="text-lime">Collabs</span>
         </Link>
+        <Stepper step={step} />
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px] lg:items-start">
           <div className="space-y-8">
-            {/* 1. Plan */}
-            <Step n={1} title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : "Plan"}>
-              {linked && (
-                <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="display text-xl">{linked.kind === "upgrade" ? "Basic to Pro" : "Pay-in-2, part 2"}</span>
-                    <span className="text-xs text-bone-3">for order {linked.parentRef}</span>
-                  </div>
-                  <p className="display tnum mt-1 text-2xl">{rs(total)}</p>
-                  <p className="mt-2 text-[13px] text-bone-2">
-                    {linked.kind === "upgrade"
-                      ? "Unlocks the 5 ad scripts, 20 DM replies and the rate card on your existing access link."
-                      : `Second half of your ${PLANS.pro.name} plan. Your access stays open.`}
-                  </p>
-                </div>
-              )}
-              <div className={`grid gap-3 sm:grid-cols-2 ${linked ? "hidden" : ""}`} role="radiogroup" aria-label="Plan">
-                {(["pro", "basic"] as PlanId[]).map((p) => {
-                  const P = PLANS[p];
-                  const on = plan === p;
-                  return (
-                    <button
-                      key={p}
-                      type="button"
-                      role="radio"
-                      aria-checked={on}
-                      onClick={() => choosePlan(p)}
-                      className={`rounded-card border-2 p-4 text-left transition-colors ${on ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2 hover:border-bone-3"}`}
-                    >
+            {step === 1 ? (
+              <>
+                {/* Plan */}
+                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : "Choose your plan"}>
+                  {linked && (
+                    <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
                       <div className="flex items-center justify-between">
-                        <span className="display text-xl">{P.name}</span>
-                        {P.recommended && <span className="rounded-pill bg-lime px-2 py-0.5 text-[11px] font-semibold text-ink">Recommended</span>}
+                        <span className="display text-xl">{linked.kind === "upgrade" ? "Basic to Pro" : "Pay-in-2, part 2"}</span>
+                        <span className="text-xs text-bone-3">for order {linked.parentRef}</span>
                       </div>
-                      <p className="display tnum mt-1 text-2xl">{rs(P.price)}</p>
-                      <ul className="mt-2 space-y-1 text-[13px] text-bone-2">
-                        {P.includes.map((x) => (
-                          <li key={x}>{x}</li>
-                        ))}
-                      </ul>
-                      <p className="mt-2 text-[12px] text-bone-3">
-                        Needs {rs(AD_BUDGET.minPerDay)} to {AD_BUDGET.maxPerDay.toLocaleString()} a day for ads.
+                      <p className="display tnum mt-1 text-2xl">{rs(total)}</p>
+                      <p className="mt-2 text-[13px] text-bone-2">
+                        {linked.kind === "upgrade"
+                          ? "Unlocks the 5 ad scripts, 20 DM replies and the rate card on your existing access link."
+                          : `Second half of your ${PLANS.pro.name} plan. Your access stays open.`}
                       </p>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {!linked && plan === "basic" && (
-                <div className="mt-3 flex flex-col gap-3 rounded-card border border-lime/40 bg-ink-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-bone-2">
-                    <span className="font-semibold text-bone">Only {rs(UPGRADE.price)} more</span> gets you the 5 ad scripts, 20 DM replies and the
-                    rate card. Most people need them on day one.
-                  </p>
-                  <button type="button" onClick={() => choosePlan("pro")} className="min-h-11 shrink-0 rounded-pill bg-lime px-4 text-sm font-semibold text-ink">
-                    Switch to Pro
-                  </button>
-                </div>
-              )}
-
-              {payIn2Allowed && (
-                <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-card border border-ink-4 bg-ink-2 p-4">
-                  <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={payIn2} onChange={(e) => { setPayIn2(e.target.checked); void saveLead({ payIn2: e.target.checked }); }} />
-                  <span className="text-sm">
-                    <span className="font-semibold">Pay in 2.</span>{" "}
-                    <span className="text-bone-2">
-                      {rs(PAY_IN_2.first)} now, {rs(PAY_IN_2.second)} in {PAY_IN_2.daysBetween} days. Access unlocks after the first part.
-                    </span>
-                  </span>
-                </label>
-              )}
-            </Step>
-
-            {/* 2. Details */}
-            <Step n={2} title="Your details">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field id="f-name" label="Name" error={errors.name}>
-                  <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} onBlur={() => saveLead()} autoComplete="name" />
-                </Field>
-                <Field id="f-whatsapp" label="WhatsApp number" error={errors.whatsapp} hint="03XX XXXXXXX">
-                  <input className={inputCls} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} onBlur={() => saveLead()} inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" />
-                </Field>
-                <Field id="f-email" label="Email" error={errors.email} hint="Access link goes here">
-                  <input className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => saveLead({ email })} inputMode="email" autoComplete="email" type="email" />
-                </Field>
-                <Field id="f-instagram" label="Instagram handle" error={errors.instagram}>
-                  <input className={inputCls} value={instagram} onChange={(e) => setInstagram(e.target.value)} onBlur={() => saveLead({ instagram })} placeholder="@yourhandle" autoCapitalize="none" />
-                </Field>
-              </div>
-            </Step>
-
-            {/* 3. Bump */}
-            {!linked && (
-            <Step n={3} title="Add on">
-              <label className={`flex cursor-pointer items-start gap-3 rounded-card border-2 p-4 ${bump ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2"}`}>
-                <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={bump} onChange={(e) => toggleBump(e.target.checked)} />
-                <span className="flex-1">
-                  <span className="flex items-center justify-between gap-3">
-                    <span className="display text-lg">{BUMP.name}</span>
-                    <span className="display tnum text-lg">+{rs(BUMP.price)}</span>
-                  </span>
-                  <span className="mt-1 block text-sm text-bone-2">{BUMP.hook}</span>
-                  <span className="mt-2 block text-[13px] text-bone-3">{BUMP.includes.join(" · ")}</span>
-                </span>
-              </label>
-            </Step>
-            )}
-
-            {/* 4. Payment */}
-            <Step n={linked ? 3 : 4} title="Pay">
-              <div className="rounded-card border border-ink-4 bg-ink-2 p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-bone-2">Send exactly</p>
-                  {BANK.isDummy && <SampleTag />}
-                </div>
-                <p className="display tnum text-4xl text-lime">{rs(dueNow)}</p>
-                {effectivePayIn2 && <p className="mt-1 text-[13px] text-bone-3">Second part {rs(PAY_IN_2.second)} due in {PAY_IN_2.daysBetween} days.</p>}
-
-                <div className="mt-4 rounded-xl border border-dashed border-bone-3 p-3">
-                  <p className="text-[12px] text-bone-3">Put this in the transfer note or reference</p>
-                  <div className="mt-1 flex items-center justify-between gap-3">
-                    <span className="display tnum text-2xl">{ref ?? "DC-····"}</span>
-                    {ref ? <CopyButton value={ref} label="reference" /> : <span className="text-[12px] text-bone-3">Fill name + WhatsApp first</span>}
+                    </div>
+                  )}
+                  <div className={`grid gap-3 sm:grid-cols-2 ${linked ? "hidden" : ""}`} role="radiogroup" aria-label="Plan">
+                    {(["pro", "basic"] as PlanId[]).map((p) => {
+                      const P = PLANS[p];
+                      const on = plan === p;
+                      return (
+                        <button
+                          key={p}
+                          type="button"
+                          role="radio"
+                          aria-checked={on}
+                          onClick={() => choosePlan(p)}
+                          className={`rounded-card border-2 p-4 text-left transition-colors ${on ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2 hover:border-bone-3"}`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="display text-xl">{P.name}</span>
+                            {P.recommended && <span className="rounded-pill bg-lime px-2 py-0.5 text-[11px] font-semibold text-ink">Recommended</span>}
+                          </div>
+                          <p className="display tnum mt-1 text-2xl">{rs(P.price)}</p>
+                          <ul className="mt-2 space-y-1 text-[13px] text-bone-2">
+                            {P.includes.map((x) => (
+                              <li key={x}>{x}</li>
+                            ))}
+                          </ul>
+                          <p className="mt-2 text-[12px] text-bone-3">
+                            Needs {rs(AD_BUDGET.minPerDay)} to {AD_BUDGET.maxPerDay.toLocaleString()} a day for ads.
+                          </p>
+                        </button>
+                      );
+                    })}
                   </div>
-                </div>
 
-                <div className="mt-4 space-y-3">
-                  <PayRow label={`${BANK.bank.name} · ${BANK.bank.title}`} value={BANK.bank.account} sub={`IBAN ${BANK.bank.iban}`} />
-                  <PayRow label={`Easypaisa · ${BANK.easypaisa.title}`} value={BANK.easypaisa.number} />
-                  <PayRow label={`JazzCash · ${BANK.jazzcash.title}`} value={BANK.jazzcash.number} />
-                </div>
-              </div>
-            </Step>
+                  {!linked && plan === "basic" && (
+                    <div className="mt-3 flex flex-col gap-3 rounded-card border border-lime/40 bg-ink-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="text-sm text-bone-2">
+                        <span className="font-semibold text-bone">Only {rs(UPGRADE.price)} more</span> gets you the 5 ad scripts, 20 DM replies and the
+                        rate card. Most people need them on day one.
+                      </p>
+                      <button type="button" onClick={() => choosePlan("pro")} className="min-h-11 shrink-0 rounded-pill bg-lime px-4 text-sm font-semibold text-ink">
+                        Switch to Pro
+                      </button>
+                    </div>
+                  )}
 
-            {/* 5. Receipt */}
-            <Step n={linked ? 4 : 5} title="Receipt">
-              <div className="grid gap-4">
-                <Field id="f-receipt" label="Screenshot or PDF of the payment" error={errors.receipt} hint="JPG, PNG, WebP or PDF. Under 5 MB.">
-                  <label className={`flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-4 text-center ${file ? "border-lime" : "border-ink-4 hover:border-bone-3"}`}>
-                    <input type="file" accept={ALLOWED_RECEIPT_TYPES.join(",")} onChange={onFile} className="sr-only" />
-                    {file ? (
-                      <>
-                        <span className="text-sm font-semibold">{file.name}</span>
-                        <span className="mt-1 text-[12px] text-bone-3">{(file.size / 1024).toFixed(0)} KB · tap to change</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-sm font-semibold">Tap to upload</span>
-                        <span className="mt-1 text-[12px] text-bone-3">The receipt screen from your bank or wallet app</span>
-                      </>
-                    )}
-                  </label>
-                </Field>
-                <Field id="f-senderName" label="Name on the account you paid from" error={errors.senderName}>
-                  <input className={inputCls} value={senderName} onChange={(e) => setSenderName(e.target.value)} />
-                </Field>
-              </div>
-            </Step>
+                  {payIn2Allowed && (
+                    <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-card border border-ink-4 bg-ink-2 p-4">
+                      <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={payIn2} onChange={(e) => { setPayIn2(e.target.checked); void saveLead({ payIn2: e.target.checked }); }} />
+                      <span className="text-sm">
+                        <span className="font-semibold">Pay in 2.</span>{" "}
+                        <span className="text-bone-2">
+                          {rs(PAY_IN_2.first)} now, {rs(PAY_IN_2.second)} in {PAY_IN_2.daysBetween} days. Access unlocks after the first part.
+                        </span>
+                      </span>
+                    </label>
+                  )}
+                </Step>
 
-            <HonestLine className="lg:hidden" />
+                {/* Details */}
+                <Step title="Your details">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field id="f-name" label="Name" error={errors.name}>
+                      <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} onBlur={() => saveLead()} autoComplete="name" />
+                    </Field>
+                    <Field id="f-whatsapp" label="WhatsApp number" error={errors.whatsapp} hint="03XX XXXXXXX">
+                      <input className={inputCls} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} onBlur={() => saveLead()} inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" />
+                    </Field>
+                    <Field id="f-email" label="Email" error={errors.email} hint="Access link goes here">
+                      <input className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => saveLead({ email })} inputMode="email" autoComplete="email" type="email" />
+                    </Field>
+                    <Field id="f-instagram" label="Instagram handle" error={errors.instagram}>
+                      <input className={inputCls} value={instagram} onChange={(e) => setInstagram(e.target.value)} onBlur={() => saveLead({ instagram })} placeholder="@yourhandle" autoCapitalize="none" />
+                    </Field>
+                  </div>
+                </Step>
 
-            {topError && (
-              <div role="alert" className="rounded-card border border-coral/60 bg-ink-2 p-4 text-sm">
-                <p className="text-coral">{topError}</p>
-                {wa && (
-                  <a href={wa} className="mt-2 inline-flex min-h-10 items-center text-sm font-semibold underline underline-offset-4">
-                    WhatsApp the receipt instead
-                  </a>
+                {/* Bump */}
+                {!linked && (
+                  <Step title="Add on">
+                    <label className={`flex cursor-pointer items-start gap-3 rounded-card border-2 p-4 ${bump ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2"}`}>
+                      <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={bump} onChange={(e) => toggleBump(e.target.checked)} />
+                      <span className="flex-1">
+                        <span className="flex items-center justify-between gap-3">
+                          <span className="display text-lg">{BUMP.name}</span>
+                          <span className="display tnum text-lg">+{rs(BUMP.price)}</span>
+                        </span>
+                        <span className="mt-1 block text-sm text-bone-2">{BUMP.hook}</span>
+                        <span className="mt-2 block text-[13px] text-bone-3">{BUMP.includes.join(" · ")}</span>
+                      </span>
+                    </label>
+                  </Step>
                 )}
-              </div>
-            )}
 
-            <div className="hidden lg:block">
-              <SubmitButton onClick={submit} busy={submitting} dueNow={dueNow} />
-              <HonestLine className="mt-3" />
-            </div>
+                <HonestLine className="lg:hidden" />
+                <div className="hidden lg:block">
+                  <PrimaryButton onClick={continueToPayment} busy={continuing} label={`Continue to payment · ${rs(dueNow)}`} busyLabel="One sec…" />
+                  <HonestLine className="mt-3" />
+                </div>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={() => goTo(1)} className="-mb-3 inline-flex min-h-11 items-center gap-2 text-sm text-bone-2 hover:text-bone">
+                  <span aria-hidden="true">←</span> Back to details
+                </button>
+
+                {/* Pay */}
+                <section>
+                  <h2 className="display text-3xl sm:text-4xl">Pay {rs(dueNow)}</h2>
+                  <p className="mt-2 text-bone-2">Send it from Easypaisa or JazzCash. It takes under a minute.</p>
+
+                  <div className="mt-5 rounded-card border border-ink-4 bg-ink-2 p-5">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">You transfer exactly</p>
+                      {BANK.isDummy && <SampleTag />}
+                    </div>
+                    <p className="display tnum mt-1 text-4xl text-lime">{rs(dueNow)}</p>
+                    {effectivePayIn2 && (
+                      <p className="mt-1 text-[13px] text-bone-3">
+                        Second part {rs(PAY_IN_2.second)} due in {PAY_IN_2.daysBetween} days.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-3 rounded-card border border-ink-4 bg-ink-2">
+                    <div className="flex items-center justify-between gap-3 p-5">
+                      <div className="min-w-0">
+                        <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">{BANK.wallet.label} number</p>
+                        <p className="tnum mt-1 text-2xl font-semibold">{formatPkNumber(BANK.wallet.number)}</p>
+                      </div>
+                      <CopyButton value={BANK.wallet.number} label="number" />
+                    </div>
+                    <div className="border-t border-ink-4 p-5">
+                      <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Account title</p>
+                      <p className="mt-1 text-lg font-semibold">{BANK.wallet.title}</p>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-[15px] leading-relaxed text-bone-2">
+                    Open Easypaisa or JazzCash, choose Send Money to a mobile account, paste the number and enter the exact amount.
+                  </p>
+
+                  {ref && (
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-dashed border-bone-3 p-3">
+                      <p className="text-[13px] text-bone-2">
+                        If your app has a note field, add <span className="display tnum text-base text-bone">{ref}</span>. Optional, it only helps us find your payment.
+                      </p>
+                      <CopyButton value={ref} label="reference" />
+                    </div>
+                  )}
+                </section>
+
+                {/* Receipt */}
+                <Step title="Upload your payment screenshot">
+                  <div className="grid gap-4">
+                    <Field id="f-receipt" label="Screenshot or PDF of the payment" error={errors.receipt} hint="JPG, PNG, WebP or PDF. Under 5 MB.">
+                      <label className={`flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-4 text-center ${file ? "border-lime" : "border-ink-4 hover:border-bone-3"}`}>
+                        <input type="file" accept={ALLOWED_RECEIPT_TYPES.join(",")} onChange={onFile} className="sr-only" />
+                        {file ? (
+                          <>
+                            <span className="text-sm font-semibold">{file.name}</span>
+                            <span className="mt-1 text-[12px] text-bone-3">{(file.size / 1024).toFixed(0)} KB · tap to change</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-sm font-semibold">Tap to upload</span>
+                            <span className="mt-1 text-[12px] text-bone-3">The receipt screen from your Easypaisa or JazzCash app</span>
+                          </>
+                        )}
+                      </label>
+                    </Field>
+                  </div>
+                </Step>
+
+                <HonestLine className="lg:hidden" />
+
+                {topError && (
+                  <div role="alert" className="rounded-card border border-coral/60 bg-ink-2 p-4 text-sm">
+                    <p className="text-coral">{topError}</p>
+                    {wa && (
+                      <a href={wa} className="mt-2 inline-flex min-h-10 items-center text-sm font-semibold underline underline-offset-4">
+                        WhatsApp the receipt instead
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                <div className="hidden lg:block">
+                  <PrimaryButton onClick={submit} busy={submitting} label="Verify and get the access" busyLabel="Verifying…" />
+                  <HonestLine className="mt-3" />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Sticky summary (desktop) */}
@@ -417,7 +482,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
         </div>
       </div>
 
-      {/* Sticky summary + submit (mobile) */}
+      {/* Sticky summary + action (mobile) */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-4 bg-ink/95 p-3 pb-[max(12px,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
         <div className="mb-2 flex items-center justify-between text-[13px]">
           <span className="text-bone-2">
@@ -426,7 +491,11 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
           </span>
           <span className="display tnum text-lg">{rs(dueNow)}</span>
         </div>
-        <SubmitButton onClick={submit} busy={submitting} dueNow={dueNow} compact />
+        {step === 1 ? (
+          <PrimaryButton onClick={continueToPayment} busy={continuing} label="Continue to payment" busyLabel="One sec…" compact />
+        ) : (
+          <PrimaryButton onClick={submit} busy={submitting} label="Verify and get the access" busyLabel="Verifying…" compact />
+        )}
       </div>
     </div>
   );
@@ -435,15 +504,30 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
 const inputCls =
   "w-full min-h-12 rounded-xl border border-ink-4 bg-ink-2 px-4 text-base text-bone placeholder:text-bone-3 focus:border-lime focus:outline-none";
 
-function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+function Step({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="display mb-3 flex items-center gap-3 text-2xl">
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-ink-3 text-sm">{n}</span>
-        {title}
-      </h2>
+      <h2 className="display mb-3 text-2xl">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/** Two steps: "Plan and details", then "Payment". */
+function Stepper({ step }: { step: 1 | 2 }) {
+  const dot = "grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-semibold";
+  return (
+    <ol className="mt-3 flex items-center gap-3 text-sm" aria-label="Checkout steps">
+      <li className="flex items-center gap-2" aria-current={step === 1 ? "step" : undefined}>
+        <span className={`${dot} ${step > 1 ? "bg-lime text-ink" : "bg-bone text-ink"}`}>{step > 1 ? "✓" : "1"}</span>
+        <span className={step === 1 ? "font-semibold" : "text-bone-3"}>Plan and details</span>
+      </li>
+      <li className="h-px w-8 bg-ink-4" aria-hidden="true" />
+      <li className="flex items-center gap-2" aria-current={step === 2 ? "step" : undefined}>
+        <span className={`${dot} ${step === 2 ? "bg-bone text-ink" : "border border-ink-4 text-bone-3"}`}>2</span>
+        <span className={step === 2 ? "font-semibold" : "text-bone-3"}>Payment</span>
+      </li>
+    </ol>
   );
 }
 
@@ -455,19 +539,6 @@ function Field({ id, label, error, hint, children }: { id: string; label: string
         <div className="mt-1.5">{children}</div>
       </label>
       {error ? <p className="mt-1.5 text-[13px] text-coral">{error}</p> : hint ? <p className="mt-1.5 text-[12px] text-bone-3">{hint}</p> : null}
-    </div>
-  );
-}
-
-function PayRow({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-xl bg-ink p-3">
-      <div className="min-w-0">
-        <p className="truncate text-[12px] text-bone-3">{label}</p>
-        <p className="tnum text-base font-semibold">{value}</p>
-        {sub && <p className="tnum text-[12px] text-bone-3">{sub}</p>}
-      </div>
-      <CopyButton value={value} label={label} />
     </div>
   );
 }
@@ -504,7 +575,7 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
   );
 }
 
-function SubmitButton({ onClick, busy, dueNow, compact }: { onClick: () => void; busy: boolean; dueNow: number; compact?: boolean }) {
+function PrimaryButton({ onClick, busy, label, busyLabel, compact }: { onClick: () => void; busy: boolean; label: string; busyLabel: string; compact?: boolean }) {
   return (
     <button
       type="button"
@@ -512,7 +583,7 @@ function SubmitButton({ onClick, busy, dueNow, compact }: { onClick: () => void;
       disabled={busy}
       className={`flex w-full items-center justify-center rounded-pill bg-lime font-semibold text-ink disabled:opacity-60 ${compact ? "min-h-13 text-base" : "min-h-14 text-base"}`}
     >
-      {busy ? "Uploading…" : `I have paid ${rs(dueNow)}, verify`}
+      {busy ? busyLabel : label}
     </button>
   );
 }

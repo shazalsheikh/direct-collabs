@@ -26,9 +26,9 @@ export function About() {
           <Eyebrow>Who made this</Eyebrow>
           <h2 className="display mt-3 text-3xl sm:text-4xl">{o.name}</h2>
           <p className="mt-4 text-bone-2">
-            Runs Meta ads for brands through {o.agency}. Spent years on the brand side watching creators get
-            underpaid by the middle man, then built this on {LARAIB.name}&apos;s page first to see if it would hold
-            up. It did. This is that setup, recorded.
+            I run Meta ads for brands through {o.agency}. I built this on {LARAIB.name}&apos;s page first, a creator with{" "}
+            {LARAIB.followers} followers and no paid collabs, to see if brand owners would apply to her. This is that
+            setup, recorded.
           </p>
           {o.showSchoolLine && <p className="mt-2 text-bone-2">{o.schoolLine}</p>}
           <a

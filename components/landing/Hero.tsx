@@ -35,7 +35,7 @@ export function Hero({ hero }: { hero: HeroVariant }) {
               </li>
               <li className="flex items-start gap-2">
                 <Dot />
-                Easypaisa, JazzCash, bank
+                Easypaisa and JazzCash
               </li>
               <li className="flex items-start gap-2">
                 <Dot />

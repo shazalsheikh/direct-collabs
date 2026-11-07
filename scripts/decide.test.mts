@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { decide, type Ocr } from "../supabase/functions/_shared/decide.ts";
+import { acceptedReceivers } from "../supabase/functions/_shared/bank.config.ts";
 
 const base: Ocr = {
   amount: 7900, currency: "PKR", receiver_account: "PK00DUMM0000000000000000", receiver_name: "DirectCollabs Dummy",
@@ -22,3 +23,12 @@ test("rejects low confidence", () => assert.match((decide(input({ confidence: 0.
 test("rejects pending", () => assert.match((decide(input({ status: "pending" })) as { reason: string }).reason, /pending/));
 test("accepts pay-in-2 partial", () => assert.equal(decide(input({ amount: 4000 }, { expectedAmounts: [4000] })).approve, true));
 test("never approves without txn id", () => assert.equal(decide(input({ txn_id: null })).approve, false));
+
+// Real wallet receipts print the receiver number in different shapes.
+const wallet = (receiver: string) => decide(input({ amount: 7900, receiver_account: receiver }, { acceptedReceivers: acceptedReceivers() }));
+test("wallet: 0300 0132773 matches", () => assert.equal(wallet("0300 0132773").approve, true));
+test("wallet: 0300-0132773 matches", () => assert.equal(wallet("0300-0132773").approve, true));
+test("wallet: +92 300 0132773 matches", () => assert.equal(wallet("+92 300 0132773").approve, true));
+test("wallet: 923000132773 matches", () => assert.equal(wallet("923000132773").approve, true));
+test("wallet: a different number is rejected", () => assert.equal(wallet("03001234567").approve, false));
+test("wallet: a masked number goes to review", () => assert.equal(wallet("0300*****73").approve, false));

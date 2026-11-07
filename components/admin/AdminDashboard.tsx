@@ -137,7 +137,7 @@ function Row({ o, bucket }: { o: OrderCurrent; bucket: Bucket }) {
     bucket === "leads"
       ? `Hi ${first}, Sheikh here from DirectCollabs. Ap ne ${label(o)} choose kia tha par receipt upload nhi hui. Koi masla? Order ${o.ref}.`
       : bucket === "review"
-        ? `Hi ${first}, DirectCollabs. Order ${o.ref}: receipt clear nhi aayi. Bank ya wallet app ka original receipt screenshot bhej dein, access turant unlock kr dete hn.`
+        ? `Hi ${first}, DirectCollabs. Order ${o.ref}: receipt clear nhi aayi. Easypaisa ya JazzCash app ka original receipt screenshot bhej dein, access turant unlock kr dete hn.`
         : `Hi ${first}, DirectCollabs. Payment verified, order ${o.ref}. Your course link: ${accessUrl}`;
   const wa = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(waText)}` : "";
 

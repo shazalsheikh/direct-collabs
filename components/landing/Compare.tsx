@@ -5,9 +5,9 @@ import { rs } from "@/lib/format";
 const ROWS: [string, string, string][] = [
   ["Who finds the brand", "The agency, when they feel like it", "Your ad. Brands apply to you"],
   ["Who sets your rate", "Agency, and they quote low to close fast", "You. Chapter 5"],
-  ["What you keep", `${100 - ANCHOR.agencyCutPct}%`, "100%"],
+  ["What you keep", `About ${100 - ANCHOR.agencyCutPct}% of your fee`, "100% of your fee. Ad spend is yours."],
   ["Who owns the relationship", "Agency. Brand never has your number", "You. Repeat deals in your DMs"],
-  ["Cost", `${ANCHOR.agencyCutPct}% of every deal, forever`, `${rs(PLANS.pro.price)} once, plus your ad spend`],
+  ["Cost", `About ${ANCHOR.agencyCutPct}% of every deal, forever`, `${rs(PLANS.pro.price)} once, plus your ad spend`],
 ];
 
 export function Compare() {

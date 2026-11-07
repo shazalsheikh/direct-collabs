@@ -70,9 +70,9 @@ export const PAY_IN_2 = {
 
 /** Required ad budget, repeated plainly on both plans. */
 export const AD_BUDGET = {
-  minPerDay: 500,
+  minPerDay: 700,
   maxPerDay: 1000,
-  perMonthAtMin: 15000, // 30 days at Rs 500
+  perMonthAtMin: 21000, // 30 days at Rs 700
   daysToWarmUp: "3 to 7 days",
 };
 
@@ -106,13 +106,13 @@ export const GUARANTEE: {
   performance: {
     forms: 10,
     days: 7,
-    spendPerDay: 500,
+    spendPerDay: 700,
     refundHours: 48,
     headline: "10 brand forms in 7 days, or your money back.",
-    body: "Run the ad as taught, Rs 500 a day, approved and delivering for 7 days. If fewer than 10 brand owners fill your form, show us the Ads Manager screen and we refund within 48 hours.",
+    body: "Run the ad as taught, Rs 700 a day, approved and delivering for 7 days. If fewer than 10 brand owners fill your form, show us the Ads Manager screen and we refund within 48 hours.",
     conditions: [
       "The ad must be approved by Meta and delivering for the full 7 days.",
-      "Daily budget of at least Rs 500 for those 7 days.",
+      "Daily budget of at least Rs 700 for those 7 days.",
       "The lead form must be the one from the course, with the three questions intact.",
       "Refund request within 14 days of purchase with Ads Manager and Lead Center screenshots.",
       "One refund per person.",
@@ -167,7 +167,7 @@ export const CHAPTERS = [
   {
     n: 3,
     title: "Setting up on your own page",
-    blurb: "Step by step. Ads Manager, placements, Rs 500/day.",
+    blurb: "Step by step. Ads Manager, placements, Rs 700/day.",
     minutes: 28,
     pro: false,
   },
@@ -181,7 +181,7 @@ export const CHAPTERS = [
   {
     n: 5,
     title: "Setting your rate",
-    blurb: "Rate kam hai? This chapter is only about that.",
+    blurb: "What to charge a brand and how to quote it. Rate kam hai? This chapter is only about that.",
     minutes: 16,
     pro: false,
   },

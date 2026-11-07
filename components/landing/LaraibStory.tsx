@@ -21,20 +21,18 @@ export function LaraibStory() {
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1fr]">
         <div className="space-y-4 text-bone-2">
           <p>
-            {LARAIB.name} had {LARAIB.followers} followers and had never been paid for a collab. Brands followed her,
-            liked her reels, and never messaged.
+            {LARAIB.name} had {LARAIB.followers} followers and had never been paid for a collab.
           </p>
           <p>
-            We put one 40-second ad on her own page with an Instagram lead form. Category, budget, handle. Nothing
-            else changed. No agency, no DMs to brands.
+            I ran one ad from her own page with an Instagram lead form, so brand owners could apply to her. Category,
+            budget, handle.
           </p>
           {forms && deals && (
             <p>
               The form filled {forms.verified ? "" : "about "}
               <span className="tnum font-semibold text-bone">{num(forms.value as number)}</span> times. She closed{" "}
               {deals.verified ? "" : "about "}
-              <span className="tnum font-semibold text-bone">{num(deals.value as number)}</span> paid deals and said no
-              to the rest.
+              <span className="tnum font-semibold text-bone">{num(deals.value as number)}</span> paid deals.
             </p>
           )}
           {CPF_CURVE.weekOne && CPF_CURVE.weekThree && (

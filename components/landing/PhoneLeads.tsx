@@ -7,13 +7,17 @@ import { SampleTag } from "@/components/ui";
  * Hero surprise: a phone frame where "New lead" cards slide in one by one.
  * Pure HTML/CSS. Every card is a SAMPLE. Respects prefers-reduced-motion.
  */
+/**
+ * What the brand wants from the creator, and where.
+ * Product collabs: the brand ships to the creator, so no city, just "Shipped to you".
+ * Visit collabs (cafe, salon, restaurant): the creator has to go there, so the city matters.
+ */
 const SAMPLE_LEADS = [
-  { cat: "Skincare", budget: "Rs 15k to 25k", handle: "@gl••••skin", city: "Lahore" },
-  { cat: "Cafe", budget: "Rs 8k to 12k", handle: "@th••••cafe", city: "Karachi" },
-  { cat: "Clothing", budget: "Rs 20k to 40k", handle: "@na••••wear", city: "Lahore" },
-  { cat: "Mobile shop", budget: "Rs 10k to 15k", handle: "@ph••••hub", city: "Islamabad" },
-  { cat: "Salon", budget: "Rs 12k to 18k", handle: "@lu••••salon", city: "Faisalabad" },
-  { cat: "Restaurant", budget: "Rs 25k to 35k", handle: "@ka••••grill", city: "Lahore" },
+  { cat: "Clothing", ask: "Video content of the dress", budget: "Rs 20k to 40k", handle: "@na••••wear", where: "Shipped to you" },
+  { cat: "Cafe", ask: "Cafe visit", budget: "Rs 8k to 12k", handle: "@th••••cafe", where: "Islamabad" },
+  { cat: "Skincare", ask: "Unboxing video", budget: "Rs 15k to 25k", handle: "@gl••••skin", where: "Shipped to you" },
+  { cat: "Salon", ask: "Salon visit", budget: "Rs 12k to 18k", handle: "@lu••••salon", where: "Lahore" },
+  { cat: "Restaurant", ask: "Dinner visit", budget: "Rs 25k to 35k", handle: "@ka••••grill", where: "Lahore" },
 ];
 
 const VISIBLE = 3;
@@ -76,7 +80,7 @@ export function PhoneLeads() {
           </div>
 
           {/* Lead card stack */}
-          <ul className="mt-3 h-[300px] space-y-2 overflow-hidden px-3">
+          <ul className="mt-3 h-[320px] space-y-2 overflow-hidden px-3">
             {items.map((l, i) => (
               <li
                 key={l.key}
@@ -84,9 +88,10 @@ export function PhoneLeads() {
               >
                 <div className="flex items-center justify-between">
                   <span className="rounded-md bg-ink-3 px-2 py-0.5 text-[11px] font-semibold">{l.cat}</span>
-                  <span className="text-[11px] text-bone-2">{l.city}</span>
+                  <span className="text-[11px] text-bone-2">{l.where}</span>
                 </div>
-                <p className="tnum mt-2 text-[15px] font-semibold">{l.budget}</p>
+                <p className="mt-2 text-[15px] font-semibold leading-snug">{l.ask}</p>
+                <p className="tnum mt-0.5 text-[13px] text-bone-2">{l.budget}</p>
                 <div className="mt-1.5 flex items-center justify-between">
                   <span className="text-[12px] text-bone-2 blur-[1.5px] select-none">{l.handle}</span>
                   <span className="text-[11px] font-semibold text-lime">Paid collab</span>

@@ -24,11 +24,11 @@ export async function sendAccessEmail(e: AccessEmail): Promise<{ sent: boolean; 
     `Watch the course here (keep this link, it is yours only):`,
     e.accessUrl,
     ``,
-    `Before your ad: switch to a professional account, link your Facebook Page, add a payment method in Ads Manager, keep Rs 500 a day aside, and give yourself 40 seconds of camera time.`,
+    `Before your ad: switch to a professional account, link your Facebook Page, add a payment method in Ads Manager, keep Rs 700 a day aside, and give yourself 40 seconds of camera time.`,
     ``,
     `Questions, reply to this email${e.whatsappUrl ? ` or WhatsApp: ${e.whatsappUrl}` : ""}.`,
     ``,
-    `Sheikh Sajawal`,
+    `Sheikh Shazal`,
     `DirectCollabs`,
   ].join("\n");
 
