@@ -80,6 +80,17 @@ join lateral (
 alter table orders enable row level security;
 alter table order_events enable row level security;
 
+-- Lock the public Data API out of customer data. ONLY the server (service role) may touch these.
+-- 1. The view must respect the caller's rights. Without this a view runs as its owner, skips the
+--    row level security above, and would show every order to anyone who can reach the API.
+alter view orders_current set (security_invoker = true);
+-- 2. The public roles get nothing, even if the project auto-exposes new tables.
+revoke all on table public.orders, public.order_events, public.orders_current from anon, authenticated;
+-- 3. The server key keeps full access, whatever the project's "expose new tables" setting is.
+grant usage on schema public to service_role;
+grant all on table public.orders, public.order_events to service_role;
+grant select on table public.orders_current to service_role;
+
 -- Private bucket for the paid documents. Served only through /access/[token]/download/[id].
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('downloads', 'downloads', false, 20971520, array['application/pdf'])

@@ -1,4 +1,6 @@
 # Netlify auto-detects Next.js and installs its runtime. Do not set `publish` or a plugin here.
+# Security headers live in next.config.ts, because Netlify's toml headers do not reach pages
+# rendered by the Next.js runtime.
 [build]
   command = "npm run build"
 
@@ -7,10 +9,3 @@
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
