@@ -34,8 +34,10 @@ export const SITE = {
     // Thank-you page "Want it done for you?" card.
     showDoneForYou: false,
     // When true, /access shows an external invite link instead of the embedded player.
-    externalInvite: false,
-    externalInviteUrl: "",
+    // Set COURSE_INVITE_URL in Netlify (for example your Thinkific course link) and the course page shows
+    // an "Open the course" button to it instead of an embedded video.
+    externalInvite: Boolean(process.env.COURSE_INVITE_URL),
+    externalInviteUrl: process.env.COURSE_INVITE_URL ?? "",
   },
   legal: {
     entity: "DirectCollabs", // TODO: registered business name if any

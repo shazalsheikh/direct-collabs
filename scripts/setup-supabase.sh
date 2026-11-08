@@ -77,7 +77,13 @@ PY
 fi
 
 echo; echo "Step 1 of 6: log in to Supabase"
-if [ -n "${SUPABASE_ACCESS_TOKEN:-}" ]; then echo "  using SUPABASE_ACCESS_TOKEN from your environment"; else sb login; fi
+if [ -n "${SUPABASE_ACCESS_TOKEN:-}" ]; then
+  echo "  using SUPABASE_ACCESS_TOKEN from your environment"
+elif [ "$DRY_RUN" != "1" ] && npx --yes "supabase@$SB_VERSION" projects list >/dev/null 2>&1; then
+  echo "  already logged in, skipping"
+else
+  sb login
+fi
 
 echo; echo "Step 2 of 6: link this folder to your project"
 sb link --project-ref "$SUPABASE_PROJECT_REF"
@@ -132,7 +138,9 @@ for it in items:
 fi
 [ -z "$SERVICE_KEY" ] && { echo "No service key, stopping."; exit 1; }
 SUPABASE_URL="https://$SUPABASE_PROJECT_REF.supabase.co"
-ADMIN_PASSWORD="$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-20)"
+# Keep the admin password from the last run, so re-running never changes it. New one only the first time.
+ADMIN_PASSWORD="$(grep -s '^ADMIN_PASSWORD=' "$OUT_DIR/.env.netlify" | head -1 | cut -d= -f2- | tr -d '"')"
+[ -z "$ADMIN_PASSWORD" ] && ADMIN_PASSWORD="$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-20)"
 
 echo; echo "Step 6 of 6: write your env files and upload the PDFs"
 SUPABASE_URL="$SUPABASE_URL" SERVICE_KEY="$SERVICE_KEY" ADMIN_PASSWORD="$ADMIN_PASSWORD" OUT_DIR="$OUT_DIR" python3 - <<'PY'
@@ -173,6 +181,7 @@ netlify = {
     "RESEND_API_KEY": e.get("RESEND_API_KEY", ""),
     "RESEND_FROM": e.get("RESEND_FROM", ""),
     "COURSE_VIDEO_URL": e.get("COURSE_VIDEO_URL", ""),
+    "COURSE_INVITE_URL": e.get("COURSE_INVITE_URL", ""),
     "NEXT_PUBLIC_PIXEL_ID": e.get("PIXEL_ID", ""),
     "META_CAPI_TOKEN": e.get("META_CAPI_TOKEN", ""),
     "NEXT_PUBLIC_PAY_IN_2": "false",
@@ -194,5 +203,5 @@ echo "Done. What is next:"
 echo "  1. Netlify: run  npm run setup:netlify  (or in the website: Site configuration > Environment variables >"
 echo "     Add a variable > Import from a .env file, choose $OUT_DIR/.env.netlify)."
 echo "     Then Deploys > Trigger deploy > Clear cache and deploy site."
-echo "  2. Your admin password for /admin is inside .env.netlify (ADMIN_PASSWORD). Save it in a password manager."
+echo "  2. Your admin password for /admin is inside .env.netlify (ADMIN_PASSWORD) and stays the same on re-runs."
 echo "  3. Do a Rs 100 test purchase before any ads. Set the Pro price to 100 in lib/offer.config.ts first and put it back after."

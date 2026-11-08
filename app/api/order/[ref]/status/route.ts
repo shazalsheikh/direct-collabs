@@ -18,6 +18,8 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/order/[ref]/sta
         amount: o.amount,
         pay_in_2: o.pay_in_2,
         event_id: o.event_id,
+        // True when this site can send access emails (Resend configured). Lets the page promise email only when it is real.
+        email_on: Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM),
         access_token: o.status === "Approved" ? o.access_token : null,
         status_at: o.status_at,
       },

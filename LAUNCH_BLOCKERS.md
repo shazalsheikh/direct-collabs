@@ -18,13 +18,14 @@ Things only you can supply. The site builds and runs without them, but do not ru
 - [ ] **Who watches the Needs review queue.** One named person, with the admin password and WhatsApp, checking `/admin` at least twice a day.
 - [ ] **Founding counter decision.** `FOUNDING.enabled` is off. If you turn it on you must raise `PLANS.pro.price` yourself at 100 sales (admin warns you).
 - [ ] **Re-measure speed on Netlify** with a real CDN (Lighthouse mobile, LCP target under 2 s).
-- [ ] **Course video URL.** `COURSE_VIDEO_URL` (unlisted YouTube, Vimeo or Bunny embed).
+- [ ] **Course link.** Your Thinkific link as `COURSE_INVITE_URL` in `.env.supabase` (the course page then shows an Open the course button). Or `COURSE_VIDEO_URL` for an embedded video. Make the Thinkific course private and enroll each buyer by email, or the link can be forwarded.
 - [ ] **Read all six documents** in `content/downloads/src/` and fix anything that does not sound like you. They are drafts. Then `npm run build:downloads` and `npm run upload:downloads`.
 - [ ] **Decide on the public repository.** The paid documents are git-ignored, so they are safe. Real contact details and your code are still public. Make it private in GitHub if you prefer.
 - [ ] **A working support mailbox.** `SITE.supportEmail` (`hello@directcollabs.pk`) is on the legal pages. Set up forwarding for the real domain in Namecheap and update it.
 - [ ] **Supabase project** created, then `npm run setup:supabase` (creates tables and private buckets, deploys the function and its secrets, uploads the PDFs, writes `.env.netlify`).
 - [ ] **Import `.env.netlify` into Netlify** and redeploy. Save the `ADMIN_PASSWORD` from that file in a password manager.
 - [ ] **A Rs 100 test purchase** end to end, then put the Pro price back.
-- [ ] **Resend domain verified** (add its DNS records in Namecheap) and `RESEND_API_KEY` set. Optional: skipped for the lean launch. Until then send access links from `/admin` on WhatsApp.
-- [ ] **Anthropic API key** for automatic receipt checking. Optional: skipped for the lean launch, add it after the first sales.
+- [ ] **Resend domain verified** (add its DNS records in Namecheap), `RESEND_API_KEY` and `RESEND_FROM` set. Needed for the full system: the access email is sent automatically.
+- [ ] **WhatsApp is manual.** The system emails the link by itself, but sending it on WhatsApp is a button you press in `/admin` (Sales tab). Automatic WhatsApp needs the WhatsApp Business API (Meta approval, costs money).
+- [ ] **Anthropic API key** for automatic receipt checking. Needed for the full system. Put it in `.env.supabase` and run `npm run setup:supabase` again.
 - [ ] **Legal pages reviewed** (`/terms`, `/privacy`, `/refund-policy`) and the business name in `SITE.legal`.

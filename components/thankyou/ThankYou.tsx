@@ -17,6 +17,7 @@ type Status = {
   amount: number;
   pay_in_2: { enabled: boolean; first: number; second: number; due_at: string; first_paid: boolean; second_paid?: boolean } | null;
   event_id: string | null;
+  email_on?: boolean;
   access_token: string | null;
 };
 
@@ -70,6 +71,8 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
   const step = s?.status === "Approved" ? 3 : s?.status === "Submitted" || s?.status === "Needs review" ? 2 : s ? 1 : 1;
   const review = s?.status === "Needs review";
   const planName = s ? (s.kind === "upgrade" ? "Upgrade to Pro" : s.kind === "second" ? "Second payment" : PLANS[s.plan].name) : "";
+  // Promise email only when the server can really send it.
+  const shareWhere = s?.email_on ? "on WhatsApp and to the email you gave" : "on WhatsApp";
   const wa = whatsappLink(`Order ${ref ?? ""}, ${planName}, paid ${s ? rs(s.pay_in_2?.enabled && !s.pay_in_2.first_paid ? s.pay_in_2.first : s.amount) : ""}`);
   const dfy = SITE.flags.showDoneForYou ? whatsappLink(`Hi, order ${ref ?? ""}. I want the done-for-you setup.`) : "";
 
@@ -77,7 +80,7 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
     <div className="mt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">Order {ref ?? "…"}</p>
       <h1 className="display mt-3 text-4xl sm:text-5xl">
-        {s?.status === "Approved" ? "Access unlocked." : review ? "Almost there." : "Receipt received."}
+        {s?.status === "Approved" ? "Access unlocked." : s?.status === "Lead" ? "One more step." : "Thank you!"}
       </h1>
 
       {!ref && (
@@ -95,20 +98,15 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
 
       {/* Timeline */}
       <ol className="mt-8 space-y-0">
-        <Step n={1} active={step >= 1} done={step > 1} title="Receipt received" body="We have your screenshot and your details." />
+        <Step n={1} active={step >= 1} done={step > 1} title="Payment screenshot received" body="We have your screenshot and your details." />
         <Step
           n={2}
           active={step >= 2}
           done={step > 2}
-          title={review ? "Checking by hand" : "Verifying"}
-          body={
-            review
-              ? "We are checking your receipt by hand, usually within a few hours and often faster. We send your link on WhatsApp, and this page unlocks by itself."
-              : "We are checking your receipt, usually within a few hours and often faster. This page checks itself every 20 seconds, so keep it open."
-          }
-          warn={review}
+          title="We are checking your payment"
+          body={`We are confirming your payment. Then we will share your course link ${shareWhere}. If you keep this page open, it unlocks by itself.`}
         />
-        <Step n={3} active={step >= 3} done={step >= 3} title="Access unlocked" body="Your link is sent on WhatsApp and appears right here." last />
+        <Step n={3} active={step >= 3} done={step >= 3} title="Course link shared" body={`We will share your course link ${shareWhere} soon. It also appears on this page once your payment is confirmed.`} last />
       </ol>
 
       {s?.status === "Approved" && s.access_token && (
@@ -117,8 +115,8 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
         </Link>
       )}
       {review && wa && (
-        <a href={wa} className="mt-6 flex min-h-14 w-full items-center justify-center rounded-pill bg-lime text-base font-semibold text-ink">
-          WhatsApp us the receipt
+        <a href={wa} className="mt-6 flex min-h-12 w-full items-center justify-center rounded-pill border border-bone-3 text-sm font-semibold text-bone">
+          Questions? Message us on WhatsApp
         </a>
       )}
       {s && s.status === "Lead" && (

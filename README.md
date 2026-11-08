@@ -114,6 +114,7 @@ supabase secrets set \
 | `NEXT_PUBLIC_PIXEL_ID`, `META_CAPI_TOKEN` | Netlify | Meta Pixel and server events |
 | `NEXT_PUBLIC_GA4_ID`, `NEXT_PUBLIC_GADS_ID`, `NEXT_PUBLIC_GADS_CONVERSION_LABEL` | Netlify | GA4 and Google Ads stubs |
 | `COURSE_VIDEO_URL` | Netlify | Embedded player on `/access` |
+| `COURSE_INVITE_URL` | Netlify | External course link (for example Thinkific). The course page shows an Open the course button and no video |
 
 `NEXT_PUBLIC_*` values are baked in at build time. Changing one needs a redeploy.
 
