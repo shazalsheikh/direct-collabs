@@ -93,6 +93,35 @@ export const LARAIB = {
 };
 
 /**
+ * Huda: second run, the cleanest proof. Numbers were given by the owner directly.
+ * consented: false  -> the page says "A 70k creator" and shows no screenshots.
+ * consented: true   -> the page uses her name. Only flip it after her written OK.
+ * Screenshot slots hide while src is "".
+ */
+export const HUDA = {
+  name: "Huda",
+  followers: "70k",
+  consented: false,
+  spend: 4000, // Rs, total
+  days: 4,
+  leads: 40,
+  dealValue: 35000, // Rs, one brand
+  dealWhat: "2 jacket reels",
+  payments: [
+    { src: "", alt: "", caption: "" },
+    { src: "", alt: "", caption: "" },
+  ] as Screenshot[],
+  chats: [
+    { src: "", alt: "", caption: "" },
+    { src: "", alt: "", caption: "" },
+  ] as Screenshot[],
+  adsManager: [
+    { src: "", alt: "", caption: "" },
+    { src: "", alt: "", caption: "" },
+  ] as Screenshot[],
+};
+
+/**
  * Testimonials. Zero by design until real ones exist.
  * Each needs name (or handle), text, and consent. Hidden when empty.
  */

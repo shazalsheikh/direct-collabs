@@ -8,6 +8,7 @@ import { Mechanism } from "./Mechanism";
 import { Calculator } from "./Calculator";
 import { Compare } from "./Compare";
 import { LaraibStory } from "./LaraibStory";
+import { HudaStory } from "./HudaStory";
 import { Inside } from "./Inside";
 import { Plans } from "./Plans";
 import { Guarantee } from "./Guarantee";
@@ -28,6 +29,7 @@ export function Landing({ hero }: { hero: HeroVariant }) {
         <Mechanism />
         <Calculator />
         <Compare />
+        <HudaStory />
         <LaraibStory />
         <Inside />
         <Plans />

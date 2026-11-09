@@ -6,6 +6,7 @@ export { Mechanism } from "./Mechanism";
 export { Calculator } from "./Calculator";
 export { Compare } from "./Compare";
 export { LaraibStory } from "./LaraibStory";
+export { HudaStory } from "./HudaStory";
 export { Inside } from "./Inside";
 export { Plans } from "./Plans";
 export { Guarantee } from "./Guarantee";
