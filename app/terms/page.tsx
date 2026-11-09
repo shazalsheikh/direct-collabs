@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
 import { PLANS, AD_BUDGET, PAY_IN_2, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
-import { rs } from "@/lib/format";
+import { rs, lakh } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Terms", description: "Terms of use for DirectCollabs.", alternates: { canonical: "/terms" } };
 
@@ -18,8 +18,8 @@ export default function Terms() {
 
       <H>1-on-1 coaching</H>
       <p>
-        {COACHING.name} is bought through the checkout page like the course. The full price is {rs(COACHING_TOTAL)}. You pay {rs(COACHING.upfront)} to start. The other {rs(COACHING.successFee)} is due only
-        if brand deals that came through your system have paid you {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your first ad going live, shown by your payment
+        {COACHING.name} is bought through the checkout page like the course. The price is up to {rs(COACHING_TOTAL)}. You pay {rs(COACHING.upfront)} to start. The other {rs(COACHING.successFee)} is due only
+        if paid brand deals that came through your system have paid you {lakh(COACHING.revenueTarget)}, which is {rs(COACHING.revenueTarget)}, or more within {COACHING.windowMonths} months of your first ad going live. Only brand payments in cash count, shown by your payment
         screenshots. If the total stays below that, you owe nothing more. You agree to these terms at checkout, and we confirm them in writing on WhatsApp when we book your first call. We do not promise any amount of income.
       </p>
 

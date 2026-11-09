@@ -3,6 +3,12 @@ export function rs(n: number) {
   return `Rs ${Math.round(n).toLocaleString("en-PK")}`;
 }
 
+/** Rs 500000 -> "Rs 5 lakh". Whole or half lakhs read cleanly; anything else falls back to rs(). */
+export function lakh(n: number) {
+  const l = n / 100000;
+  return Number.isInteger(l * 2) ? `Rs ${l} lakh` : rs(n);
+}
+
 export function num(n: number) {
   return Math.round(n).toLocaleString("en-PK");
 }

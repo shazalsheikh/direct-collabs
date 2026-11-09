@@ -6,7 +6,7 @@ import Link from "next/link";
 import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, COACHING, COACHING_TOTAL, type PlanId } from "@/lib/offer.config";
 import { BANK, formatPkNumber } from "@/lib/bank.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
-import { rs } from "@/lib/format";
+import { rs, lakh } from "@/lib/format";
 import { normalizePkPhone, isEmail, cleanHandle } from "@/lib/format";
 import { amountsFor, ALLOWED_RECEIPT_TYPES, MAX_RECEIPT_BYTES, type FieldErrors } from "@/lib/validate";
 import { captureAttribution, readAttribution } from "@/lib/attribution";
@@ -316,7 +316,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                           </ul>
                           {p === "coaching" && (
                             <p className="mt-2 text-[13px] text-bone-2">
-                              Full price {rs(COACHING_TOTAL)}. Pay {rs(COACHING.upfront)} today. The other {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
+                              Up to {rs(COACHING_TOTAL)}. Pay {rs(COACHING.upfront)} today. The other {rs(COACHING.successFee)} only after paid brand deals from your system reach {lakh(COACHING.revenueTarget)}.
                             </p>
                           )}
                           <p className="mt-2 text-[12px] text-bone-3">
@@ -374,10 +374,16 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                 {coaching && (
                   <Step title="How the coaching fee works">
                     <div id="f-terms" className={`rounded-card border-2 bg-ink-2 p-4 ${termsError ? "border-coral" : "border-ink-4"}`}>
-                      <p className="text-[15px] leading-relaxed text-bone-2">
-                        The full price is {rs(COACHING_TOTAL)}. You pay {rs(COACHING.upfront)} today. The other {rs(COACHING.successFee)} is due only if brand deals that came through your system pay you{" "}
-                        {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. If the total stays
-                        below that, you owe nothing more. No result is promised. I confirm these terms with you on WhatsApp and book your first call.
+                      <ol className="list-decimal space-y-1.5 pl-5 text-[15px] leading-relaxed text-bone-2 marker:text-bone-3">
+                        <li>You pay {rs(COACHING.upfront)} today to start. The price is up to {rs(COACHING_TOTAL)}.</li>
+                        <li>
+                          If paid brand deals from your system reach {lakh(COACHING.revenueTarget)} within {COACHING.windowMonths} months of your first ad going live, you pay the other{" "}
+                          {rs(COACHING.successFee)}.
+                        </li>
+                        <li>If they do not, you owe nothing more.</li>
+                      </ol>
+                      <p className="mt-3 text-[13px] leading-relaxed text-bone-3">
+                        Brand payments only, in cash, shown by your screenshots. No result is promised. I confirm these terms with you on WhatsApp and book your first call.
                       </p>
                       <label className="mt-4 flex cursor-pointer items-start gap-3">
                         <input
@@ -603,7 +609,7 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
         </div>
         {plan === "coaching" && !linked && (
           <p className="text-[13px] text-bone-2">
-            Later: {rs(COACHING.successFee)}, only after you earn {rs(COACHING.revenueTarget)} or more.
+            Later: {rs(COACHING.successFee)}, only after paid brand deals from your system reach {lakh(COACHING.revenueTarget)}.
           </p>
         )}
         {payIn2 && (

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Section, Eyebrow, LinkButton, HonestLine } from "@/components/ui";
 import { PLANS, AD_BUDGET, FOUNDING, PAY_IN_2, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
-import { rs } from "@/lib/format";
+import { rs, lakh } from "@/lib/format";
 import { countVerifiedSales } from "@/lib/db";
 
 /**
@@ -59,13 +59,13 @@ export function Plans() {
           </div>
           <h3 className="display mt-5 text-3xl">{COACHING.name}</h3>
           <p className="mt-2 text-sm text-bone-2">
-            Full price <span className="tnum font-semibold text-bone">{rs(COACHING_TOTAL)}</span>
+            Up to <span className="tnum font-semibold text-bone">{rs(COACHING_TOTAL)}</span>
           </p>
           <p className="display tnum text-5xl">
             {rs(COACHING.upfront)} <span className="text-2xl text-lime">today</span>
           </p>
           <p className="mt-1 text-sm text-bone-2">
-            The other {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
+            Pay the other {rs(COACHING.successFee)} only after paid brand deals from your system have reached {lakh(COACHING.revenueTarget)}, which is {rs(COACHING.revenueTarget)}.
           </p>
           <p className="mt-3 text-bone-2">I sit with you on live Zoom and build the whole system on your own page.</p>
           <ul className="mt-5 space-y-2.5 text-[15px]">
@@ -79,10 +79,15 @@ export function Plans() {
 
           <div className="mt-6 rounded-xl border border-ink-4 bg-ink p-4 text-[14px] leading-relaxed text-bone-2">
             <p className="font-semibold text-bone">How the {rs(COACHING.successFee)} works</p>
-            <p className="mt-1">
-              You pay it only if brand deals that came through your system pay you {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your
-              first ad going live. You show me the payment screenshots. If the total stays below that, you owe nothing more.
-            </p>
+            <ol className="mt-2 list-decimal space-y-1.5 pl-5 marker:text-bone-3">
+              <li>You pay {rs(COACHING.upfront)} today to start.</li>
+              <li>
+                If paid brand deals from your system reach {lakh(COACHING.revenueTarget)} within {COACHING.windowMonths} months of your first ad going live, you pay the other{" "}
+                {rs(COACHING.successFee)}.
+              </li>
+              <li>If they do not, you owe nothing more.</li>
+            </ol>
+            <p className="mt-2 text-[13px] text-bone-3">Brand payments only, in cash, shown by your screenshots.</p>
           </div>
 
           <div className="mt-auto pt-7">

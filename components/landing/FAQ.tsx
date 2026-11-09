@@ -1,7 +1,7 @@
 import { Section, Eyebrow } from "@/components/ui";
 import { AD_BUDGET, GUARANTEE, PLANS, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
-import { rs } from "@/lib/format";
+import { rs, lakh } from "@/lib/format";
 
 export function FAQ() {
   const g = GUARANTEE[GUARANTEE.type];
@@ -30,8 +30,8 @@ export function FAQ() {
       `The course is for you if you are happy to set up the ad yourself from recorded lectures. Coaching is for you if you want me on live Zoom building the setup with you. You pay at checkout like the course, and I message you on WhatsApp to book your first call.`,
     ],
     [
-      `Why is the ${rs(COACHING.successFee)} only after ${rs(COACHING.revenueTarget)}?`,
-      `The full coaching price is ${rs(COACHING_TOTAL)}, and you pay ${rs(COACHING.upfront)} today. The other ${rs(COACHING.successFee)} is due only if brand deals that came through your system have paid you ${rs(COACHING.revenueTarget)} or more within ${COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
+      `Why is the ${rs(COACHING.successFee)} only after ${lakh(COACHING.revenueTarget)}?`,
+      `The coaching price is up to ${rs(COACHING_TOTAL)}, and you pay ${rs(COACHING.upfront)} today. The other ${rs(COACHING.successFee)} is due only if paid brand deals from your system have reached ${lakh(COACHING.revenueTarget)} within ${COACHING.windowMonths} months of your first ad going live. Only brand payments in cash count, shown by your screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
     ],
     [
       "Is this a guaranteed income?",
