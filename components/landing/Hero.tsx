@@ -1,6 +1,5 @@
 import { Container, LinkButton, HonestLine } from "@/components/ui";
 import { PLANS, GUARANTEE } from "@/lib/offer.config";
-import { LARAIB } from "@/lib/proof.config";
 import type { HeroVariant } from "@/lib/heroes";
 import { rs } from "@/lib/format";
 import { Headline } from "./HeroHeadline";
@@ -31,7 +30,7 @@ export function Hero({ hero }: { hero: HeroVariant }) {
             <ul className="mt-7 grid grid-cols-1 gap-2 text-[13px] text-bone-2 sm:grid-cols-3 sm:gap-4">
               <li className="flex items-start gap-2">
                 <Dot />
-                Run on a {LARAIB.followers} creator&apos;s page first
+                Works for 5k, 10k and bigger pages
               </li>
               <li className="flex items-start gap-2">
                 <Dot />

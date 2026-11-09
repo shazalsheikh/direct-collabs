@@ -5,14 +5,14 @@ import { Section, Eyebrow } from "@/components/ui";
 import { ANCHOR, AD_BUDGET } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
 
-const MIN = 3000;
+const MIN = 1000;
 const MAX = 50000;
 const STEP = 500;
 const CUTS = [20, 30, 40] as const;
 
 /** Second surprise: "Do the math". Pure client state, no deps. */
 export function Calculator() {
-  const [rate, setRate] = useState(12000);
+  const [rate, setRate] = useState(8000);
   const [cut, setCut] = useState<number>(ANCHOR.agencyCutPct);
   const id = useId();
 

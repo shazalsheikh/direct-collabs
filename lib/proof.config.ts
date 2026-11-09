@@ -14,7 +14,7 @@ export type Stat = {
   note?: string;
 };
 
-/** Laraib: 100k followers, zero paid collabs before, then one ad. */
+/** Laraib: 78k followers, zero paid collabs before, then one ad. */
 export const PROOF_STATS: Stat[] = [
   {
     id: "forms",
@@ -78,7 +78,7 @@ export type Screenshot = {
  */
 export const LARAIB = {
   name: "Laraib",
-  followers: "100k",
+  followers: "78k",
   // TODO: get written consent from Laraib to use name + screenshots.
   consented: false,
   payments: [
@@ -110,7 +110,7 @@ export const LARAIB = {
  */
 export const HUDA = {
   name: "Huda",
-  followers: "70k",
+  followers: "45k",
   consented: false,
   spend: 4000, // Rs, total
   days: 4,

@@ -7,6 +7,7 @@ export { Calculator } from "./Calculator";
 export { Compare } from "./Compare";
 export { LaraibStory } from "./LaraibStory";
 export { HudaStory } from "./HudaStory";
+export { SmallCreators } from "./SmallCreators";
 export { Inside } from "./Inside";
 export { Plans } from "./Plans";
 export { Guarantee } from "./Guarantee";

@@ -7,8 +7,8 @@ export function FAQ() {
   const g = GUARANTEE[GUARANTEE.type];
   const items: [string, string][] = [
     [
-      "Big following needed?",
-      `No. Smaller creators run this too. But the ad costs about ${rs(AD_BUDGET.perMonthAtMin)} a month, so your rate decides whether it pays. Use the calculator above before you buy.`,
+      "Do I need a big following?",
+      `No. Creators with 5k and 10k followers use this too, and it is built to help smaller pages get their first paid collabs. The ad costs about ${rs(AD_BUDGET.perMonthAtMin)} a month, so at a smaller rate you need a few deals to cover it. Use the calculator above before you buy.`,
     ],
     [`${rs(AD_BUDGET.minPerDay)} a day, really?`, "Yes. That is the budget the whole course is built around. You can go higher later, you never need to."],
     ["What if I get no forms?", g.headline + " " + g.body],

@@ -11,7 +11,7 @@ export function ProofBar() {
         <dl className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
           {stats.map((s) => (
             <div key={s.id}>
-              <dd className="display tnum text-3xl sm:text-4xl">
+              <dd className="display tnum whitespace-nowrap text-2xl sm:text-4xl">
                 {!s.verified && <span className="text-bone-3">~</span>}
                 {s.prefix}
                 {num(s.value as number)}

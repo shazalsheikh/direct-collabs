@@ -18,6 +18,8 @@ const SAMPLE_LEADS = [
   { cat: "Skincare", ask: "Unboxing video", budget: "Rs 15k to 25k", handle: "@gl••••skin", where: "Shipped to you" },
   { cat: "Salon", ask: "Salon visit", budget: "Rs 12k to 18k", handle: "@lu••••salon", where: "Lahore" },
   { cat: "Restaurant", ask: "Dinner visit", budget: "Rs 25k to 35k", handle: "@ka••••grill", where: "Lahore" },
+  { cat: "Jewellery", ask: "Reel with the new collection", budget: "Rs 4k to 7k", handle: "@sa••••jewels", where: "Shipped to you" },
+  { cat: "Bakery", ask: "Bakery visit", budget: "Rs 3k to 5k", handle: "@su••••bakes", where: "Islamabad" },
 ];
 
 const VISIBLE = 3;
