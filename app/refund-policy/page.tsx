@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
-import { GUARANTEE, PAY_IN_2, BUMP, UPGRADE } from "@/lib/offer.config";
+import { GUARANTEE, PAY_IN_2 } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Refund policy", description: "How refunds work at DirectCollabs." };
@@ -38,9 +38,9 @@ export default function RefundPolicy() {
       </p>
       <Contact />
 
-      <H>Add-ons, upgrades and instalments</H>
+      <H>Coaching and instalments</H>
       <UL>
-        <li>The {BUMP.name} ({rs(BUMP.price)}) and the Basic to Pro upgrade ({rs(UPGRADE.price)}) are part of your order and are refunded together with it.</li>
+        <li>This policy covers the course. The 1-on-1 coaching is agreed separately in writing on WhatsApp before you pay.</li>
         {PAY_IN_2.enabled && (
           <li>
             If you paid in two parts, a refund covers what you have actually paid. If the second part ({rs(PAY_IN_2.second)}) is not paid, you owe nothing further and your

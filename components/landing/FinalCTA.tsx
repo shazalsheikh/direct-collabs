@@ -19,10 +19,10 @@ export function FinalCTA() {
           Get the system · {rs(PLANS.pro.price)}
         </LinkButton>
         <Link
-          href="/checkout?plan=basic"
+          href="#plans"
           className="min-h-11 inline-flex items-center justify-center text-sm text-bone-3 underline-offset-4 hover:text-bone hover:underline"
         >
-          or Basic, {rs(PLANS.basic.price)}
+          or work with me 1-on-1
         </Link>
       </div>
       <HonestLine className="mt-4 max-w-md" />

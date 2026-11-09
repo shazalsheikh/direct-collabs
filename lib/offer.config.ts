@@ -8,6 +8,7 @@ export type PlanId = "basic" | "pro";
 export const CURRENCY = "PKR";
 
 export const PLANS = {
+  // Not sold any more (see SELLABLE_PLANS). Kept so the type, old orders and the DB check still work.
   basic: {
     id: "basic" as const,
     name: "Basic",
@@ -20,26 +21,34 @@ export const PLANS = {
     ],
     recommended: false,
   },
+  // The one course people can buy. Internal id stays "pro" so orders, access and the DB need no migration.
   pro: {
     id: "pro" as const,
-    name: "Pro",
-    price: 7900,
-    tagline: "Everything in Basic plus the scripts you actually need on day one.",
+    name: "The Course",
+    price: 15000,
+    tagline: "Recorded lectures, templates and scripts. You set it up yourself.",
     includes: [
-      "Everything in Basic",
-      "5 ready-to-shoot ad scripts (Roman Urdu, natural Lahore speech)",
+      "2-hour recorded course, Roman Urdu",
+      "Instagram lead form template",
+      "Ad setup checklist",
+      "5 ready-to-shoot ad scripts in Roman Urdu",
       "20 DM reply scripts",
       "Rate card and quote sheet",
+      "Barter Pitch Pack: 20 pitch DMs, media kit template, follow-up sequence",
     ],
-    recommended: true,
+    recommended: false,
   },
 } satisfies Record<PlanId, unknown>;
+
+/** Plans a visitor can actually buy. The server refuses anything else. */
+export const SELLABLE_PLANS: PlanId[] = ["pro"];
 
 /** Which plan is preselected on the landing page CTA and checkout. */
 export const DEFAULT_PLAN: PlanId = "pro";
 
-/** Order bump shown on checkout only. */
+/** Order bump shown on checkout only. Off: the Barter Pitch Pack is now included in the course. */
 export const BUMP = {
+  enabled: false,
   id: "barter-pitch-pack",
   name: "Barter Pitch Pack",
   price: 1200,
@@ -61,8 +70,8 @@ export const UPGRADE = {
 export const PAY_IN_2 = {
   enabled: process.env.NEXT_PUBLIC_PAY_IN_2 === "true",
   plan: "pro" as const,
-  first: 4000,
-  second: 4000,
+  first: 7500,
+  second: 7500,
   daysBetween: 7,
   // Access unlocks after the first part clears.
   unlockAfterFirst: true,
@@ -78,9 +87,9 @@ export const AD_BUDGET = {
 
 /** Anchor used next to the price. */
 export const ANCHOR = {
-  dealValue: 20000,
+  dealValue: 35000,
   agencyCutPct: 30,
-  // "Agency keeps Rs 6,000 of a Rs 20,000 deal. Pro costs less than two agency cuts."
+  // "Agency keeps Rs 10,500 of a Rs 35,000 deal. The course costs less than two agency cuts."
   get agencyKeeps() {
     return Math.round((this.dealValue * this.agencyCutPct) / 100);
   },
@@ -140,8 +149,28 @@ export const GUARANTEE: {
 export const FOUNDING = {
   enabled: false,
   limit: 100,
-  priceAfter: 9900,
+  priceAfter: 19900,
   showAt: 10,
+};
+
+/**
+ * The second offer: 1-on-1 coaching and a full setup. Sold by application on WhatsApp, never through checkout.
+ * The Rs 100,000 is a success fee: due only if brand deals that came through the system pay the client
+ * `revenueTarget` or more inside `windowMonths` of the first ad going live. Edit numbers here only.
+ */
+export const COACHING = {
+  name: "1-on-1 Coaching and Setup",
+  upfront: 50000,
+  successFee: 100000,
+  revenueTarget: 500000,
+  windowMonths: 2,
+  calls: 3,
+  callsWithinDays: 10,
+  includes: [
+    "3 live 1-on-1 Zoom calls in your first 10 days",
+    "I build your ad, lead form and funnel with you, on your page",
+    "A place in the community WhatsApp group",
+  ],
 };
 
 /** The honest line. Shown near every CTA group. Do not soften it. */
@@ -206,10 +235,10 @@ export const DOWNLOADS = [
   { id: "scripts", name: "5 ad scripts (Roman Urdu)", pro: true, file: "ad-scripts.pdf", filename: "DirectCollabs - 5 ad scripts.pdf" },
   { id: "dm-scripts", name: "20 DM reply scripts", pro: true, file: "dm-reply-scripts.pdf", filename: "DirectCollabs - 20 DM reply scripts.pdf" },
   { id: "rate-card", name: "Rate card and quote sheet", pro: true, file: "rate-card-and-quote-sheet.pdf", filename: "DirectCollabs - Rate card and quote sheet.pdf" },
-  { id: "barter-pack", name: "Barter Pitch Pack", pro: false, bump: true, file: "barter-pitch-pack.pdf", filename: "DirectCollabs - Barter Pitch Pack.pdf" },
+  { id: "barter-pack", name: "Barter Pitch Pack", pro: true, bump: false, file: "barter-pitch-pack.pdf", filename: "DirectCollabs - Barter Pitch Pack.pdf" },
 ] as const;
 
 /** Total for an order. Pure, used on client, server and in the edge function. */
 export function orderTotal(plan: PlanId, bump: boolean) {
-  return PLANS[plan].price + (bump ? BUMP.price : 0);
+  return PLANS[plan].price + (bump && BUMP.enabled ? BUMP.price : 0);
 }

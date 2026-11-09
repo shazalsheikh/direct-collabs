@@ -19,7 +19,7 @@ export async function approveManually(order: OrderCurrent, note = "Marked as pai
   const accessUrl = `${SITE.url.replace(/\/$/, "")}/access/${token}`;
   const [email, capi] = await Promise.all([
     order.email
-      ? sendAccessEmail({ apiKey: process.env.RESEND_API_KEY, from: process.env.RESEND_FROM, to: order.email, name: order.name ?? "", plan: order.plan === "pro" ? "Pro" : "Basic", ref: order.ref, accessUrl, whatsappUrl: SITE.whatsappNumber ? `https://wa.me/${SITE.whatsappNumber}` : undefined })
+      ? sendAccessEmail({ apiKey: process.env.RESEND_API_KEY, from: process.env.RESEND_FROM, to: order.email, name: order.name ?? "", plan: order.plan === "pro" ? "course" : "Basic", ref: order.ref, accessUrl, whatsappUrl: SITE.whatsappNumber ? `https://wa.me/${SITE.whatsappNumber}` : undefined })
       : Promise.resolve({ sent: false, error: "no email" }),
     sendCapiEvent({
       pixelId: process.env.NEXT_PUBLIC_PIXEL_ID,

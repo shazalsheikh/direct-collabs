@@ -4,7 +4,9 @@ Things only you can supply. The site builds and runs without them, but do not ru
 
 - [x] **Easypaisa and JazzCash details** are set in `supabase/functions/_shared/bank.config.ts` (one number, 03000132773, Shazal Ahmed Ali, shown as "Easypaisa or JazzCash"). Confirm the number and title are right and that both wallets are active on it.
 - [ ] **WhatsApp number.** `NEXT_PUBLIC_WHATSAPP_NUMBER` in Netlify env (digits only, country code first).
-- [ ] **Final prices** in `lib/offer.config.ts` (Basic, Pro, bump, upgrade, pay-in-2 split, founding price after 100).
+- [ ] **Final prices** in `lib/offer.config.ts`. The site now sells two offers: The Course (Rs 15,000, internal plan id `pro`) and 1-on-1 Coaching (`COACHING`: Rs 50,000 to start, Rs 100,000 only after Rs 5 lakh of brand-deal revenue within 2 months). Basic, the order bump and the upgrade are switched off (`SELLABLE_PLANS`, `BUMP.enabled`).
+- [ ] **Coaching is sold by WhatsApp application, not checkout.** Agree the terms in writing on WhatsApp before taking the Rs 50,000 (a Rs 50,000 payment probably needs bank transfer, so check wallet receiving limits). Read the 1-on-1 coaching paragraph in `/terms` and make sure it says exactly what you agree with each client.
+- [ ] **Check the course guarantee still fits Rs 15,000.** The refund guarantee is 10 brand forms in 7 days at Rs 700 a day. The refund exposure is now larger.
 - [ ] **Refund window and guarantee type** in `lib/offer.config.ts` (`GUARANTEE.type`). `/refund-policy` follows it.
 - [ ] **Netlify URL / custom domain.** `NEXT_PUBLIC_SITE_URL`. Needed for OG tags, email links and the Meta pixel domain verification.
 - [ ] **Your photo** (WebP, square, under 60 KB) at `public/owner.webp`, then set `SITE.owner.photo` in `lib/site.config.ts`.

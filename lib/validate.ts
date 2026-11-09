@@ -1,5 +1,5 @@
 import { normalizePkPhone, isEmail, cleanHandle } from "./format";
-import { PLANS, BUMP, PAY_IN_2, UPGRADE, orderTotal, type PlanId } from "./offer.config";
+import { PLANS, BUMP, PAY_IN_2, UPGRADE, SELLABLE_PLANS, orderTotal, type PlanId } from "./offer.config";
 import type { PayIn2 } from "./orders";
 
 export type LinkedKind = "upgrade" | "second";
@@ -18,8 +18,9 @@ export type FieldErrors = Partial<Record<keyof Details | "receipt", string>>;
 
 export function parseDetails(raw: Record<string, unknown>, opts: { requireAll: boolean }): { ok: true; d: Details } | { ok: false; errors: FieldErrors } {
   const errors: FieldErrors = {};
-  const plan = raw.plan === "basic" ? "basic" : "pro";
-  const bump = raw.bump === true || raw.bump === "1" || raw.bump === "true";
+  // Only plans in SELLABLE_PLANS can be bought. Anything else falls back to the course.
+  const plan: PlanId = raw.plan === "basic" && SELLABLE_PLANS.includes("basic") ? "basic" : "pro";
+  const bump = BUMP.enabled && (raw.bump === true || raw.bump === "1" || raw.bump === "true");
   const payIn2 = PAY_IN_2.enabled && plan === PAY_IN_2.plan && (raw.payIn2 === true || raw.payIn2 === "1" || raw.payIn2 === "true");
 
   const name = String(raw.name ?? "").trim();

@@ -1,22 +1,33 @@
 import { Suspense } from "react";
 import { Section, Eyebrow, LinkButton, HonestLine } from "@/components/ui";
-import { PLANS, UPGRADE, AD_BUDGET, FOUNDING, PAY_IN_2 } from "@/lib/offer.config";
+import { PLANS, AD_BUDGET, FOUNDING, PAY_IN_2, COACHING } from "@/lib/offer.config";
+import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 import { countVerifiedSales } from "@/lib/db";
 
+/**
+ * Two offers, nothing else.
+ * 1. The Course: recorded lectures, you do it yourself. Buys through /checkout.
+ * 2. Coaching: live 1-on-1 and a full setup. Applies on WhatsApp, pays by agreement. Never through checkout.
+ * Every number comes from lib/offer.config.ts.
+ */
 export function Plans() {
   const budget = `Needs ${rs(AD_BUDGET.minPerDay)} to ${rs(AD_BUDGET.maxPerDay).replace("Rs ", "")} a day for ads.`;
+  const apply =
+    whatsappLink(
+      `Hi ${SITE.owner.name}, I want to apply for the 1-on-1 coaching.\nMy Instagram: @\nMy followers: \nWhat I would charge a brand for one reel: `,
+    ) || "#plans";
   return (
     <Section id="plans" wide>
-      <Eyebrow>Pick one</Eyebrow>
-      <h2 className="display mt-3 text-4xl sm:text-5xl">Start tonight.</h2>
+      <Eyebrow>Two ways in</Eyebrow>
+      <h2 className="display mt-3 text-4xl sm:text-5xl">Do it yourself, or do it with me.</h2>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-[1.25fr_1fr] lg:items-start">
-        {/* Pro */}
-        <div className="rounded-card border-2 border-lime bg-ink-2 p-6 sm:p-8">
+      <div className="mt-8 grid gap-4 lg:grid-cols-2 lg:items-stretch">
+        {/* The course */}
+        <div className="flex flex-col rounded-card border-2 border-lime bg-ink-2 p-6 sm:p-8">
           <div className="flex items-center justify-between">
-            <span className="rounded-pill bg-lime px-3 py-1 text-xs font-semibold text-ink">Recommended</span>
-            <span className="text-xs text-bone-3">Only {rs(UPGRADE.price)} more</span>
+            <span className="rounded-pill bg-lime px-3 py-1 text-xs font-semibold text-ink">Start tonight</span>
+            <span className="text-xs text-bone-3">Instant access</span>
           </div>
           <h3 className="display mt-5 text-3xl">{PLANS.pro.name}</h3>
           <p className="display tnum mt-1 text-5xl">{rs(PLANS.pro.price)}</p>
@@ -37,29 +48,51 @@ export function Plans() {
               </li>
             ))}
           </ul>
-          <LinkButton href="/checkout?plan=pro" className="mt-7 w-full">
-            Get Pro · {rs(PLANS.pro.price)}
-          </LinkButton>
-          <p className="mt-3 text-[13px] text-bone-2">{budget}</p>
+          <div className="mt-auto pt-7">
+            <LinkButton href="/checkout?plan=pro" className="w-full">
+              Get the course · {rs(PLANS.pro.price)}
+            </LinkButton>
+            <p className="mt-3 text-[13px] text-bone-2">{budget}</p>
+          </div>
         </div>
 
-        {/* Basic */}
-        <div className="rounded-card border border-ink-4 bg-ink-2 p-6">
-          <h3 className="display text-2xl">{PLANS.basic.name}</h3>
-          <p className="display tnum mt-1 text-4xl">{rs(PLANS.basic.price)}</p>
-          <p className="mt-3 text-sm text-bone-2">{PLANS.basic.tagline}</p>
-          <ul className="mt-5 space-y-2.5 text-sm">
-            {PLANS.basic.includes.map((x) => (
+        {/* Coaching */}
+        <div className="flex flex-col rounded-card border border-ink-4 bg-ink-2 p-6 sm:p-8">
+          <div className="flex items-center justify-between">
+            <span className="rounded-pill border border-bone-3 px-3 py-1 text-xs font-semibold text-bone">By application</span>
+            <span className="text-xs text-bone-3">Live, 1-on-1</span>
+          </div>
+          <h3 className="display mt-5 text-3xl">{COACHING.name}</h3>
+          <p className="display tnum mt-1 text-5xl">{rs(COACHING.upfront)}</p>
+          <p className="mt-1 text-sm text-bone-2">
+            to start. Then {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
+          </p>
+          <p className="mt-3 text-bone-2">I sit with you on live Zoom and build the whole system on your own page.</p>
+          <ul className="mt-5 space-y-2.5 text-[15px]">
+            {COACHING.includes.map((x) => (
               <li key={x} className="flex gap-2.5">
-                <Check muted />
+                <Check />
                 {x}
               </li>
             ))}
           </ul>
-          <LinkButton href="/checkout?plan=basic" variant="outline" className="mt-7 w-full">
-            Get Basic · {rs(PLANS.basic.price)}
-          </LinkButton>
-          <p className="mt-3 text-[13px] text-bone-2">{budget}</p>
+
+          <div className="mt-6 rounded-xl border border-ink-4 bg-ink p-4 text-[14px] leading-relaxed text-bone-2">
+            <p className="font-semibold text-bone">How the {rs(COACHING.successFee)} works</p>
+            <p className="mt-1">
+              You pay it only if brand deals that came through your system pay you {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your
+              first ad going live. You show me the payment screenshots. If the total stays below that, you owe nothing more.
+            </p>
+          </div>
+
+          <div className="mt-auto pt-7">
+            <LinkButton href={apply} variant="outline" className="w-full">
+              Apply on WhatsApp
+            </LinkButton>
+            <p className="mt-3 text-[13px] text-bone-2">
+              {budget} Terms are agreed in writing on WhatsApp before you pay. No result is promised.
+            </p>
+          </div>
         </div>
       </div>
       <HonestLine className="mt-6" />

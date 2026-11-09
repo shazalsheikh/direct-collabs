@@ -1,5 +1,5 @@
 import { Section, Eyebrow } from "@/components/ui";
-import { AD_BUDGET, GUARANTEE, PLANS } from "@/lib/offer.config";
+import { AD_BUDGET, GUARANTEE, PLANS, COACHING } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 
@@ -20,14 +20,22 @@ export function FAQ() {
       "Camera shy?",
       "It is a 40-second video, not a vlog. Chapter 1 gives you the script word for word. Record it on your phone in one take.",
     ],
-    ["Language?", `${SITE.course.language}. Recorded the way people in Lahore actually talk.`],
+    ["Language?", `${SITE.course.language}. Recorded the way people actually talk.`],
     [
       "How do I pay, and when do I get access?",
       "Easypaisa or JazzCash. Upload the receipt on the checkout page. We check every receipt, usually within a few hours and often faster. Your access unlocks on the page you land on after paying, and we send the link on WhatsApp too.",
     ],
     [
+      "Course or 1-on-1 coaching?",
+      `The course is for you if you are happy to set up the ad yourself from recorded lectures. Coaching is for you if you want me on live Zoom building the setup with you. You apply on WhatsApp first, and we only start if it fits.`,
+    ],
+    [
+      `Why is the ${rs(COACHING.successFee)} only after ${rs(COACHING.revenueTarget)}?`,
+      `Coaching starts at ${rs(COACHING.upfront)}. The extra ${rs(COACHING.successFee)} is due only if brand deals that came through your system have paid you ${rs(COACHING.revenueTarget)} or more within ${COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
+    ],
+    [
       "Is this a guaranteed income?",
-      `No. ${PLANS.pro.name} teaches you to get brand owners to apply. Who you say yes to, what you charge, and how fast you reply are on you.`,
+      `No. ${PLANS.pro.name} and the coaching teach you to get brand owners to apply. Who you say yes to, what you charge, and how fast you reply are on you.`,
     ],
   ];
 

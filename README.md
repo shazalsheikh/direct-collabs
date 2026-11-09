@@ -69,7 +69,7 @@ Edit `PLANS`, `BUMP` or `PAY_IN_2` in `lib/offer.config.ts` and redeploy. The la
 The six files buyers receive (lead form template, ad setup checklist, 5 ad scripts, 20 DM reply scripts, rate card and quote sheet, Barter Pitch Pack) live in `content/downloads/src/*.html` and build to PDF with headless Chrome.
 
 - **`content/` is git-ignored on purpose.** The GitHub repository is public and these files are the product. If you make the repository private you can remove `content/` from `.gitignore` and version them.
-- **Delivery is gated.** `/access/[token]/download/[id]` checks the buyer's token and plan (Pro files need Pro, the Barter pack needs the add-on), then redirects to a 60 second signed link from the private `downloads` bucket. Nothing is ever public.
+- **Delivery is gated.** `/access/[token]/download/[id]` checks the buyer's token and plan (Pro-id files need the course plan; the Barter pack is now part of the course and the add-on is switched off), then redirects to a 60 second signed link from the private `downloads` bucket. Nothing is ever public.
 - **To change a document:** edit the HTML in `content/downloads/src/`, run `npm run build:downloads`, then `npm run upload:downloads`. Buyers get the new version on their next click.
 - **They are drafts.** Read every document before launch. The Roman Urdu is written the way people type it, but you should change anything that does not sound like you.
 

@@ -45,7 +45,7 @@ const rows: Row[] = [
     events: [{ status: "Lead", at: daysAgo(12) }, { status: "Submitted", at: daysAgo(12) }, { status: "Approved", method: "auto", txn_id: "TX1003", at: daysAgo(12) }] },
 ];
 
-const prices = { basic: 4900, pro: 7900 };
+const prices = { basic: 4900, pro: 15000 };
 
 for (const r of rows) {
   const amount = prices[r.plan] + (r.bump ? 1200 : 0);

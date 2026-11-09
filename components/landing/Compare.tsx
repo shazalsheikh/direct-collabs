@@ -57,7 +57,7 @@ export function Compare() {
 
       <p className="mt-6 text-bone-2">
         Agency keeps {rs(ANCHOR.agencyKeeps)} of a {rs(ANCHOR.dealValue)} deal.{" "}
-        <span className="text-bone">Pro costs less than two agency cuts.</span>
+        <span className="text-bone">The course costs less than two agency cuts.</span>
       </p>
     </Section>
   );

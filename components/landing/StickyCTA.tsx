@@ -32,7 +32,7 @@ export function StickyCTA() {
         tabIndex={show ? 0 : -1}
         className="flex min-h-14 items-center justify-center rounded-pill bg-lime text-base font-semibold text-ink shadow-[0_-10px_40px_rgba(0,0,0,0.6)]"
       >
-        Pro {rs(PLANS.pro.price)} · Start
+        Get the course · {rs(PLANS.pro.price)}
       </Link>
     </div>
   );

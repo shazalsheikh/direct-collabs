@@ -184,7 +184,7 @@ Deno.serve(async (req) => {
 
     const [email, capi] = await Promise.all([
       order.email
-        ? sendAccessEmail({ apiKey: env("RESEND_API_KEY"), from: env("RESEND_FROM"), to: order.email, name: order.name ?? "", plan: order.plan === "pro" ? "Pro" : "Basic", ref, accessUrl, whatsappUrl: wa ? `https://wa.me/${wa}` : undefined })
+        ? sendAccessEmail({ apiKey: env("RESEND_API_KEY"), from: env("RESEND_FROM"), to: order.email, name: order.name ?? "", plan: order.plan === "pro" ? "course" : "Basic", ref, accessUrl, whatsappUrl: wa ? `https://wa.me/${wa}` : undefined })
         : Promise.resolve({ sent: false, error: "no email" }),
       sendCapiEvent({
         pixelId: env("PIXEL_ID"),

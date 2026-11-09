@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, type PlanId } from "@/lib/offer.config";
+import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, type PlanId } from "@/lib/offer.config";
 import { BANK, formatPkNumber } from "@/lib/bank.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
@@ -60,7 +60,7 @@ export function CheckoutWithParams() {
   const second = sp.get("second");
   const okRef = (r: string | null) => (r && /^DC-[A-Z0-9]{4}$/.test(r) ? r : null);
   const linked: Linked = okRef(up) ? { kind: "upgrade", parentRef: okRef(up) as string } : okRef(second) ? { kind: "second", parentRef: okRef(second) as string } : null;
-  return <CheckoutForm initialPlan={p === "basic" ? "basic" : "pro"} linked={linked} />;
+  return <CheckoutForm initialPlan={p === "basic" && SELLABLE_PLANS.includes("basic") ? "basic" : "pro"} linked={linked} />;
 }
 
 export function CheckoutForm({ initialPlan, linked = null }: Props) {
@@ -268,7 +268,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
             {step === 1 ? (
               <>
                 {/* Plan */}
-                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : "Choose your plan"}>
+                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : (SELLABLE_PLANS.length > 1 ? "Choose your plan" : "Your order")}>
                   {linked && (
                     <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
                       <div className="flex items-center justify-between">
@@ -283,8 +283,8 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                       </p>
                     </div>
                   )}
-                  <div className={`grid gap-3 sm:grid-cols-2 ${linked ? "hidden" : ""}`} role="radiogroup" aria-label="Plan">
-                    {(["pro", "basic"] as PlanId[]).map((p) => {
+                  <div className={`grid gap-3 ${SELLABLE_PLANS.length > 1 ? "sm:grid-cols-2" : ""} ${linked ? "hidden" : ""}`} role="radiogroup" aria-label="Plan">
+                    {SELLABLE_PLANS.map((p) => {
                       const P = PLANS[p];
                       const on = plan === p;
                       return (
@@ -358,7 +358,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                 </Step>
 
                 {/* Bump */}
-                {!linked && (
+                {!linked && BUMP.enabled && (
                   <Step title="Add on">
                     <label className={`flex cursor-pointer items-start gap-3 rounded-card border-2 p-4 ${bump ? "border-lime bg-ink-2" : "border-ink-4 bg-ink-2"}`}>
                       <input type="checkbox" className="mt-1 h-5 w-5 accent-lime" checked={bump} onChange={(e) => toggleBump(e.target.checked)} />

@@ -44,7 +44,7 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
   return (
     <div className="mt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">
-        {isPro ? "Pro" : "Basic"} · order {content.ref}
+        {isPro ? PLANS.pro.name : PLANS.basic.name} · order {content.ref}
       </p>
       <h1 className="display mt-3 text-4xl sm:text-5xl">{first ? `${first}, ` : ""}brands ko apply krne do.</h1>
       <p className="mt-3 text-bone-2">

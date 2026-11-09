@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
-import { PLANS, AD_BUDGET, PAY_IN_2, BUMP } from "@/lib/offer.config";
+import { PLANS, AD_BUDGET, PAY_IN_2, COACHING } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 
@@ -12,8 +12,15 @@ export default function Terms() {
     <LegalPage title="Terms" intro={`By paying for ${SITE.name} you agree to these terms. They are short on purpose.`}>
       <H>What you are buying</H>
       <p>
-        A recorded course in {SITE.course.language} ({SITE.course.durationLabel}) and the templates listed on the plan you choose ({PLANS.basic.name} {rs(PLANS.basic.price)} or{" "}
-        {PLANS.pro.name} {rs(PLANS.pro.price)}), plus the optional {BUMP.name} if you add it. It is an educational product. We do not sell leads, collabs or brand deals.
+        {PLANS.pro.name} ({rs(PLANS.pro.price)}): a recorded course in {SITE.course.language} ({SITE.course.durationLabel}) with the templates, scripts and sheets listed on the course page. It is
+        an educational product. We do not sell leads, collabs or brand deals.
+      </p>
+
+      <H>1-on-1 coaching</H>
+      <p>
+        {COACHING.name} is by application on WhatsApp and is not bought through the checkout page. The fee is {rs(COACHING.upfront)} to start. A further {rs(COACHING.successFee)} is due only
+        if brand deals that came through your system have paid you {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your first ad going live, shown by your payment
+        screenshots. If the total stays below that, you owe nothing more. We agree the details in writing on WhatsApp before you pay. We do not promise any amount of income.
       </p>
 
       <H>No income promise</H>
