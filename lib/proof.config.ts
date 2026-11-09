@@ -24,19 +24,19 @@ export const PROOF_STATS: Stat[] = [
     note: "Instagram lead form submissions, one campaign.",
   },
   {
-    id: "cpf",
-    label: "per form",
-    value: 77, // TODO: verify, Meta shows about Rs 77
-    prefix: "Rs ",
-    verified: false,
-    note: "Average cost per form across the run.",
-  },
-  {
     id: "spend",
     label: "total ad spend",
-    value: 80000, // TODO: verify, about Rs 80k
+    value: 80000, // owner: "around 80k". TODO: confirm exact figure in Ads Manager
     prefix: "Rs ",
     verified: false,
+  },
+  {
+    id: "revenue",
+    label: "paid by brands",
+    value: 500000, // owner: "revenue of 5 lac". TODO: confirm with Laraib's payment screenshots
+    prefix: "Rs ",
+    verified: false,
+    note: "Paid brand deals, not barter.",
   },
   {
     id: "deals",
@@ -44,6 +44,16 @@ export const PROOF_STATS: Stat[] = [
     value: 15, // TODO: verify with Laraib, about 15
     verified: false,
     note: "Paid, not barter.",
+  },
+  {
+    // Hidden on purpose: Rs 77 x 960 forms is about Rs 74k, which does not match the ~Rs 80k spend
+    // (Rs 80k / 960 is about Rs 83). Turn back on only with the exact figure from Meta.
+    id: "cpf",
+    label: "per form",
+    value: null,
+    prefix: "Rs ",
+    verified: false,
+    note: "Average cost per form across the run.",
   },
 ];
 

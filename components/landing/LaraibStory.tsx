@@ -1,6 +1,6 @@
 import { Section, Eyebrow, HonestLine } from "@/components/ui";
 import { LARAIB, CPF_CURVE, visibleMedia, visibleStats } from "@/lib/proof.config";
-import { num } from "@/lib/format";
+import { num, rs } from "@/lib/format";
 import { MediaGrid } from "./Lightbox";
 
 export function LaraibStory() {
@@ -10,6 +10,8 @@ export function LaraibStory() {
   const stats = visibleStats();
   const forms = stats.find((s) => s.id === "forms");
   const deals = stats.find((s) => s.id === "deals");
+  const spend = stats.find((s) => s.id === "spend");
+  const revenue = stats.find((s) => s.id === "revenue");
 
   return (
     <Section wide>
@@ -33,6 +35,14 @@ export function LaraibStory() {
               <span className="tnum font-semibold text-bone">{num(forms.value as number)}</span> times. She closed{" "}
               {deals.verified ? "" : "about "}
               <span className="tnum font-semibold text-bone">{num(deals.value as number)}</span> paid deals.
+            </p>
+          )}
+          {spend && revenue && (
+            <p>
+              Ad spend was {spend.verified ? "" : "around "}
+              <span className="tnum font-semibold text-bone">{rs(spend.value as number)}</span>. Brands paid her{" "}
+              {revenue.verified ? "" : "around "}
+              <span className="tnum font-semibold text-lime">{rs(revenue.value as number)}</span> in return.
             </p>
           )}
           {CPF_CURVE.weekOne && CPF_CURVE.weekThree && (
