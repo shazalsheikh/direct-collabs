@@ -56,8 +56,8 @@ export function Compare() {
       </div>
 
       <p className="mt-6 text-bone-2">
-        Agency keeps {rs(ANCHOR.agencyKeeps)} of a {rs(ANCHOR.dealValue)} deal.{" "}
-        <span className="text-bone">The course costs less than two agency cuts.</span>
+        On a {rs(ANCHOR.dealValue)} deal, an agency keeps {rs(ANCHOR.agencyKeeps)}.{" "}
+        <span className="text-bone">Use the calculator above to see the cut at your own rate.</span>
       </p>
     </Section>
   );

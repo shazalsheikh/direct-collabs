@@ -159,7 +159,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
     const e: FieldErrors = {};
     if (name.trim().length < 2) e.name = "Your name, at least 2 letters.";
     if (!normalizePkPhone(whatsapp)) e.whatsapp = "Pakistani number like 03XX XXXXXXX.";
-    if (!isEmail(email)) e.email = "A real email. Your access link goes here.";
+    if (!isEmail(email)) e.email = "A real email, for your order updates.";
     if (cleanHandle(instagram).length < 2) e.instagram = "Your Instagram handle.";
     if (!file) e.receipt = "Upload your payment receipt.";
     return e;
@@ -615,7 +615,7 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
       </dl>
       <p className="mt-4 text-[12px] text-bone-3">
         {plan === "coaching" && !linked
-          ? "Once we verify the receipt, I message you on WhatsApp to confirm the terms and book your first call."
+          ? "Once I verify the receipt, I message you on WhatsApp to confirm the terms and book your first call."
           : "Your access unlocks once we verify the receipt, usually within a few hours and often faster. We also send the link on WhatsApp."}
       </p>
       <p className="mt-2 text-[12px] text-bone-3">Questions? @{SITE.owner.instagram}</p>

@@ -22,7 +22,7 @@ export function Plans() {
         <div className="flex flex-col rounded-card border-2 border-lime bg-ink-2 p-6 sm:p-8">
           <div className="flex items-center justify-between">
             <span className="rounded-pill bg-lime px-3 py-1 text-xs font-semibold text-ink">Start tonight</span>
-            <span className="text-xs text-bone-3">Instant access</span>
+            <span className="text-xs text-bone-3">Access after payment check</span>
           </div>
           <h3 className="display mt-5 text-3xl">{PLANS.pro.name}</h3>
           <p className="display tnum mt-1 text-5xl">{rs(PLANS.pro.price)}</p>

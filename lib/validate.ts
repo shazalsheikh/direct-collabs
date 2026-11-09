@@ -31,7 +31,7 @@ export function parseDetails(raw: Record<string, unknown>, opts: { requireAll: b
   if (!whatsapp) errors.whatsapp = "Pakistani number like 03XX XXXXXXX.";
 
   const emailRaw = String(raw.email ?? "").trim();
-  if (opts.requireAll && !isEmail(emailRaw)) errors.email = "A real email. Your access link goes here.";
+  if (opts.requireAll && !isEmail(emailRaw)) errors.email = "A real email, for your order updates.";
 
   const instagram = cleanHandle(String(raw.instagram ?? ""));
   if (opts.requireAll && instagram.length < 2) errors.instagram = "Your Instagram handle.";

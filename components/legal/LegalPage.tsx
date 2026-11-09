@@ -33,19 +33,25 @@ export const UL = ({ children }: { children: ReactNode }) => <ul className="list
 export function Contact() {
   return (
     <p>
-      Email{" "}
-      <a href={`mailto:${SITE.supportEmail}`} className="text-bone underline underline-offset-4">
-        {SITE.supportEmail}
-      </a>
+      {SITE.supportEmail && (
+        <>
+          Email{" "}
+          <a href={`mailto:${SITE.supportEmail}`} className="text-bone underline underline-offset-4">
+            {SITE.supportEmail}
+          </a>
+          ,{" "}
+        </>
+      )}
       {SITE.whatsappNumber && (
         <>
-          , WhatsApp{" "}
+          WhatsApp{" "}
           <a href={`https://wa.me/${SITE.whatsappNumber}`} className="text-bone underline underline-offset-4">
             +{SITE.whatsappNumber}
           </a>
+          ,{" "}
         </>
       )}
-      , or message @{SITE.owner.instagram} on Instagram.
+      or message @{SITE.owner.instagram} on Instagram.
     </p>
   );
 }

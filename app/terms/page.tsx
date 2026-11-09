@@ -5,7 +5,7 @@ import { PLANS, AD_BUDGET, PAY_IN_2, COACHING, COACHING_TOTAL } from "@/lib/offe
 import { SITE } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Terms", description: "Terms of use for DirectCollabs." };
+export const metadata: Metadata = { title: "Terms", description: "Terms of use for DirectCollabs.", alternates: { canonical: "/terms" } };
 
 export default function Terms() {
   return (

@@ -104,10 +104,10 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
           n={2}
           active={step >= 2}
           done={step > 2}
-          title="We are checking your payment"
+          title={coaching ? "I am checking your payment" : "We are checking your payment"}
           body={
             coaching
-              ? "We are confirming your payment. Then I will message you on WhatsApp to confirm the terms and book your first call."
+              ? "I am confirming your payment. Then I will message you on WhatsApp to confirm the terms and book your first call."
               : `We are confirming your payment. Then we will share your course link ${shareWhere}. If you keep this page open, it unlocks by itself.`
           }
         />

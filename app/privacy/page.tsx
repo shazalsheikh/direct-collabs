@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
 import { SITE } from "@/lib/site.config";
 
-export const metadata: Metadata = { title: "Privacy", description: "What DirectCollabs collects and why." };
+export const metadata: Metadata = { title: "Privacy", description: "What DirectCollabs collects and why.", alternates: { canonical: "/privacy" } };
 
 export default function Privacy() {
   return (
@@ -11,6 +11,7 @@ export default function Privacy() {
       <UL>
         <li>Your name, WhatsApp number, email and Instagram handle, when you start checkout. We save these when you finish the name and WhatsApp fields so we can follow up if checkout is interrupted.</li>
         <li>Your payment receipt (an image or PDF).</li>
+        <li>If you buy coaching, the screenshots of brand payments you share with us to show your results.</li>
         <li>Order details: plan, add-on, amount, status, and your access link.</li>
         <li>Campaign data from the link you arrived on (UTM tags, Meta click id) and the Meta cookies <code>_fbp</code> and <code>_fbc</code> if you have them.</li>
         <li>Basic usage data from Meta Pixel and Google Analytics once those are switched on.</li>

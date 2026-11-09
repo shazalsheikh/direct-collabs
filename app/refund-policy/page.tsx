@@ -3,7 +3,7 @@ import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
 import { GUARANTEE, PAY_IN_2 } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Refund policy", description: "How refunds work at DirectCollabs." };
+export const metadata: Metadata = { title: "Refund policy", description: "How refunds work at DirectCollabs.", alternates: { canonical: "/refund-policy" } };
 
 /** Reads GUARANTEE.type from lib/offer.config.ts, so this page always matches the landing page. */
 export default function RefundPolicy() {

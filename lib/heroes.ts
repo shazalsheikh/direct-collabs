@@ -30,7 +30,7 @@ export const HEROES: Record<1 | 2 | 3, HeroVariant> = {
     id: 3,
     key: "proof",
     eyebrow: "PAKISTANI CREATORS · 5K+ FOLLOWERS",
-    h1: "1 ad. 960 brand forms. Laraib ke account pe.",
+    h1: "1 ad. About 960 brand forms. Ek creator ke account pe.",
     sub: "Ek ad apni profile se. Brand owner form bhrta hai: category, budget, handle. Ap choose krte ho kis ke saath kaam krna hai. Na agency, na 30% cut.",
   },
 };

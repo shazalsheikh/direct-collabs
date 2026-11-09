@@ -25,7 +25,7 @@ export const SITE = {
   // Digits only, country code first. Read from env so it never lands in git.
   // TODO: set NEXT_PUBLIC_WHATSAPP_NUMBER in Netlify before launch.
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
-  supportEmail: "hello@directcollabs.pk", // TODO: confirm mailbox exists
+  supportEmail: "", // TODO: set a real mailbox on your own domain. Empty hides the email line on the legal pages.
   course: {
     language: "Roman Urdu",
     durationLabel: "about 2 hours",
@@ -42,7 +42,7 @@ export const SITE = {
   legal: {
     entity: "DirectCollabs", // TODO: registered business name if any
     city: "Islamabad, Pakistan",
-    lastUpdated: "2026-11-07",
+    lastUpdated: "2026-11-09",
   },
 } as const;
 

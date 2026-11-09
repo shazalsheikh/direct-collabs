@@ -184,7 +184,7 @@ export const FOUNDING = {
 
 /** The honest line. Shown near every CTA group. Do not soften it. */
 export const HONEST_LINE =
-  "Results depend on your followers, your rate and how fast you reply. Nothing here is a guarantee.";
+  "Results depend on your followers, your rate and how fast you reply. Nothing here is a guarantee of income.";
 
 /** The six chapters. Shown on landing and inside /access. */
 export const CHAPTERS = [

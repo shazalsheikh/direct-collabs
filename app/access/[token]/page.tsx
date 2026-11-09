@@ -67,8 +67,8 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
           />
         </div>
       ) : (
-        <div className="mt-8 grid aspect-video place-items-center rounded-card border border-dashed border-ink-4 bg-ink-2 text-center text-sm text-bone-3">
-          Video player goes here. Set COURSE_VIDEO_URL.
+        <div className="mt-8 grid aspect-video place-items-center rounded-card border border-dashed border-ink-4 bg-ink-2 px-6 text-center text-sm text-bone-2">
+          {process.env.NODE_ENV !== "production" ? "Video player goes here. Set COURSE_VIDEO_URL or COURSE_INVITE_URL." : "Your payment is confirmed. Your course link is on its way, and I will also send it to you on WhatsApp."}
         </div>
       )}
 
