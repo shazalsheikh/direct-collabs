@@ -1,5 +1,5 @@
 import { Section, Eyebrow } from "@/components/ui";
-import { AD_BUDGET, GUARANTEE, PLANS, COACHING } from "@/lib/offer.config";
+import { AD_BUDGET, GUARANTEE, PLANS, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 
@@ -31,7 +31,7 @@ export function FAQ() {
     ],
     [
       `Why is the ${rs(COACHING.successFee)} only after ${rs(COACHING.revenueTarget)}?`,
-      `Coaching starts at ${rs(COACHING.upfront)}. The extra ${rs(COACHING.successFee)} is due only if brand deals that came through your system have paid you ${rs(COACHING.revenueTarget)} or more within ${COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
+      `The full coaching price is ${rs(COACHING_TOTAL)}, and you pay ${rs(COACHING.upfront)} today. The other ${rs(COACHING.successFee)} is due only if brand deals that came through your system have paid you ${rs(COACHING.revenueTarget)} or more within ${COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
     ],
     [
       "Is this a guaranteed income?",

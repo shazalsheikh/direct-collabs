@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Section, Eyebrow, LinkButton, HonestLine } from "@/components/ui";
-import { PLANS, AD_BUDGET, FOUNDING, PAY_IN_2, COACHING } from "@/lib/offer.config";
+import { PLANS, AD_BUDGET, FOUNDING, PAY_IN_2, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
 import { countVerifiedSales } from "@/lib/db";
 
@@ -58,9 +58,14 @@ export function Plans() {
             <span className="text-xs text-bone-3">Live, 1-on-1</span>
           </div>
           <h3 className="display mt-5 text-3xl">{COACHING.name}</h3>
-          <p className="display tnum mt-1 text-5xl">{rs(COACHING.upfront)}</p>
+          <p className="mt-2 text-sm text-bone-2">
+            Full price <span className="tnum font-semibold text-bone">{rs(COACHING_TOTAL)}</span>
+          </p>
+          <p className="display tnum text-5xl">
+            {rs(COACHING.upfront)} <span className="text-2xl text-lime">today</span>
+          </p>
           <p className="mt-1 text-sm text-bone-2">
-            to start. Then {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
+            The other {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
           </p>
           <p className="mt-3 text-bone-2">I sit with you on live Zoom and build the whole system on your own page.</p>
           <ul className="mt-5 space-y-2.5 text-[15px]">
@@ -82,7 +87,7 @@ export function Plans() {
 
           <div className="mt-auto pt-7">
             <LinkButton href="/checkout?plan=coaching" className="w-full">
-              Start coaching · {rs(COACHING.upfront)}
+              Start coaching · Pay {rs(COACHING.upfront)} today
             </LinkButton>
             <p className="mt-3 text-[13px] text-bone-2">
               {budget} After you pay, I message you on WhatsApp to confirm the terms and book your first call. No result is promised.

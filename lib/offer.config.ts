@@ -247,6 +247,9 @@ export const DOWNLOADS = [
   { id: "barter-pack", name: "Barter Pitch Pack", pro: true, bump: false, file: "barter-pitch-pack.pdf", filename: "DirectCollabs - Barter Pitch Pack.pdf" },
 ] as const;
 
+/** Full coaching price if the revenue target is reached. Shown as the headline total, never as a struck-through discount. */
+export const COACHING_TOTAL = COACHING.upfront + COACHING.successFee;
+
 /** Total for an order. Pure, used on client, server and in the edge function. */
 export function orderTotal(plan: PlanId, bump: boolean) {
   return PLANS[plan].price + (bump && BUMP.enabled ? BUMP.price : 0);
