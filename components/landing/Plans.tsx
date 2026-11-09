@@ -1,22 +1,17 @@
 import { Suspense } from "react";
 import { Section, Eyebrow, LinkButton, HonestLine } from "@/components/ui";
 import { PLANS, AD_BUDGET, FOUNDING, PAY_IN_2, COACHING } from "@/lib/offer.config";
-import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 import { countVerifiedSales } from "@/lib/db";
 
 /**
  * Two offers, nothing else.
  * 1. The Course: recorded lectures, you do it yourself. Buys through /checkout.
- * 2. Coaching: live 1-on-1 and a full setup. Applies on WhatsApp, pays by agreement. Never through checkout.
+ * 2. Coaching: live 1-on-1 and a full setup. Same checkout, same screenshot upload, Rs 50,000 to start.
  * Every number comes from lib/offer.config.ts.
  */
 export function Plans() {
   const budget = `Needs ${rs(AD_BUDGET.minPerDay)} to ${rs(AD_BUDGET.maxPerDay).replace("Rs ", "")} a day for ads.`;
-  const apply =
-    whatsappLink(
-      `Hi ${SITE.owner.name}, I want to apply for the 1-on-1 coaching.\nMy Instagram: @\nMy followers: \nWhat I would charge a brand for one reel: `,
-    ) || "#plans";
   return (
     <Section id="plans" wide>
       <Eyebrow>Two ways in</Eyebrow>
@@ -59,7 +54,7 @@ export function Plans() {
         {/* Coaching */}
         <div className="flex flex-col rounded-card border border-ink-4 bg-ink-2 p-6 sm:p-8">
           <div className="flex items-center justify-between">
-            <span className="rounded-pill border border-bone-3 px-3 py-1 text-xs font-semibold text-bone">By application</span>
+            <span className="rounded-pill border border-bone-3 px-3 py-1 text-xs font-semibold text-bone">Done with you</span>
             <span className="text-xs text-bone-3">Live, 1-on-1</span>
           </div>
           <h3 className="display mt-5 text-3xl">{COACHING.name}</h3>
@@ -86,11 +81,11 @@ export function Plans() {
           </div>
 
           <div className="mt-auto pt-7">
-            <LinkButton href={apply} variant="outline" className="w-full">
-              Apply on WhatsApp
+            <LinkButton href="/checkout?plan=coaching" className="w-full">
+              Start coaching · {rs(COACHING.upfront)}
             </LinkButton>
             <p className="mt-3 text-[13px] text-bone-2">
-              {budget} Terms are agreed in writing on WhatsApp before you pay. No result is promised.
+              {budget} After you pay, I message you on WhatsApp to confirm the terms and book your first call. No result is promised.
             </p>
           </div>
         </div>

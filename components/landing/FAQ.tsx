@@ -27,7 +27,7 @@ export function FAQ() {
     ],
     [
       "Course or 1-on-1 coaching?",
-      `The course is for you if you are happy to set up the ad yourself from recorded lectures. Coaching is for you if you want me on live Zoom building the setup with you. You apply on WhatsApp first, and we only start if it fits.`,
+      `The course is for you if you are happy to set up the ad yourself from recorded lectures. Coaching is for you if you want me on live Zoom building the setup with you. You pay at checkout like the course, and I message you on WhatsApp to book your first call.`,
     ],
     [
       `Why is the ${rs(COACHING.successFee)} only after ${rs(COACHING.revenueTarget)}?`,

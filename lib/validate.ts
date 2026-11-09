@@ -19,7 +19,8 @@ export type FieldErrors = Partial<Record<keyof Details | "receipt", string>>;
 export function parseDetails(raw: Record<string, unknown>, opts: { requireAll: boolean }): { ok: true; d: Details } | { ok: false; errors: FieldErrors } {
   const errors: FieldErrors = {};
   // Only plans in SELLABLE_PLANS can be bought. Anything else falls back to the course.
-  const plan: PlanId = raw.plan === "basic" && SELLABLE_PLANS.includes("basic") ? "basic" : "pro";
+  const asked = String(raw.plan ?? "");
+  const plan: PlanId = (SELLABLE_PLANS as string[]).includes(asked) ? (asked as PlanId) : "pro";
   const bump = BUMP.enabled && (raw.bump === true || raw.bump === "1" || raw.bump === "true");
   const payIn2 = PAY_IN_2.enabled && plan === PAY_IN_2.plan && (raw.payIn2 === true || raw.payIn2 === "1" || raw.payIn2 === "true");
 

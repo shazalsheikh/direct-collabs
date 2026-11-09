@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
     const wa = env("WHATSAPP_NUMBER");
 
     const [email, capi] = await Promise.all([
-      order.email
+      order.email && order.plan !== "coaching"
         ? sendAccessEmail({ apiKey: env("RESEND_API_KEY"), from: env("RESEND_FROM"), to: order.email, name: order.name ?? "", plan: order.plan === "pro" ? "course" : "Basic", ref, accessUrl, whatsappUrl: wa ? `https://wa.me/${wa}` : undefined })
         : Promise.resolve({ sent: false, error: "no email" }),
       sendCapiEvent({

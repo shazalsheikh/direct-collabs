@@ -40,7 +40,7 @@ export default function RefundPolicy() {
 
       <H>Coaching and instalments</H>
       <UL>
-        <li>This policy covers the course. The 1-on-1 coaching is agreed separately in writing on WhatsApp before you pay.</li>
+        <li>This policy covers the course. The 1-on-1 coaching has its own terms, shown at checkout and confirmed in writing on WhatsApp when we book your first call.</li>
         {PAY_IN_2.enabled && (
           <li>
             If you paid in two parts, a refund covers what you have actually paid. If the second part ({rs(PAY_IN_2.second)}) is not paid, you owe nothing further and your

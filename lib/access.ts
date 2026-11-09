@@ -25,6 +25,8 @@ export async function resolveAccess(token: string): Promise<Access | null> {
     const parent = await getOrderById(order.parent_order_id);
     if (parent) content = parent;
   }
+  // Coaching comes with live calls, not the recorded course, so there is nothing to open here.
+  if (content.plan === "coaching") return null;
   return { order, content, isPro: content.plan === "pro", hasBump: content.bump };
 }
 

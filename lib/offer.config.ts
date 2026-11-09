@@ -3,7 +3,27 @@
  * Edit this file only. Everything on the site reads from here.
  */
 
-export type PlanId = "basic" | "pro";
+/**
+ * The second offer: 1-on-1 coaching and a full setup. Sold through the normal checkout (Rs 50,000 by screenshot upload).
+ * The Rs 100,000 is a success fee, agreed and collected by hand on WhatsApp: due only if brand deals that came through the system pay the client
+ * `revenueTarget` or more inside `windowMonths` of the first ad going live. Edit numbers here only.
+ */
+export const COACHING = {
+  name: "1-on-1 Coaching and Setup",
+  upfront: 50000,
+  successFee: 100000,
+  revenueTarget: 500000,
+  windowMonths: 2,
+  calls: 3,
+  callsWithinDays: 10,
+  includes: [
+    "3 live 1-on-1 Zoom calls in your first 10 days",
+    "I build your ad, lead form and funnel with you, on your page",
+    "A place in the community WhatsApp group",
+  ],
+};
+
+export type PlanId = "basic" | "pro" | "coaching";
 
 export const CURRENCY = "PKR";
 
@@ -38,10 +58,19 @@ export const PLANS = {
     ],
     recommended: false,
   },
+  // The second offer. Paid through the same checkout. No course access comes with it (see lib/access.ts).
+  coaching: {
+    id: "coaching" as const,
+    name: COACHING.name,
+    price: COACHING.upfront,
+    tagline: "Live calls and a full setup, built with you on your own page.",
+    includes: COACHING.includes,
+    recommended: false,
+  },
 } satisfies Record<PlanId, unknown>;
 
 /** Plans a visitor can actually buy. The server refuses anything else. */
-export const SELLABLE_PLANS: PlanId[] = ["pro"];
+export const SELLABLE_PLANS: PlanId[] = ["pro", "coaching"];
 
 /** Which plan is preselected on the landing page CTA and checkout. */
 export const DEFAULT_PLAN: PlanId = "pro";
@@ -151,26 +180,6 @@ export const FOUNDING = {
   limit: 100,
   priceAfter: 19900,
   showAt: 10,
-};
-
-/**
- * The second offer: 1-on-1 coaching and a full setup. Sold by application on WhatsApp, never through checkout.
- * The Rs 100,000 is a success fee: due only if brand deals that came through the system pay the client
- * `revenueTarget` or more inside `windowMonths` of the first ad going live. Edit numbers here only.
- */
-export const COACHING = {
-  name: "1-on-1 Coaching and Setup",
-  upfront: 50000,
-  successFee: 100000,
-  revenueTarget: 500000,
-  windowMonths: 2,
-  calls: 3,
-  callsWithinDays: 10,
-  includes: [
-    "3 live 1-on-1 Zoom calls in your first 10 days",
-    "I build your ad, lead form and funnel with you, on your page",
-    "A place in the community WhatsApp group",
-  ],
 };
 
 /** The honest line. Shown near every CTA group. Do not soften it. */

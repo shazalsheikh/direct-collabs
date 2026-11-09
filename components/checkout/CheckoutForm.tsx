@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, type PlanId } from "@/lib/offer.config";
+import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, COACHING, type PlanId } from "@/lib/offer.config";
 import { BANK, formatPkNumber } from "@/lib/bank.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
@@ -60,7 +60,7 @@ export function CheckoutWithParams() {
   const second = sp.get("second");
   const okRef = (r: string | null) => (r && /^DC-[A-Z0-9]{4}$/.test(r) ? r : null);
   const linked: Linked = okRef(up) ? { kind: "upgrade", parentRef: okRef(up) as string } : okRef(second) ? { kind: "second", parentRef: okRef(second) as string } : null;
-  return <CheckoutForm initialPlan={p === "basic" && SELLABLE_PLANS.includes("basic") ? "basic" : "pro"} linked={linked} />;
+  return <CheckoutForm initialPlan={p && (SELLABLE_PLANS as string[]).includes(p) ? (p as PlanId) : "pro"} linked={linked} />;
 }
 
 export function CheckoutForm({ initialPlan, linked = null }: Props) {
@@ -80,6 +80,9 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
   const leadBusy = useRef(false);
   const [step, setStep] = useState<1 | 2>(1);
   const [continuing, setContinuing] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [termsError, setTermsError] = useState(false);
+  const coaching = plan === "coaching" && !linked;
 
   const payIn2Allowed = !linked && PAY_IN_2.enabled && plan === PAY_IN_2.plan;
   const effectivePayIn2 = payIn2Allowed && payIn2;
@@ -181,6 +184,11 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
       document.getElementById(`f-${Object.keys(e)[0]}`)?.scrollIntoView({ block: "center" });
       return;
     }
+    if (coaching && !agreed) {
+      setTermsError(true);
+      document.getElementById("f-terms")?.scrollIntoView({ block: "center" });
+      return;
+    }
     setContinuing(true);
     await saveLead({ email, instagram });
     setContinuing(false);
@@ -268,7 +276,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
             {step === 1 ? (
               <>
                 {/* Plan */}
-                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : (SELLABLE_PLANS.length > 1 ? "Choose your plan" : "Your order")}>
+                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : (SELLABLE_PLANS.length > 1 ? "Choose your offer" : "Your order")}>
                   {linked && (
                     <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
                       <div className="flex items-center justify-between">
@@ -306,6 +314,11 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                               <li key={x}>{x}</li>
                             ))}
                           </ul>
+                          {p === "coaching" && (
+                            <p className="mt-2 text-[13px] text-bone-2">
+                              Then {rs(COACHING.successFee)} only after you earn {rs(COACHING.revenueTarget)} or more.
+                            </p>
+                          )}
                           <p className="mt-2 text-[12px] text-bone-3">
                             Needs {rs(AD_BUDGET.minPerDay)} to {AD_BUDGET.maxPerDay.toLocaleString()} a day for ads.
                           </p>
@@ -356,6 +369,32 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                     </Field>
                   </div>
                 </Step>
+
+                {/* Coaching terms */}
+                {coaching && (
+                  <Step title="How the coaching fee works">
+                    <div id="f-terms" className={`rounded-card border-2 bg-ink-2 p-4 ${termsError ? "border-coral" : "border-ink-4"}`}>
+                      <p className="text-[15px] leading-relaxed text-bone-2">
+                        You pay {rs(COACHING.upfront)} now. A further {rs(COACHING.successFee)} is due only if brand deals that came through your system pay you{" "}
+                        {rs(COACHING.revenueTarget)} or more within {COACHING.windowMonths} months of your first ad going live. You show the payment screenshots. If the total stays
+                        below that, you owe nothing more. No result is promised. I confirm these terms with you on WhatsApp and book your first call.
+                      </p>
+                      <label className="mt-4 flex cursor-pointer items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-5 w-5 accent-lime"
+                          checked={agreed}
+                          onChange={(e) => {
+                            setAgreed(e.target.checked);
+                            if (e.target.checked) setTermsError(false);
+                          }}
+                        />
+                        <span className="text-sm font-semibold">I have read and agree to this.</span>
+                      </label>
+                      {termsError && <p className="mt-2 text-sm text-coral">Tick the box to continue.</p>}
+                    </div>
+                  </Step>
+                )}
 
                 {/* Bump */}
                 {!linked && BUMP.enabled && (
@@ -468,7 +507,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                 )}
 
                 <div className="hidden lg:block">
-                  <PrimaryButton onClick={submit} busy={submitting} label="Verify and get the access" busyLabel="Verifying…" />
+                  <PrimaryButton onClick={submit} busy={submitting} label={coaching ? "Verify and start coaching" : "Verify and get the access"} busyLabel="Verifying…" />
                   <HonestLine className="mt-3" />
                 </div>
               </>
@@ -494,7 +533,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
         {step === 1 ? (
           <PrimaryButton onClick={continueToPayment} busy={continuing} label="Continue to payment" busyLabel="One sec…" compact />
         ) : (
-          <PrimaryButton onClick={submit} busy={submitting} label="Verify and get the access" busyLabel="Verifying…" compact />
+          <PrimaryButton onClick={submit} busy={submitting} label={coaching ? "Verify and start coaching" : "Verify and get the access"} busyLabel="Verifying…" compact />
         )}
       </div>
     </div>
@@ -569,7 +608,11 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
           </div>
         )}
       </dl>
-      <p className="mt-4 text-[12px] text-bone-3">Your access unlocks once we verify the receipt, usually within a few hours and often faster. We also send the link on WhatsApp.</p>
+      <p className="mt-4 text-[12px] text-bone-3">
+        {plan === "coaching" && !linked
+          ? "Once we verify the receipt, I message you on WhatsApp to confirm the terms and book your first call."
+          : "Your access unlocks once we verify the receipt, usually within a few hours and often faster. We also send the link on WhatsApp."}
+      </p>
       <p className="mt-2 text-[12px] text-bone-3">Questions? @{SITE.owner.instagram}</p>
     </div>
   );
