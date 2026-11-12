@@ -1,50 +1,38 @@
 import { Section, Eyebrow } from "@/components/ui";
-import { AD_BUDGET, GUARANTEE, PLANS, COACHING, COACHING_TOTAL } from "@/lib/offer.config";
-import { SITE } from "@/lib/site.config";
-import { rs, lakh } from "@/lib/format";
+
+/** Answers the questions a creator asks before applying. No prices and no method details here. */
+const ITEMS: [string, string][] = [
+  [
+    "How do brands reach out to me?",
+    "Brand owners contact you directly, with what they need and their budget. We set up and run the system that makes that happen, and we walk you through it when we talk.",
+  ],
+  [
+    "Do I need a big following?",
+    "There is no fixed number. It works best for creators who already post consistently and want to charge for their work. Apply, and we will tell you honestly whether it fits your page.",
+  ],
+  [
+    "What does it cost?",
+    "It depends on your page and what you need. We share the plan and the price on WhatsApp after we review your application. No payment is taken on this website.",
+  ],
+  [
+    "Are you an agency?",
+    "No. An agency sits between you and the brand and keeps a cut. We do not. Brand owners deal with you directly, and you keep your full fee.",
+  ],
+  ["Paid or barter?", "You see what each brand is offering before you reply. You decide which ones to answer."],
+  [
+    "Is income guaranteed?",
+    "No. We bring brand owners to you. Who you say yes to, what you charge and how fast you reply are on you.",
+  ],
+  ["What happens after I apply?", "We review your page and message you on WhatsApp, usually within a day or two."],
+];
 
 export function FAQ() {
-  const g = GUARANTEE[GUARANTEE.type];
-  const items: [string, string][] = [
-    [
-      "Do I need a big following?",
-      `No. Creators with 5k and 10k followers use this too, and it is built to help smaller pages get their first paid collabs. The ad costs about ${rs(AD_BUDGET.perMonthAtMin)} a month, so at a smaller rate you need a few deals to cover it. Use the calculator above before you buy.`,
-    ],
-    [`${rs(AD_BUDGET.minPerDay)} a day, really?`, "Yes. That is the budget the whole course is built around. You can go higher later, you never need to."],
-    ["What if I get no forms?", g.headline + " " + g.body],
-    [
-      "Only paid, no barter?",
-      "The form asks the brand to pick paid or barter and a budget range before they submit. You decide what to reply to. Barter requests land in a separate bucket.",
-    ],
-    [
-      "Camera shy?",
-      "It is a 40-second video, not a vlog. Chapter 1 gives you the script word for word. Record it on your phone in one take.",
-    ],
-    ["Language?", `${SITE.course.language}. Recorded the way people actually talk.`],
-    [
-      "How do I pay, and when do I get access?",
-      "Easypaisa or JazzCash. Upload the receipt on the checkout page. We check every receipt, usually within a few hours and often faster. Your access unlocks on the page you land on after paying, and we send the link on WhatsApp too.",
-    ],
-    [
-      "Course or 1-on-1 coaching?",
-      `The course is for you if you are happy to set up the ad yourself from recorded lectures. Coaching is for you if you want me on live Zoom building the setup with you. You pay at checkout like the course, and I message you on WhatsApp to book your first call.`,
-    ],
-    [
-      `Why is the ${rs(COACHING.successFee)} only after ${lakh(COACHING.revenueTarget)}?`,
-      `The coaching price is up to ${rs(COACHING_TOTAL)}, and you pay ${rs(COACHING.upfront)} today. The other ${rs(COACHING.successFee)} is due only if paid brand deals from your system have reached ${lakh(COACHING.revenueTarget)} within ${COACHING.windowMonths} months of your first ad going live. Only brand payments in cash count, shown by your screenshots. Below that you owe nothing more. I cannot promise you will reach it.`,
-    ],
-    [
-      "Is this a guaranteed income?",
-      `No. ${PLANS.pro.name} and the coaching teach you to get brand owners to apply. Who you say yes to, what you charge, and how fast you reply are on you.`,
-    ],
-  ];
-
   return (
     <Section tone="ink-2" wide>
       <Eyebrow>Questions</Eyebrow>
       <h2 className="display mt-3 text-4xl sm:text-5xl">Before you ask.</h2>
       <div className="mt-8 divide-y divide-ink-4 rounded-card border border-ink-4 bg-ink">
-        {items.map(([q, a]) => (
+        {ITEMS.map(([q, a]) => (
           <details key={q} className="group">
             <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-[15px] font-semibold marker:content-none [&::-webkit-details-marker]:hidden">
               {q}

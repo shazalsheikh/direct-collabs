@@ -2,22 +2,21 @@ import type { HeroVariant } from "@/lib/heroes";
 import { TrackOnMount } from "@/components/Tracking";
 import { Nav } from "./Nav";
 import { Hero } from "./Hero";
-import { ProofBar } from "./ProofBar";
 import { Pain } from "./Pain";
-import { Mechanism } from "./Mechanism";
-import { Calculator } from "./Calculator";
+import { WhatWeDo } from "./WhatWeDo";
 import { Compare } from "./Compare";
-import { LaraibStory } from "./LaraibStory";
-import { HudaStory } from "./HudaStory";
-import { SmallCreators } from "./SmallCreators";
-import { Inside } from "./Inside";
-import { Plans } from "./Plans";
-import { Guarantee } from "./Guarantee";
+import { Results } from "./Results";
+import { Fit } from "./Fit";
 import { About } from "./About";
 import { FAQ } from "./FAQ";
-import { FinalCTA, Footer } from "./FinalCTA";
+import { Apply } from "./Apply";
+import { Footer } from "./Footer";
 import { StickyCTA } from "./StickyCTA";
 
+/**
+ * One job: get a creator to apply. No prices, no checkout, and no description of the method.
+ * Order: promise, pain, what we do, why not an agency, proof, fit, who, questions, form.
+ */
 export function Landing({ hero }: { hero: HeroVariant }) {
   return (
     <>
@@ -25,20 +24,14 @@ export function Landing({ hero }: { hero: HeroVariant }) {
       <Nav />
       <main className="flex-1">
         <Hero hero={hero} />
-        <ProofBar />
         <Pain />
-        <SmallCreators />
-        <Mechanism />
-        <Calculator />
+        <WhatWeDo />
+        <Results />
         <Compare />
-        <HudaStory />
-        <LaraibStory />
-        <Inside />
-        <Plans />
-        <Guarantee />
+        <Fit />
         <About />
         <FAQ />
-        <FinalCTA />
+        <Apply />
       </main>
       <Footer />
       <StickyCTA />

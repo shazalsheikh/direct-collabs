@@ -9,6 +9,8 @@ import { PLANS, FOUNDING } from "@/lib/offer.config";
 import { SITE } from "@/lib/site.config";
 import { rs, num } from "@/lib/format";
 import { Chart } from "./Chart";
+import { Applications } from "./Applications";
+import type { Application } from "@/lib/applications";
 
 type Bucket = "leads" | "review" | "sales";
 
@@ -25,7 +27,7 @@ function ago(iso: string) {
 const fmtRs = (n: number) => rs(n);
 const fmtN = (n: number) => num(n);
 
-export function AdminDashboard({ snap, foundingHit = false }: { snap: AdminSnapshot; foundingHit?: boolean }) {
+export function AdminDashboard({ snap, foundingHit = false, apps = null }: { snap: AdminSnapshot; foundingHit?: boolean; apps?: Application[] | null }) {
   const [bucket, setBucket] = useState<Bucket>("review");
   const leads = snap.orders.filter((o) => o.status === "Lead");
   const review = snap.orders.filter((o) => o.status === "Needs review" || o.status === "Submitted" || o.status === "Rejected");
@@ -70,8 +72,14 @@ export function AdminDashboard({ snap, foundingHit = false }: { snap: AdminSnaps
         </div>
       )}
 
+      {/* Creator applications: the main thing now that the site takes applications, not payments. */}
+      {snap.configured && <Applications apps={apps} />}
+
+      {/* Old checkout orders. Kept so past payments stay visible. */}
+      <h2 className="display mt-12 text-2xl text-bone-2">Past checkout orders</h2>
+
       {/* KPI */}
-      <div className="mt-5 rounded-card border border-lime bg-ink-2 p-5">
+      <div className="mt-3 rounded-card border border-ink-4 bg-ink-2 p-5">
         <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Revenue · last {snap.range} days</p>
         <p className="display tnum mt-1 text-5xl">{rs(k.revenue)}</p>
       </div>

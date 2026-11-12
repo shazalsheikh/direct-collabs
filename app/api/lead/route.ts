@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createLead, updateOrder, getOrderByRef, linkedContext, DbUnavailable } from "@/lib/orders";
 import { parseDetails, amountsFor, payIn2Record, parseLinked } from "@/lib/validate";
 import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
+import { SITE } from "@/lib/site.config";
 
 /**
  * POST /api/lead
@@ -9,6 +10,7 @@ import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
  * or updates an existing one by ref. Abandoned checkouts become WhatsApp follow-ups.
  */
 export async function POST(req: Request) {
+  if (!SITE.flags.checkoutOpen) return NextResponse.json({ error: "closed" }, { status: 410 });
   let body: Record<string, unknown>;
   try {
     body = await req.json();

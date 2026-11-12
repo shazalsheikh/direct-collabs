@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Section, Eyebrow } from "@/components/ui";
 import { SITE } from "@/lib/site.config";
-import { LARAIB } from "@/lib/proof.config";
 
 export function About() {
   const o = SITE.owner;
@@ -26,8 +25,8 @@ export function About() {
           <Eyebrow>Who made this</Eyebrow>
           <h2 className="display mt-3 text-3xl sm:text-4xl">{o.name}</h2>
           <p className="mt-4 text-bone-2">
-            I run Meta ads for brands through {o.agency}. I built this on {LARAIB.name}&apos;s page first, a creator with no paid collabs, to see if brand owners would
-            apply to her. It works for small pages too. This is that setup, recorded.
+            I work with brands every day through {o.agency}, my marketing agency. So I see how brand owners pick creators, and why most creators never hear from
+            them. DirectCollabs is the system I built to fix that. Brand owners come to the creator, and the deal stays between the two of them.
           </p>
           {o.showSchoolLine && <p className="mt-2 text-bone-2">{o.schoolLine}</p>}
           <a

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { sendCapiEvent } from "@/lib/capi";
 import { SITE } from "@/lib/site.config";
 
-const ALLOWED = new Set(["PageView", "ViewContent", "InitiateCheckout", "AddPaymentInfo"]);
+const ALLOWED = new Set(["PageView", "ViewContent", "Lead", "InitiateCheckout", "AddPaymentInfo"]);
 
 function cookie(header: string | null, name: string) {
   const m = header?.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));

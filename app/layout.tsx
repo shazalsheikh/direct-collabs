@@ -23,14 +23,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name}: brands apply to you`,
+    default: `${SITE.name}: direct brand deals for content creators`,
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
   openGraph: {
     type: "website",
     siteName: SITE.name,
-    title: `${SITE.name}: brands apply to you`,
+    title: `${SITE.name}: direct brand deals for content creators`,
     description: SITE.description,
     locale: "en_PK",
   },

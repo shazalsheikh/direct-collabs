@@ -1,6 +1,7 @@
 /**
  * Three swappable hero headline sets.
  * Selected by ?a=1|2|3 or utm_content=1|2|3. Default 2 (method).
+ * The copy says what the creator gets, never how the system works behind the scenes.
  */
 
 export type HeroVariant = {
@@ -11,28 +12,14 @@ export type HeroVariant = {
   sub: string;
 };
 
+const EYEBROW = "FOR PAKISTANI CONTENT CREATORS";
+const SUB =
+  "We help content creators get direct brand deals. Brand owners reach out to you with what they need and their budget. You pick who to work with. No agency, no cut.";
+
 export const HEROES: Record<1 | 2 | 3, HeroVariant> = {
-  1: {
-    id: 1,
-    key: "pain",
-    eyebrow: "PAKISTANI CREATORS · 5K+ FOLLOWERS",
-    h1: "Followers hain, collab nahi?",
-    sub: "Ek ad apni profile se. Brand owner form bhrta hai: category, budget, handle. Ap choose krte ho kis ke saath kaam krna hai. Na agency, na 30% cut.",
-  },
-  2: {
-    id: 2,
-    key: "method",
-    eyebrow: "PAKISTANI CREATORS · 5K+ FOLLOWERS",
-    h1: "Brands ko dhoondna chhoro. Brands ko apply krne do.",
-    sub: "Ek ad apni profile se. Brand owner form bhrta hai: category, budget, handle. Ap choose krte ho kis ke saath kaam krna hai. Na agency, na 30% cut.",
-  },
-  3: {
-    id: 3,
-    key: "proof",
-    eyebrow: "PAKISTANI CREATORS · 5K+ FOLLOWERS",
-    h1: "1 ad. About 960 brand forms. Ek creator ke account pe.",
-    sub: "Ek ad apni profile se. Brand owner form bhrta hai: category, budget, handle. Ap choose krte ho kis ke saath kaam krna hai. Na agency, na 30% cut.",
-  },
+  1: { id: 1, key: "pain", eyebrow: EYEBROW, h1: "Followers hain, brand deals nahi?", sub: SUB },
+  2: { id: 2, key: "method", eyebrow: EYEBROW, h1: "Brands ko dhoondna chhoro. Brands ko apne paas aane do.", sub: SUB },
+  3: { id: 3, key: "proof", eyebrow: EYEBROW, h1: "Brand owners khud reach out krte hain. Deal direct ap se.", sub: SUB },
 };
 
 export const DEFAULT_HERO: 1 | 2 | 3 = 2;

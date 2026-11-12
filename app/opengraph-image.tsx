@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "DirectCollabs: brands apply to you";
+export const alt = "DirectCollabs: direct brand deals for content creators";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -14,9 +14,9 @@ export default function OpengraphImage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 88, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>
           <span>Brands ko dhoondna chhoro.</span>
-          <span style={{ color: "#C8FF2E" }}>Brands ko apply krne do.</span>
+          <span style={{ color: "#C8FF2E" }}>Brands ko apne paas aane do.</span>
         </div>
-        <div style={{ display: "flex", fontSize: 28, color: "rgba(244,241,234,0.6)", letterSpacing: 4 }}>FOR PAKISTANI CREATORS</div>
+        <div style={{ display: "flex", fontSize: 28, color: "rgba(244,241,234,0.6)", letterSpacing: 4 }}>DIRECT BRAND DEALS FOR CONTENT CREATORS</div>
       </div>
     ),
     size,

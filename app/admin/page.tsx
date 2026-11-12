@@ -8,6 +8,7 @@ import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { demoSnapshot } from "@/lib/admin-demo";
 import { countVerifiedSales } from "@/lib/db";
 import { FOUNDING } from "@/lib/offer.config";
+import { listApplications } from "@/lib/applications";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
 
@@ -31,5 +32,6 @@ async function AdminData({ searchParams }: { searchParams: PageProps<"/admin">["
   if (!snap.configured && process.env.NODE_ENV !== "production" && sp.demo === "1") snap = demoSnapshot(range);
   const proSold = FOUNDING.enabled ? await countVerifiedSales("pro") : null;
   const foundingHit = proSold !== null && proSold >= FOUNDING.limit;
-  return <AdminDashboard snap={snap} foundingHit={foundingHit} />;
+  const apps = await listApplications();
+  return <AdminDashboard snap={snap} foundingHit={foundingHit} apps={apps} />;
 }

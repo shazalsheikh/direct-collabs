@@ -14,6 +14,7 @@ import {
 } from "@/lib/orders";
 import { parseDetails, amountsFor, payIn2Record, parseLinked, ALLOWED_RECEIPT_TYPES, MAX_RECEIPT_BYTES } from "@/lib/validate";
 import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
+import { SITE } from "@/lib/site.config";
 
 /**
  * POST /api/checkout/submit (multipart)
@@ -21,6 +22,7 @@ import { UPGRADE, PAY_IN_2 } from "@/lib/offer.config";
  * then kicks the verify-receipt Edge Function after the response is sent.
  */
 export async function POST(req: Request) {
+  if (!SITE.flags.checkoutOpen) return NextResponse.json({ error: "closed" }, { status: 410 });
   let form: FormData;
   try {
     form = await req.formData();

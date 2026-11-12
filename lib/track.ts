@@ -2,13 +2,13 @@
  * Browser tracking: Meta Pixel + server CAPI (shared event_id for dedup), GA4, Google Ads.
  * Everything is a no-op while the matching NEXT_PUBLIC_* id is empty.
  *
- * Ladder: PageView, ViewContent (landing), InitiateCheckout, AddPaymentInfo (receipt submit),
+ * Ladder: PageView, ViewContent (landing), Lead (application sent), InitiateCheckout, AddPaymentInfo (receipt submit),
  * Purchase (server-side CAPI on approval; the thank-you page also fires the browser Purchase
  * with the SAME event_id so Meta dedups).
  */
 import { readAttribution } from "./attribution";
 
-export type MetaEvent = "PageView" | "ViewContent" | "InitiateCheckout" | "AddPaymentInfo";
+export type MetaEvent = "PageView" | "ViewContent" | "Lead" | "InitiateCheckout" | "AddPaymentInfo";
 
 type Fbq = ((...a: unknown[]) => void) & { queue?: unknown[]; loaded?: boolean; callMethod?: (...a: unknown[]) => void; push?: unknown; version?: string };
 declare global {
@@ -71,6 +71,7 @@ function loadGtag() {
 const GA_NAME: Record<MetaEvent, string> = {
   PageView: "page_view",
   ViewContent: "view_item",
+  Lead: "generate_lead",
   InitiateCheckout: "begin_checkout",
   AddPaymentInfo: "add_payment_info",
 };

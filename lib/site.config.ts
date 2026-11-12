@@ -9,7 +9,7 @@ export const SITE = {
   // TODO: replace with the final Netlify / custom domain URL before launch.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://directcollabs.pk",
   description:
-    "One Meta ad from your own Instagram. Brand owners fill a form with category, budget and handle. You pick who to work with. No agency, no 30% cut.",
+    "We help content creators in Pakistan get direct brand deals. Brand owners reach out to you, you pick who to work with, and you keep your full fee. No agency, no cut.",
   owner: {
     name: "Sheikh Shazal",
     instagram: "sh.shazal",
@@ -31,6 +31,9 @@ export const SITE = {
     durationLabel: "about 2 hours",
   },
   flags: {
+    // The site takes applications now, not payments. false closes /checkout and the checkout APIs
+    // (they redirect or return 410). Past orders, /thank-you and /access links keep working.
+    checkoutOpen: false,
     // Thank-you page "Want it done for you?" card.
     showDoneForYou: false,
     // When true, /access shows an external invite link instead of the embedded player.
@@ -42,7 +45,7 @@ export const SITE = {
   legal: {
     entity: "DirectCollabs", // TODO: registered business name if any
     city: "Islamabad, Pakistan",
-    lastUpdated: "2026-11-09",
+    lastUpdated: "2026-11-13",
   },
 } as const;
 

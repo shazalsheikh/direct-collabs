@@ -4,7 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { SampleTag } from "@/components/ui";
 
 /**
- * Hero surprise: a phone frame where "New lead" cards slide in one by one.
+ * Hero surprise: a phone frame where brand request cards slide in one by one.
  * Pure HTML/CSS. Every card is a SAMPLE. Respects prefers-reduced-motion.
  */
 /**
@@ -18,8 +18,6 @@ const SAMPLE_LEADS = [
   { cat: "Skincare", ask: "Unboxing video", budget: "Rs 15k to 25k", handle: "@gl••••skin", where: "Shipped to you" },
   { cat: "Salon", ask: "Salon visit", budget: "Rs 12k to 18k", handle: "@lu••••salon", where: "Lahore" },
   { cat: "Restaurant", ask: "Dinner visit", budget: "Rs 25k to 35k", handle: "@ka••••grill", where: "Lahore" },
-  { cat: "Jewellery", ask: "Reel with the new collection", budget: "Rs 4k to 7k", handle: "@sa••••jewels", where: "Shipped to you" },
-  { cat: "Bakery", ask: "Bakery visit", budget: "Rs 3k to 5k", handle: "@su••••bakes", where: "Islamabad" },
 ];
 
 const VISIBLE = 3;
@@ -66,17 +64,17 @@ export function PhoneLeads() {
               IG
             </span>
             <div className="min-w-0">
-              <p className="text-[12px] font-semibold leading-tight">New lead</p>
-              <p className="truncate text-[11px] text-bone-2">A brand owner filled your form</p>
+              <p className="text-[12px] font-semibold leading-tight">New brand request</p>
+              <p className="truncate text-[11px] text-bone-2">A brand owner wants to work with you</p>
             </div>
             <span className="ml-auto text-[11px] text-bone-2">now</span>
           </div>
 
-          {/* Lead Center header */}
+          {/* Inbox header */}
           <div className="mt-4 flex items-center justify-between px-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Lead Center</p>
-              <p className="display text-xl">Leads</p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Your inbox</p>
+              <p className="display text-xl">Brand requests</p>
             </div>
             <SampleTag />
           </div>

@@ -17,7 +17,7 @@ export type PurchaseInput = {
   clientIp?: string | null;
   userAgent?: string | null;
   testEventCode?: string;
-  eventName?: "Purchase" | "InitiateCheckout" | "AddPaymentInfo" | "ViewContent" | "PageView";
+  eventName?: "Purchase" | "Lead" | "InitiateCheckout" | "AddPaymentInfo" | "ViewContent" | "PageView";
 };
 
 async function sha256(s: string): Promise<string> {

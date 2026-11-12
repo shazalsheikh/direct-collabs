@@ -1,3 +1,14 @@
+## The site is now an application page (13 Nov 2026)
+
+The offer changed. The site no longer sells a course or coaching and shows no prices. A creator fills the
+application form, it lands in `/admin` under Applications, and you follow up on WhatsApp.
+
+- [ ] **Run `supabase/migrations/0003_applications.sql` on Supabase.** Without it the form cannot save and shows "message us on WhatsApp".
+- [ ] **Confirm the two results** in `lib/proof.config.ts` (about Rs 10,000 in and Rs 70,000 in deals; about Rs 80,000 in and Rs 7 lakh in deals). They show with "~" until `verified: true`. Hold the payment screenshots before you verify them.
+- [ ] **Reply to every application fast.** `/admin` shows how many are waiting for a first message.
+- [ ] **Pixel ID** if you want the "Lead" event counted for your marketing.
+- Checkout is closed with `SITE.flags.checkoutOpen = false`. `/checkout` goes to the form, `/refund-policy` goes to `/terms`, and the checkout APIs return 410. Past orders, `/thank-you` and `/access` links still work. Everything below this section describes the old course offer and only matters if you reopen checkout.
+
 # Launch blockers
 
 Things only you can supply. The site builds and runs without them, but do not run ads until every box is ticked.

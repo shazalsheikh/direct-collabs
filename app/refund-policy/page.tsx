@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import { LegalPage, H, UL, Contact } from "@/components/legal/LegalPage";
 import { GUARANTEE, PAY_IN_2 } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
+import { redirect } from "next/navigation";
+import { SITE } from "@/lib/site.config";
 
 export const metadata: Metadata = { title: "Refund policy", description: "How refunds work at DirectCollabs.", alternates: { canonical: "/refund-policy" } };
 
 /** Reads GUARANTEE.type from lib/offer.config.ts, so this page always matches the landing page. */
 export default function RefundPolicy() {
+  // This page describes the old course guarantee. While checkout is closed it sends people to the terms.
+  if (!SITE.flags.checkoutOpen) redirect("/terms");
   const perf = GUARANTEE.type === "performance";
   const g = GUARANTEE[GUARANTEE.type];
   const p = GUARANTEE.performance;

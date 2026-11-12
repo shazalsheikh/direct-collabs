@@ -6,6 +6,13 @@ Stack: Next.js 16 (App Router, TypeScript, Tailwind v4), Supabase (Postgres, pri
 
 Before ads run, go through [LAUNCH_BLOCKERS.md](LAUNCH_BLOCKERS.md). Nothing is live until every box in it is ticked.
 
+## Current mode: application page
+
+The landing page takes creator applications instead of payments. Form options live in `lib/apply.config.ts`,
+the form posts to `/api/apply`, rows are stored in the `applications` table (`supabase/migrations/0003_applications.sql`),
+and `/admin` lists them with a WhatsApp button and a status. The page copy never names prices or the method.
+The old checkout, thank-you and access code is still in the repo behind `SITE.flags.checkoutOpen` (false).
+
 ## Quick start
 
 ```bash

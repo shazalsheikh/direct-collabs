@@ -1,12 +1,9 @@
 import { Container, LinkButton, HonestLine } from "@/components/ui";
-import { PLANS, GUARANTEE } from "@/lib/offer.config";
 import type { HeroVariant } from "@/lib/heroes";
-import { rs } from "@/lib/format";
 import { Headline } from "./HeroHeadline";
 import { PhoneLeads } from "./PhoneLeads";
 
 export function Hero({ hero }: { hero: HeroVariant }) {
-  const g = GUARANTEE[GUARANTEE.type];
   return (
     <section className="pt-10 pb-14 sm:pt-16 sm:pb-20">
       <Container wide>
@@ -14,31 +11,26 @@ export function Hero({ hero }: { hero: HeroVariant }) {
           <div>
             <Headline hero={hero} />
 
-            <div className="mt-8 flex flex-col gap-3 sm:max-w-sm">
-              <LinkButton href="/checkout?plan=pro" className="w-full">
-                Get the system · {rs(PLANS.pro.price)}
+            <div className="mt-8 flex flex-col gap-2 sm:max-w-sm">
+              <LinkButton href="#apply" className="w-full">
+                Apply to work with us
               </LinkButton>
-              <a
-                href="#plans"
-                className="min-h-11 inline-flex items-center justify-center text-sm text-bone-3 underline-offset-4 hover:text-bone hover:underline"
-              >
-                or work with me 1-on-1
-              </a>
+              <p className="text-center text-sm text-bone-3">Takes one minute. We reply on WhatsApp.</p>
             </div>
 
             {/* Trust strip */}
             <ul className="mt-7 grid grid-cols-1 gap-2 text-[13px] text-bone-2 sm:grid-cols-3 sm:gap-4">
               <li className="flex items-start gap-2">
                 <Dot />
-                Works for 5k, 10k and bigger pages
+                Brand owners reach out to you directly
               </li>
               <li className="flex items-start gap-2">
                 <Dot />
-                Easypaisa and JazzCash
+                Your rate, your payment, no cut
               </li>
               <li className="flex items-start gap-2">
                 <Dot />
-                {g.headline}
+                By application only
               </li>
             </ul>
             <HonestLine className="mt-4 max-w-md" />

@@ -1,13 +1,13 @@
 import { Section, Eyebrow } from "@/components/ui";
-import { ANCHOR, PLANS } from "@/lib/offer.config";
+import { ANCHOR } from "@/lib/offer.config";
 import { rs } from "@/lib/format";
 
 const ROWS: [string, string, string][] = [
-  ["Who finds the brand", "The agency, when they feel like it", "Your ad. Brands apply to you"],
-  ["Who sets your rate", "Agency, and they quote low to close fast", "You. Chapter 5"],
-  ["What you keep", `About ${100 - ANCHOR.agencyCutPct}% of your fee`, "100% of your fee. Ad spend is yours."],
+  ["Who finds the brand", "The agency, when they feel like it", "Our system. Brand owners come to you"],
+  ["Who sets your rate", "Agency, and they quote low to close fast", "You"],
+  ["What you keep", `About ${100 - ANCHOR.agencyCutPct}% of your fee`, "100% of your fee"],
   ["Who owns the relationship", "Agency. Brand never has your number", "You. Repeat deals in your DMs"],
-  ["Cost", `About ${ANCHOR.agencyCutPct}% of every deal, forever`, `${rs(PLANS.pro.price)} once, plus your ad spend`],
+  ["Their share of your deals", `About ${ANCHOR.agencyCutPct}% of every deal, forever`, "Nothing. No percentage of your deals"],
 ];
 
 export function Compare() {
@@ -57,7 +57,7 @@ export function Compare() {
 
       <p className="mt-6 text-bone-2">
         On a {rs(ANCHOR.dealValue)} deal, an agency keeps {rs(ANCHOR.agencyKeeps)}.{" "}
-        <span className="text-bone">Use the calculator above to see the cut at your own rate.</span>
+        <span className="text-bone">With us, the full {rs(ANCHOR.dealValue)} is yours.</span>
       </p>
     </Section>
   );
