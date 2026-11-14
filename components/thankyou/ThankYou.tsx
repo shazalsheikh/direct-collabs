@@ -157,13 +157,33 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
         </div>
       )}
 
+      {/* Before you start */}
+      <div className="mt-10">
+        <h2 className="display text-2xl">Before you start</h2>
+        <p className="mt-1 text-sm text-bone-2">Do these while the receipt verifies. Ten minutes, tops.</p>
+        <ul className="mt-4 space-y-2">
+          {[
+            "Switch Instagram to a professional account",
+            "Link your Facebook Page to the Instagram account",
+            "Add a payment method to your Meta account",
+            `Keep ${rs(AD_BUDGET.minPerDay)} a day aside for the first week`,
+            "40 seconds of camera time, phone, one take",
+          ].map((x) => (
+            <li key={x} className="flex items-start gap-3 rounded-xl border border-ink-4 bg-ink-2 px-4 py-3 text-[15px]">
+              <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-lime" aria-hidden="true" />
+              {x}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* Basic upgrade */}
       {s?.plan === "basic" && s.kind === "purchase" && s.status === "Approved" && (
         <div className="mt-10 rounded-card border-2 border-lime bg-ink-2 p-5 sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">One more thing</p>
           <h2 className="display mt-2 text-2xl">Add Pro for {rs(UPGRADE.price)}</h2>
           <p className="mt-2 text-sm text-bone-2">
-            5 scripts, 20 DM replies, the rate card. Same link, unlocked once we verify the upgrade.
+            5 scripts in Roman Urdu, 20 DM replies, the rate card. Same link, unlocked once we verify the upgrade.
           </p>
           <Link href={`/checkout?upgrade=${s.ref}`} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-pill bg-lime text-sm font-semibold text-ink">
             Upgrade · {rs(UPGRADE.price)}
@@ -175,7 +195,7 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
       {dfy && (
         <div className="mt-6 rounded-card border border-ink-4 bg-ink-2 p-5">
           <h2 className="display text-xl">Want it done for you?</h2>
-          <p className="mt-1 text-sm text-bone-2">We set up the ad and the form on your page with you on a call.</p>
+          <p className="mt-1 text-sm text-bone-2">We set up the whole system on your page with you on a call.</p>
           <a href={dfy} className="mt-3 inline-flex min-h-11 items-center rounded-pill border border-bone-3 px-4 text-sm font-semibold">
             Ask on WhatsApp
           </a>
