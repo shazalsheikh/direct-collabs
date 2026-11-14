@@ -13,8 +13,8 @@ export default function OpengraphImage() {
           Direct<span style={{ color: "#C8FF2E" }}>Collabs</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 88, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>
-          <span>Brands ko dhoondna chhoro.</span>
-          <span style={{ color: "#C8FF2E" }}>Brands ko apne paas aane do.</span>
+          <span>Stop chasing brands.</span>
+          <span style={{ color: "#C8FF2E" }}>Let them come to you.</span>
         </div>
         <div style={{ display: "flex", fontSize: 28, color: "rgba(244,241,234,0.6)", letterSpacing: 4 }}>DIRECT BRAND DEALS FOR CONTENT CREATORS</div>
       </div>

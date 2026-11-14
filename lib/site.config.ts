@@ -12,8 +12,8 @@ export const SITE = {
     "We help content creators in Pakistan get direct brand deals. Brand owners reach out to you, you pick who to work with, and you keep your full fee. No agency, no cut.",
   owner: {
     name: "Sheikh Shazal",
-    instagram: "sh.shazal",
-    instagramUrl: "https://instagram.com/sh.shazal",
+    instagram: "shk.shazal",
+    instagramUrl: "https://instagram.com/shk.shazal",
     agency: "Revzo",
     // Toggle the "Sajawal.School, 67,000+ students" line in the About block.
     showSchoolLine: false,
