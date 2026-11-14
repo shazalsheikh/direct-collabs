@@ -10,8 +10,8 @@ export default function Privacy() {
       <H>What we collect</H>
       <UL>
         <li>What you put in the application: your name, WhatsApp number, Instagram handle, follower range, what you charge, and any note you add.</li>
-        <li>Campaign data from the link you arrived on (UTM tags and click ids), and the Meta cookies _fbp and _fbc if you have them.</li>
-        <li>Basic usage data from Meta Pixel and Google Analytics once those are switched on.</li>
+        <li>Link data from the page you arrived on (tracking tags and click ids), and the cookies _fbp and _fbc if you have them.</li>
+        <li>Basic usage data from analytics tools, once those are switched on.</li>
         <li>If you work with us, what you share with us on WhatsApp to do the work.</li>
         <li>If you paid through this site in the past, your order and payment receipt.</li>
       </UL>
@@ -20,14 +20,14 @@ export default function Privacy() {
       <UL>
         <li>To review your application and message you about it, mainly on WhatsApp.</li>
         <li>To do the work we agreed with you.</li>
-        <li>To measure which of our marketing brings applications, including sending an event to Meta with your details hashed.</li>
+        <li>To measure which of our pages bring applications, including sending a hashed event to our tracking providers.</li>
       </UL>
 
       <H>Who handles it</H>
       <UL>
         <li>Supabase stores applications in a private database.</li>
         <li>Netlify hosts the site.</li>
-        <li>Meta and Google receive the tracking events described above.</li>
+        <li>Our tracking providers receive the events described above.</li>
       </UL>
       <p>We do not sell your data and do not share your application with brands or anyone else.</p>
 
@@ -36,7 +36,7 @@ export default function Privacy() {
 
       <H>Your choices</H>
       <p>
-        You can ask us to see, correct or delete your data. You can block the Meta and Google cookies in your browser and the site will still work.
+        You can ask us to see, correct or delete your data. You can block tracking cookies in your browser and the site will still work.
       </p>
 
       <H>Contact</H>
