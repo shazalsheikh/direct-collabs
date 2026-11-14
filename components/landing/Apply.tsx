@@ -9,18 +9,18 @@ export function Apply() {
         <div>
           <Eyebrow lime>Apply</Eyebrow>
           <h2 className="display mt-3 text-4xl sm:text-5xl">
-            Brands ko apne paas aane do. <span className="text-lime">Apply kro.</span>
+            Let brands come to you. <span className="text-lime">Apply now.</span>
           </h2>
           <p className="mt-4 text-bone-2">Tell us about your page. We review every application and reply on WhatsApp.</p>
           <ol className="mt-6 space-y-3 text-[15px] text-bone-2">
             <li className="flex gap-3">
-              <span className="display tnum text-lime">1</span> You send this application. One minute.
+              <span className="display tnum text-lime">1</span> Send your application. It takes one minute.
             </li>
             <li className="flex gap-3">
-              <span className="display tnum text-lime">2</span> We look at your page and message you on WhatsApp.
+              <span className="display tnum text-lime">2</span> We review your page and message you on WhatsApp.
             </li>
             <li className="flex gap-3">
-              <span className="display tnum text-lime">3</span> If it is a fit, we explain the plan and you decide.
+              <span className="display tnum text-lime">3</span> If it is a fit, we explain the plan. You decide.
             </li>
           </ol>
         </div>
