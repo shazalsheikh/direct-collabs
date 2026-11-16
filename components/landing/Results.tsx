@@ -8,14 +8,14 @@ export function Results() {
   const money = (n: number) => (n >= 100000 ? lakh(n) : rs(n));
   return (
     <Section wide>
-      <Eyebrow>Results</Eyebrow>
+      <Eyebrow lime>Case studies</Eyebrow>
       <h2 className="display mt-3 text-4xl sm:text-5xl">
         Two creators we work with. <span className="text-lime">One system.</span>
       </h2>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {RESULTS.map((r) => (
-          <div key={r.id} className="rounded-card border border-ink-4 bg-ink-2 p-6 sm:p-8">
+          <div key={r.id} className="rounded-card border border-lime/50 bg-ink-2 p-6 shadow-[0_0_0_1px_rgba(200,255,80,0.08),0_20px_60px_-30px_rgba(200,255,80,0.25)] sm:p-8">
             <p className="text-[11px] uppercase tracking-[0.14em] text-bone-3">Creator with {r.followers} followers</p>
             <dl className="mt-5 grid grid-cols-2 gap-4">
               <div>

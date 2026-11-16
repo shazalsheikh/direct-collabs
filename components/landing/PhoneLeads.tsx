@@ -50,7 +50,7 @@ export function PhoneLeads() {
   return (
     <div className="relative mx-auto w-[280px] sm:w-[300px]" aria-hidden="true">
       {/* Phone frame */}
-      <div className="rounded-[2.2rem] border border-ink-4 bg-ink-2 p-2.5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
+      <div className="rounded-[2.2rem] border border-lime/60 bg-ink-2 ring-1 ring-lime/20 p-2.5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
         <div className="relative overflow-hidden rounded-[1.8rem] bg-ink">
           {/* Notch */}
           <div className="mx-auto mt-2 h-5 w-24 rounded-full bg-ink-3" />
