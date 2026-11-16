@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ChangeEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, COACHING, COACHING_TOTAL, type PlanId } from "@/lib/offer.config";
+import { PLANS, BUMP, UPGRADE, PAY_IN_2, AD_BUDGET, SELLABLE_PLANS, DEFAULT_PLAN, COACHING, COACHING_TOTAL, type PlanId } from "@/lib/offer.config";
 import { BANK, formatPkNumber } from "@/lib/bank.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs, lakh } from "@/lib/format";
@@ -60,7 +60,7 @@ export function CheckoutWithParams() {
   const second = sp.get("second");
   const okRef = (r: string | null) => (r && /^DC-[A-Z0-9]{4}$/.test(r) ? r : null);
   const linked: Linked = okRef(up) ? { kind: "upgrade", parentRef: okRef(up) as string } : okRef(second) ? { kind: "second", parentRef: okRef(second) as string } : null;
-  return <CheckoutForm initialPlan={p && (SELLABLE_PLANS as string[]).includes(p) ? (p as PlanId) : "pro"} linked={linked} />;
+  return <CheckoutForm initialPlan={p && (SELLABLE_PLANS as string[]).includes(p) ? (p as PlanId) : DEFAULT_PLAN} linked={linked} />;
 }
 
 export function CheckoutForm({ initialPlan, linked = null }: Props) {
@@ -622,7 +622,7 @@ function Summary({ plan, bump, total, dueNow, payIn2, linked }: { plan: PlanId; 
       <p className="mt-4 text-[12px] text-bone-3">
         {plan === "coaching" && !linked
           ? "Once I verify the receipt, I message you on WhatsApp to confirm the terms and book your first call."
-          : "Your access unlocks once we verify the receipt, usually within a few hours and often faster. We also send the link on WhatsApp."}
+          : "Your access unlocks once we verify the receipt, within 24 hours. We also send the link on WhatsApp."}
       </p>
       <p className="mt-2 text-[12px] text-bone-3">Questions? @{SITE.owner.instagram}</p>
     </div>

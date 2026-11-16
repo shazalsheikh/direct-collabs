@@ -9,13 +9,14 @@ import { Results } from "./Results";
 import { Fit } from "./Fit";
 import { About } from "./About";
 import { FAQ } from "./FAQ";
+import { Program } from "./Program";
 import { Apply } from "./Apply";
 import { Footer } from "./Footer";
 import { StickyCTA } from "./StickyCTA";
 
 /**
- * One job: get a creator to apply. No prices, no checkout, and no description of the method.
- * Order: promise, pain, what we do, why not an agency, proof, fit, who, questions, form.
+ * One job: get a creator to apply. The program is the second way in, shown above the form.
+ * Order: promise, pain, what we do, why not an agency, proof, fit, who, questions, two ways in, form.
  */
 export function Landing({ hero }: { hero: HeroVariant }) {
   return (
@@ -31,6 +32,7 @@ export function Landing({ hero }: { hero: HeroVariant }) {
         <Fit />
         <About />
         <FAQ />
+        <Program />
         <Apply />
       </main>
       <Footer />

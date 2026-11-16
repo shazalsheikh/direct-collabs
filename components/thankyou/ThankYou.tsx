@@ -11,7 +11,7 @@ import { trackPurchaseClient } from "@/lib/track";
 type Status = {
   ref: string;
   status: "Lead" | "Submitted" | "Approved" | "Needs review" | "Rejected";
-  plan: "basic" | "pro" | "coaching";
+  plan: "basic" | "pro" | "coaching" | "program";
   kind: "purchase" | "upgrade" | "second";
   bump: boolean;
   amount: number;
@@ -74,6 +74,8 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
   // Promise email only when the server can really send it.
   const shareWhere = s?.email_on ? "on WhatsApp and to the email you gave" : "on WhatsApp";
   const coaching = s?.plan === "coaching";
+  // The program: we send the course link by hand within 24 hours. No self-serve access page yet.
+  const program = s?.plan === "program";
   const wa = whatsappLink(`Order ${ref ?? ""}, ${planName}, paid ${s ? rs(s.pay_in_2?.enabled && !s.pay_in_2.first_paid ? s.pay_in_2.first : s.amount) : ""}`);
   const dfy = SITE.flags.showDoneForYou ? whatsappLink(`Hi, order ${ref ?? ""}. I want the done-for-you setup.`) : "";
 
@@ -81,7 +83,7 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
     <div className="mt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">Order {ref ?? "…"}</p>
       <h1 className="display mt-3 text-4xl sm:text-5xl">
-        {s?.status === "Approved" ? (coaching ? "You are in." : "Access unlocked.") : s?.status === "Lead" ? "One more step." : "Thank you!"}
+        {s?.status === "Approved" ? (coaching || program ? "You are in." : "Access unlocked.") : s?.status === "Lead" ? "One more step." : "Thank you!"}
       </h1>
 
       {!ref && (
@@ -108,24 +110,28 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
           body={
             coaching
               ? "I am confirming your payment. Then I will message you on WhatsApp to confirm the terms and book your first call."
-              : `We are confirming your payment. Then we will share your course link ${shareWhere}. If you keep this page open, it unlocks by itself.`
+              : program
+                ? `We are confirming your payment. Within 24 hours we will send your course link ${shareWhere}.`
+                : `We are confirming your payment. Then we will share your course link ${shareWhere}. If you keep this page open, it unlocks by itself.`
           }
         />
         <Step
           n={3}
           active={step >= 3}
           done={step >= 3}
-          title={coaching ? "Your first call is booked" : "Course link shared"}
+          title={coaching ? "Your first call is booked" : program ? "Course link sent within 24 hours" : "Course link shared"}
           body={
             coaching
               ? "I will message you on WhatsApp to confirm the terms and book your first Zoom call, within your first 10 days."
-              : `We will share your course link ${shareWhere} soon. It also appears on this page once your payment is confirmed.`
+              : program
+                ? `Your course link comes ${shareWhere} within 24 hours of your payment.`
+                : `We will share your course link ${shareWhere} soon. It also appears on this page once your payment is confirmed.`
           }
           last
         />
       </ol>
 
-      {s?.status === "Approved" && s.access_token && !coaching && (
+      {s?.status === "Approved" && s.access_token && !coaching && !program && (
         <Link href={`/access/${s.access_token}`} className="mt-6 flex min-h-14 w-full items-center justify-center rounded-pill bg-lime text-base font-semibold text-ink">
           Watch now
         </Link>

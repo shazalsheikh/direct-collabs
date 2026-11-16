@@ -23,7 +23,7 @@ export const COACHING = {
   ],
 };
 
-export type PlanId = "basic" | "pro" | "coaching";
+export type PlanId = "basic" | "pro" | "coaching" | "program";
 
 export const CURRENCY = "PKR";
 
@@ -67,13 +67,27 @@ export const PLANS = {
     includes: COACHING.includes,
     recommended: false,
   },
+  // The Brand Inbox Program: 3-hour recorded lecture, 8 modules, lifetime access. The only plan sold now.
+  program: {
+    id: "program" as const,
+    name: "The Brand Inbox Program",
+    price: 9800,
+    tagline: "A 3-hour recorded lecture in 8 modules. You build the system yourself.",
+    includes: [
+      "3-hour recorded lecture in 8 modules, Roman Urdu",
+      "Lifetime access",
+      "24/7 WhatsApp support while you build",
+      "Money back if you don't get 10 brand reach-outs in 7 days",
+    ],
+    recommended: true,
+  },
 } satisfies Record<PlanId, unknown>;
 
 /** Plans a visitor can actually buy. The server refuses anything else. */
-export const SELLABLE_PLANS: PlanId[] = ["pro", "coaching"];
+export const SELLABLE_PLANS: PlanId[] = ["program"];
 
 /** Which plan is preselected on the landing page CTA and checkout. */
-export const DEFAULT_PLAN: PlanId = "pro";
+export const DEFAULT_PLAN: PlanId = "program";
 
 /** Order bump shown on checkout only. Off: the Barter Pitch Pack is now included in the course. */
 export const BUMP = {

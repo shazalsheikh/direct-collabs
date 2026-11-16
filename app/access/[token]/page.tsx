@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DbUnavailable } from "@/lib/orders";
 import { resolveAccess, canDownload, type Access } from "@/lib/access";
 import { CHAPTERS, DOWNLOADS, UPGRADE, PLANS } from "@/lib/offer.config";
+import { PROGRAM } from "@/lib/program.config";
 import { SITE, whatsappLink } from "@/lib/site.config";
 import { rs } from "@/lib/format";
 
@@ -37,6 +38,7 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
 
   // Linked orders (upgrade, second payment) open the original order's content.
   const { content, isPro } = access;
+  const isProgram = content.plan === "program";
   const videoUrl = process.env.COURSE_VIDEO_URL ?? "";
   const first = (content.name ?? "").split(" ")[0];
   const wa = whatsappLink(`Hi, order ${content.ref}. Question about the course.`);
@@ -44,7 +46,7 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
   return (
     <div className="mt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">
-        {isPro ? PLANS.pro.name : PLANS.basic.name} · order {content.ref}
+        {isProgram ? PLANS.program.name : isPro ? PLANS.pro.name : PLANS.basic.name} · order {content.ref}
       </p>
       <h1 className="display mt-3 text-4xl sm:text-5xl">{first ? `${first}, ` : ""}brands ko apply krne do.</h1>
       <p className="mt-3 text-bone-2">
@@ -72,9 +74,19 @@ async function Gate({ params }: { params: Promise<{ token: string }> }) {
         </div>
       )}
 
-      {/* Chapters */}
-      <h2 className="display mt-10 text-2xl">Chapters</h2>
-      <ol className="mt-4 grid gap-2">
+      {/* Modules (program) or chapters (course) */}
+      <h2 className="display mt-10 text-2xl">{isProgram ? "Modules" : "Chapters"}</h2>
+      {isProgram ? (
+        <ol className="mt-4 grid gap-2">
+          {PROGRAM.modules.map((m, i) => (
+            <li key={m} className="flex items-center gap-4 rounded-xl border border-ink-4 bg-ink-2 px-4 py-3">
+              <span className="display tnum text-xl text-lime">{String(i + 1).padStart(2, "0")}</span>
+              <p className="font-semibold">{m}</p>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      <ol className={`mt-4 grid gap-2 ${isProgram ? "hidden" : ""}`}>
         {CHAPTERS.map((c) => (
           <li key={c.n} className="flex items-center gap-4 rounded-xl border border-ink-4 bg-ink-2 px-4 py-3">
             <span className="display tnum text-xl text-lime">{String(c.n).padStart(2, "0")}</span>

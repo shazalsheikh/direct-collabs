@@ -27,7 +27,8 @@ export async function resolveAccess(token: string): Promise<Access | null> {
   }
   // Coaching comes with live calls, not the recorded course, so there is nothing to open here.
   if (content.plan === "coaching") return null;
-  return { order, content, isPro: content.plan === "pro", hasBump: content.bump };
+  // The program gets the same downloads as Pro for now (see DOWNLOADS in offer.config).
+  return { order, content, isPro: content.plan === "pro" || content.plan === "program", hasBump: content.bump };
 }
 
 export type Download = (typeof DOWNLOADS)[number];
