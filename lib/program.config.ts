@@ -57,5 +57,7 @@ export const SERVICE = {
 /** Ad spend is paid to Meta, not to us. Shown on both options. */
 export const AD_SPEND_NOTE = {
   minPerDay: AD_BUDGET.minPerDay,
+  // Meta charges the card on file every day. Monthly is 30 days at the minimum.
+  monthlyAtMin: AD_BUDGET.minPerDay * 30,
   line: `Ad spend: at least Rs ${AD_BUDGET.minPerDay} a day, paid to Meta directly. It never comes to us.`,
 };

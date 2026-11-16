@@ -12,7 +12,7 @@ const ITEMS: [string, string][] = [
   ],
   [
     "What does it cost?",
-    "The Brand Inbox Program is Rs 9,800 one-time, with lifetime access. The monthly service is Rs 30,000 a month. Ad spend of at least Rs 700 a day is paid to Meta separately, and it never comes to us.",
+    "The Brand Inbox Program is Rs 9,800 one-time, with lifetime access. The monthly service is Rs 30,000 a month. Ad spend of at least Rs 500 a day is paid to Meta separately, and it never comes to us.",
   ],
   [
     "Are you an agency?",

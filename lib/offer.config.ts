@@ -122,9 +122,9 @@ export const PAY_IN_2 = {
 
 /** Required ad budget, repeated plainly on both plans. */
 export const AD_BUDGET = {
-  minPerDay: 700,
+  minPerDay: 500,
   maxPerDay: 1000,
-  perMonthAtMin: 21000, // 30 days at Rs 700
+  perMonthAtMin: 15000, // 30 days at Rs 500
   daysToWarmUp: "3 to 7 days",
 };
 
@@ -158,13 +158,13 @@ export const GUARANTEE: {
   performance: {
     forms: 10,
     days: 7,
-    spendPerDay: 700,
+    spendPerDay: 500,
     refundHours: 48,
     headline: "10 brand forms in 7 days, or your money back.",
-    body: "Run the ad as taught, Rs 700 a day, approved and delivering for 7 days. If fewer than 10 brand owners fill your form, show us the Ads Manager screen and we refund within 48 hours.",
+    body: "Run the ad as taught, Rs 500 a day, approved and delivering for 7 days. If fewer than 10 brand owners fill your form, show us the Ads Manager screen and we refund within 48 hours.",
     conditions: [
       "The ad must be approved by Meta and delivering for the full 7 days.",
-      "Daily budget of at least Rs 700 for those 7 days.",
+      "Daily budget of at least Rs 500 for those 7 days.",
       "The lead form must be the one from the course, with the three questions intact.",
       "Refund request within 14 days of purchase with Ads Manager and Lead Center screenshots.",
       "One refund per person.",
@@ -219,7 +219,7 @@ export const CHAPTERS = [
   {
     n: 3,
     title: "Setting up on your own page",
-    blurb: "Step by step. Ads Manager, placements, Rs 700/day.",
+    blurb: "Step by step. Ads Manager, placements, Rs 500/day.",
     minutes: 28,
     pro: false,
   },

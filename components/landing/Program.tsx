@@ -47,6 +47,11 @@ export function Program() {
               At least <span className="font-semibold text-lime">Rs {AD_SPEND_NOTE.minPerDay} a day</span>, paid to Meta
               directly. It never comes to us. The program fee and the ad budget are two separate costs.
             </p>
+            <p className="mt-3 text-[15px] text-bone-2">
+              Add a card to your Meta account and Meta charges it every day. At the minimum, that is about{" "}
+              <span className="font-semibold text-bone">Rs {rs(AD_SPEND_NOTE.monthlyAtMin).replace("Rs ", "")} a month</span>. One
+              brand collab of Rs 20,000 covers that cost, and every collab after it is yours.
+            </p>
           </div>
 
           {/* Guarantee, highlighted */}
