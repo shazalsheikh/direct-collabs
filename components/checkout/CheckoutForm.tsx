@@ -65,7 +65,7 @@ export function CheckoutWithParams() {
 
 export function CheckoutForm({ initialPlan, linked = null }: Props) {
   const router = useRouter();
-  const [plan, setPlan] = useState<PlanId>(initialPlan ?? "pro");
+  const [plan, setPlan] = useState<PlanId>(initialPlan ?? DEFAULT_PLAN);
   const [bump, setBump] = useState(false);
   const [payIn2, setPayIn2] = useState(false);
   const [name, setName] = useState("");
