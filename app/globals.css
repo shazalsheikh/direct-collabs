@@ -112,4 +112,27 @@ p {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .marquee-track {
+    animation: none !important;
+  }
+  .marquee {
+    overflow-x: auto;
+  }
+}
+
+/* Slow, continuous horizontal loop for the brand-request cards. Pauses on hover. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 60s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
 }

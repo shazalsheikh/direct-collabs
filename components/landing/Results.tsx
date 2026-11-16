@@ -4,10 +4,11 @@ import { RESULTS } from "@/lib/proof.config";
 import { rs, lakh } from "@/lib/format";
 
 /** Real brand requests from the lead form, cropped to the question answers. Contact details are removed, not blurred. */
+/** Every image is the full form, on one 540x820 canvas, so all three cards are the same size. Contact values are covered in black. */
 const LEADS = [
-  { src: "/proof/lead-11-nov.jpg", w: 532, h: 392, alt: "Brand request, 11 November 2026: jewellery and accessories, budget 100k+, not running Meta ads" },
-  { src: "/proof/lead-12-nov.jpg", w: 510, h: 392, alt: "Brand request, 12 November 2026: clothing, budget 20k to 40k, not running Meta ads" },
-  { src: "/proof/lead-13-nov.jpg", w: 536, h: 362, alt: "Brand request, 13 November 2026: makeup and skincare, budget 20k to 40k, running Meta ads" },
+  { src: "/proof/lead-11-nov.jpg", w: 540, h: 820, alt: "Brand request, 11 November 2026: jewellery and accessories, budget 100k+, not running Meta ads" },
+  { src: "/proof/lead-12-nov.jpg", w: 540, h: 820, alt: "Brand request, 12 November 2026: clothing, budget 20k to 40k, not running Meta ads" },
+  { src: "/proof/lead-13-nov.jpg", w: 540, h: 820, alt: "Brand request, 13 November 2026: makeup and skincare, budget 20k to 40k, running Meta ads" },
 ];
 
 /** Two anonymous creators. Numbers come from lib/proof.config.ts and stay "about" until verified. */
@@ -47,15 +48,22 @@ export function Results() {
       </div>
       {/* Daily consistency: brand requests on three days in a row. */}
       <div className="mt-12">
-        <p className="text-xs font-semibold tracking-[0.18em] text-lime uppercase">Brand requests, three days in a row</p>
-        <p className="mt-2 text-[15px] text-bone-2">Brand owners fill in the form, and the request lands with us. Contact details removed.</p>
-        <ul className="-mx-4 mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0 [scrollbar-width:thin]">
-          {LEADS.map((l) => (
-            <li key={l.src} className="w-[78%] shrink-0 snap-start overflow-hidden rounded-card border border-ink-4 bg-white sm:w-[340px]">
-              <Image src={l.src} alt={l.alt} width={l.w} height={l.h} sizes="(min-width: 640px) 340px, 78vw" className="h-auto w-full" />
-            </li>
-          ))}
-        </ul>
+        <p className="text-xs font-semibold tracking-[0.18em] text-lime uppercase">This is how our creators receive brand deals</p>
+        {/* Auto-scrolling loop. The list is written twice so the loop joins seamlessly. Copies after the first are hidden from screen readers. */}
+        <div className="marquee mt-5 -mx-4 overflow-hidden px-4 sm:mx-0 sm:px-0">
+          <ul className="marquee-track flex w-max gap-4 pb-2 pr-4">
+            {[...LEADS, ...LEADS].map((l, i) => (
+              <li
+                key={`${l.src}-${i}`}
+                aria-hidden={i >= LEADS.length ? true : undefined}
+                className="w-[240px] shrink-0 overflow-hidden rounded-card border border-ink-4 bg-white sm:w-[280px]"
+              >
+                {/* Served as-is: the three crops are already small JPEGs, and the optimizer cache was serving the old crops. */}
+                <Image src={l.src} alt={i >= LEADS.length ? "" : l.alt} width={l.w} height={l.h} unoptimized sizes="(min-width: 640px) 280px, 240px" className="h-auto w-full" />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <p className="mt-5 text-[13px] text-bone-3">Rounded numbers. Creator and brand names are kept private.</p>
