@@ -15,14 +15,14 @@ export const PROGRAM = {
   lectureHours: 3,
   // DRAFT titles. Replace with the exact titles from the recorded lecture.
   modules: [
-    "Your brand-ready profile",
-    "The hook and the script",
+    "Brand-ready profile",
+    "The 40-second video",
     "Your lead form",
-    "Setting up the ad",
-    "Brand-owner targeting",
-    "Replying within 5 minutes",
-    "Setting your rate",
-    "Keeping the ad alive",
+    "Ads Manager setup",
+    "Targeting brand owners",
+    "5-minute replies",
+    "Your rate",
+    "Week 3: refresh the ad",
   ],
   // Payment link for the program. Set NEXT_PUBLIC_PROGRAM_CHECKOUT_URL in Netlify.
   // Empty = the CTA falls back to WhatsApp, then to the application form.
