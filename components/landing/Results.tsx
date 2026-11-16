@@ -49,10 +49,10 @@ export function Results() {
       <div className="mt-12">
         <p className="text-xs font-semibold tracking-[0.18em] text-lime uppercase">Brand requests, three days in a row</p>
         <p className="mt-2 text-[15px] text-bone-2">Brand owners fill in the form, and the request lands with us. Contact details removed.</p>
-        <ul className="mt-5 grid gap-4 sm:grid-cols-3">
+        <ul className="-mx-4 mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 sm:mx-0 sm:px-0 [scrollbar-width:thin]">
           {LEADS.map((l) => (
-            <li key={l.src} className="overflow-hidden rounded-card border border-ink-4 bg-ink-2">
-              <Image src={l.src} alt={l.alt} width={l.w} height={l.h} sizes="(min-width: 640px) 33vw, 100vw" className="h-auto w-full" />
+            <li key={l.src} className="w-[78%] shrink-0 snap-start overflow-hidden rounded-card border border-ink-4 bg-white sm:w-[340px]">
+              <Image src={l.src} alt={l.alt} width={l.w} height={l.h} sizes="(min-width: 640px) 340px, 78vw" className="h-auto w-full" />
             </li>
           ))}
         </ul>
