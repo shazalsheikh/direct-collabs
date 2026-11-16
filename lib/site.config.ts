@@ -33,7 +33,7 @@ export const SITE = {
   flags: {
     // The site takes applications now, not payments. false closes /checkout and the checkout APIs
     // (they redirect or return 410). Past orders, /thank-you and /access links keep working.
-    checkoutOpen: true,
+    checkoutOpen: false,
     // Thank-you page "Want it done for you?" card.
     showDoneForYou: false,
     // When true, /access shows an external invite link instead of the embedded player.
