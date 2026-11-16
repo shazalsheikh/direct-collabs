@@ -18,9 +18,9 @@ export const SITE = {
     // Toggle the "Sajawal.School, 67,000+ students" line in the About block.
     showSchoolLine: false,
     schoolLine: "Also behind Sajawal.School, 67,000+ students.",
-    // Photo slot. Drop a WebP at public/owner.webp and set to "/owner.webp".
+    // Portrait shown in the About block. Resized to 506x900 JPEG in public/about/.
     // Hidden when empty.
-    photo: "" as string,
+    photo: "/about/shazal.jpg" as string,
   },
   // Digits only, country code first. Read from env so it never lands in git.
   // TODO: set NEXT_PUBLIC_WHATSAPP_NUMBER in Netlify before launch.

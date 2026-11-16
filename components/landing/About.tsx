@@ -6,18 +6,22 @@ export function About() {
   const o = SITE.owner;
   return (
     <Section wide>
-      <div className="grid gap-8 sm:grid-cols-[140px_1fr] sm:items-start">
+      <div className="grid gap-8 sm:grid-cols-[260px_1fr] sm:items-start">
+        {/* Fixed 4:5 portrait frame. Crop anchored at the upper third so the face stays in frame. */}
         {o.photo ? (
-          <Image
-            src={o.photo}
-            alt={o.name}
-            width={280}
-            height={280}
-            className="h-[140px] w-[140px] rounded-card object-cover"
-            sizes="140px"
-          />
+          <div className="relative w-[240px] self-start overflow-hidden rounded-card border border-ink-4 bg-ink-2 sm:w-[260px]">
+            <div className="relative aspect-[4/5] w-full">
+              <Image
+                src={o.photo}
+                alt={`${o.name}, creator and founder of DirectCollabs`}
+                fill
+                sizes="(min-width: 640px) 260px, 240px"
+                className="object-cover object-[50%_30%]"
+              />
+            </div>
+          </div>
         ) : (
-          <div className="display grid h-[140px] w-[140px] place-items-center rounded-card border border-ink-4 bg-ink-2 text-4xl text-bone-3">
+          <div className="display grid aspect-[4/5] w-[240px] place-items-center rounded-card border border-ink-4 bg-ink-2 text-4xl text-bone-3 sm:w-[260px]">
             SS
           </div>
         )}
