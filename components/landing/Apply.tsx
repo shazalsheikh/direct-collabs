@@ -24,7 +24,10 @@ export function Apply() {
             </li>
           </ol>
         </div>
-        <ApplyForm />
+        {/* Header Apply jumps here, straight to the fields. */}
+        <div id="apply-form" className="scroll-mt-6">
+          <ApplyForm />
+        </div>
       </div>
     </Section>
   );
