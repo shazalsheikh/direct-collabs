@@ -12,7 +12,7 @@ export function Program() {
 
   return (
     <Section id="program" tone="ink-2" wide className="scroll-mt-4">
-      <Eyebrow lime>Two ways in</Eyebrow>
+      <Eyebrow lime>Choose your plan</Eyebrow>
       <h2 className="display mt-3 text-4xl sm:text-5xl">
         Brands come to you. <span className="text-lime">Build it yourself, or let us run it.</span>
       </h2>
