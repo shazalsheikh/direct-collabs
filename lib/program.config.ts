@@ -36,7 +36,7 @@ export const PROGRAM = {
     conditions: [
       "Complete all 8 modules before you launch.",
       `Run the ad at least Rs ${AD_BUDGET.minPerDay} a day for the 7 days after it goes live.`,
-      "Send your Ads Manager and WhatsApp screenshots within 14 days of purchase.",
+      "WhatsApp support, 24/7, if you get stuck anywhere.",
       "One refund per person.",
     ],
   },
