@@ -67,10 +67,10 @@ export const PLANS = {
     includes: COACHING.includes,
     recommended: false,
   },
-  // The Brand Inbox Program: 3-hour recorded lecture, 8 modules, lifetime access. The only plan sold now.
+  // Training: How to Get Brand Collaborations. 3-hour recorded lecture, 8 modules, lifetime access. The only plan sold now.
   program: {
     id: "program" as const,
-    name: "The Brand Inbox Program",
+    name: "Training: How to Get Brand Collaborations",
     price: 9800,
     tagline: "A 3-hour recorded lecture in 8 modules. You build the system yourself.",
     includes: [
