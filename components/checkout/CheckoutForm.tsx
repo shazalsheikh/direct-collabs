@@ -275,8 +275,9 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
           <div className="space-y-8">
             {step === 1 ? (
               <>
-                {/* Plan */}
-                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : (SELLABLE_PLANS.length > 1 ? "Choose your offer" : "Your order")}>
+                {/* Plan: only when more than one plan is sold, or for an upgrade or second payment */}
+                {(SELLABLE_PLANS.length > 1 || linked) && (
+                <Step title={linked ? (linked.kind === "upgrade" ? "Upgrade" : "Second payment") : "Choose your offer"}>
                   {linked && (
                     <div className="rounded-card border-2 border-lime bg-ink-2 p-4">
                       <div className="flex items-center justify-between">
@@ -351,6 +352,7 @@ export function CheckoutForm({ initialPlan, linked = null }: Props) {
                     </label>
                   )}
                 </Step>
+                )}
 
                 {/* Details */}
                 <Step title="Your details">

@@ -1,16 +1,14 @@
-import { Section, Eyebrow, Card, HonestLine, LinkButton } from "@/components/ui";
+import { Section, Eyebrow, Card, HonestLine } from "@/components/ui";
 import { rs } from "@/lib/format";
-import { whatsappLink } from "@/lib/site.config";
 import { PROGRAM, SERVICE, AD_SPEND_NOTE } from "@/lib/program.config";
 
 /**
- * Two ways in. The program is the self-serve option (checkout or WhatsApp).
- * The service is the monthly application. The application stays the main CTA on the page.
+ * Two ways in. The program opens checkout in a new window. The service is the monthly application,
+ * which stays the main CTA on the page.
  */
 export function Program() {
-  const waHref = whatsappLink(`Assalam o Alaikum, I want ${PROGRAM.name}.`);
-  const programHref = PROGRAM.checkoutUrl || waHref || "#apply";
-  const programExternal = programHref !== "#apply";
+  // Checkout is the program's own page, opened in a new window so the visitor keeps this page.
+  const programHref = PROGRAM.checkoutUrl || "/checkout?plan=program";
 
   return (
     <Section id="program" tone="ink-2" wide className="scroll-mt-4">
@@ -25,7 +23,7 @@ export function Program() {
           <p className="text-xs font-semibold tracking-[0.18em] text-lime uppercase">Do it yourself</p>
           <h3 className="display mt-2 text-3xl">{PROGRAM.name}</h3>
           <p className="mt-4 flex items-baseline gap-2">
-            <span className="display tnum text-4xl whitespace-nowrap text-lime sm:text-5xl">{rs(PROGRAM.price)}</span>
+            <span className="display tnum whitespace-nowrap text-4xl text-lime sm:text-5xl">{rs(PROGRAM.price)}</span>
             <span className="text-bone-3">one-time · lifetime access</span>
           </p>
           <p className="mt-3 text-bone-2">
@@ -68,20 +66,14 @@ export function Program() {
           <p className="mt-4 text-[15px] text-bone-2">{PROGRAM.support}</p>
 
           <div className="mt-6 flex flex-col gap-2">
-            {programExternal ? (
-              <a
-                href={programHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-14 w-full items-center justify-center rounded-pill bg-lime px-6 text-base font-semibold text-ink transition-[transform,background-color] duration-150 hover:bg-[#d6ff5c] active:scale-[0.98]"
-              >
-                Get the program · {rs(PROGRAM.price)}
-              </a>
-            ) : (
-              <LinkButton href={programHref} className="w-full">
-                Get the program · {rs(PROGRAM.price)}
-              </LinkButton>
-            )}
+            <a
+              href={programHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-14 w-full items-center justify-center rounded-pill bg-lime px-6 text-base font-semibold text-ink transition-[transform,background-color] duration-150 hover:bg-[#d6ff5c] active:scale-[0.98]"
+            >
+              Get the program · {rs(PROGRAM.price)}
+            </a>
           </div>
         </Card>
 
@@ -90,7 +82,7 @@ export function Program() {
           <p className="text-xs font-semibold tracking-[0.18em] text-bone-3 uppercase">We run it for you</p>
           <h3 className="display mt-2 text-3xl">{SERVICE.name}</h3>
           <p className="mt-4 flex items-baseline gap-2">
-            <span className="display tnum text-5xl">{rs(SERVICE.monthly)}</span>
+            <span className="display tnum text-4xl sm:text-5xl">{rs(SERVICE.monthly)}</span>
             <span className="text-bone-3">per month</span>
           </p>
           <p className="mt-3 text-bone-2">We build and run the system on your page, with you in the loop every day.</p>
@@ -113,9 +105,12 @@ export function Program() {
           </div>
 
           <div className="mt-6">
-            <LinkButton href="#apply" variant="outline" className="w-full">
+            <a
+              href="#apply"
+              className="inline-flex min-h-14 w-full items-center justify-center rounded-pill border border-bone-3 bg-transparent px-6 text-base font-semibold text-bone transition-[transform,border-color] duration-150 hover:border-lime active:scale-[0.98]"
+            >
               Apply for the monthly plan
-            </LinkButton>
+            </a>
           </div>
         </Card>
       </div>
