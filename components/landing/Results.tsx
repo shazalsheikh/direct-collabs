@@ -1,6 +1,14 @@
+import Image from "next/image";
 import { Section, Eyebrow, HonestLine } from "@/components/ui";
 import { RESULTS } from "@/lib/proof.config";
 import { rs, lakh } from "@/lib/format";
+
+/** Real brand requests from the lead form, cropped to the question answers. Contact details are removed, not blurred. */
+const LEADS = [
+  { src: "/proof/lead-11-nov.jpg", w: 532, h: 392, alt: "Brand request, 11 November 2026: jewellery and accessories, budget 100k+, not running Meta ads" },
+  { src: "/proof/lead-12-nov.jpg", w: 510, h: 392, alt: "Brand request, 12 November 2026: clothing, budget 20k to 40k, not running Meta ads" },
+  { src: "/proof/lead-13-nov.jpg", w: 536, h: 362, alt: "Brand request, 13 November 2026: makeup and skincare, budget 20k to 40k, running Meta ads" },
+];
 
 /** Two anonymous creators. Numbers come from lib/proof.config.ts and stay "about" until verified. */
 export function Results() {
@@ -37,6 +45,19 @@ export function Results() {
           </div>
         ))}
       </div>
+      {/* Daily consistency: brand requests on three days in a row. */}
+      <div className="mt-12">
+        <p className="text-xs font-semibold tracking-[0.18em] text-lime uppercase">Brand requests, three days in a row</p>
+        <p className="mt-2 text-[15px] text-bone-2">Brand owners fill in the form, and the request lands with us. Contact details removed.</p>
+        <ul className="mt-5 grid gap-4 sm:grid-cols-3">
+          {LEADS.map((l) => (
+            <li key={l.src} className="overflow-hidden rounded-card border border-ink-4 bg-ink-2">
+              <Image src={l.src} alt={l.alt} width={l.w} height={l.h} sizes="(min-width: 640px) 33vw, 100vw" className="h-auto w-full" />
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <p className="mt-5 text-[13px] text-bone-3">Rounded numbers. Creator and brand names are kept private.</p>
       <HonestLine className="mt-2" />
     </Section>
