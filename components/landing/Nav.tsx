@@ -12,8 +12,8 @@ export function Nav() {
           <a href={SITE.owner.instagramUrl} target="_blank" rel="noopener" className="hidden min-h-11 items-center text-sm text-bone-3 hover:text-bone sm:inline-flex">
             @{SITE.owner.instagram}
           </a>
-          <a href="#apply-form" className="inline-flex min-h-11 items-center rounded-pill border border-bone-3 px-4 text-sm font-semibold text-bone hover:border-lime hover:text-lime">
-            Apply
+          <a href="#program" className="inline-flex min-h-11 items-center rounded-pill border border-bone-3 px-4 text-sm font-semibold text-bone hover:border-lime hover:text-lime">
+            See plans
           </a>
         </div>
       </Container>
