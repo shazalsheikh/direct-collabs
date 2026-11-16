@@ -21,7 +21,7 @@ const SUB =
 
 export const HEROES: Record<VariantId, HeroVariant> = {
   1: { id: 1, key: "pain", eyebrow: EYEBROW, h1: "Tired of DMing brands and getting left on seen?", sub: SUB },
-  2: { id: 2, key: "method", eyebrow: EYEBROW, h1: "Stop chasing brands. Let them come to you.", sub: SUB },
+  2: { id: 2, key: "method", eyebrow: EYEBROW, h1: "Brands can't book you if they've never seen you.", sub: SUB },
   3: { id: 3, key: "proof", eyebrow: EYEBROW, h1: "Brand owners reach out to you directly. You close the deal.", sub: SUB },
   // Visibility hooks, for testing against each other and against 1 to 3.
   4: { id: 4, key: "need", eyebrow: EYEBROW, h1: "Brands need content every day. They just don't know you exist.", sub: SUB },
