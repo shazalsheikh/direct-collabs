@@ -131,6 +131,17 @@ export function ThankYou({ orderRef }: { orderRef: string | null }) {
         />
       </ol>
 
+      {/* What the buyer receives, in their own words. Sent by hand on WhatsApp or email within 24 hours. */}
+      {program && (
+        <div className="mt-8 rounded-card border border-ink-4 bg-ink-2 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">The message you will get</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-bone">
+            Assalam o Alaikum. Aap ki payment mil gayi hai, shukriya. Aap ka access 24 ghanton ke andar is WhatsApp number aur email
+            par bheja jayega. Koi sawal ho to yahin reply karein. Shazal
+          </p>
+        </div>
+      )}
+
       {s?.status === "Approved" && s.access_token && !coaching && !program && (
         <Link href={`/access/${s.access_token}`} className="mt-6 flex min-h-14 w-full items-center justify-center rounded-pill bg-lime text-base font-semibold text-ink">
           Watch now
